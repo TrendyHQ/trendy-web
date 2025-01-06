@@ -1,0 +1,51 @@
+#signUpForm{
+    display: flex;
+    flex-direction: column;
+    width: 340px;
+    height: 420px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(50px) brightness(1.4);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+#signUpForm label{
+    font-size: 0.8rem;
+    margin: 5px 0;
+    color: #c5c5c5;
+}
+
+.divider{
+    text-align: center;
+    position: relative;
+}
+
+.divider::before, .divider::after{
+    content: "";
+    position: absolute;
+    width: 40%;
+    height: 1px;
+    background-color: #c5c5c5;
+    border-radius: 1px;
+    top: 50%;
+}
+
+.divider::before{
+    right: 0;
+}
+
+.divider::after{
+    left: 0;
+}
+
+@media (prefers-color-scheme: light) {
+    #signUpForm{
+        backdrop-filter: blur(50px) brightness(0.8);
+        box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.5);
+    }   
+
+    #signUpForm label{
+        color: #4b4b4b;
+    }    
+  }
+  

@@ -27,8 +27,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
+  height: fit-content;
   position: relative;
+  min-height: 100dvh;
+}
+
+.bodyCont.signUp{
+  align-items: center;
+  min-height: calc(100dvh + 60px);
 }
 
 @media (prefers-color-scheme: light) {

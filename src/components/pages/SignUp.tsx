@@ -2,8 +2,18 @@ import "../../css/SignUp.css";
 import Header from "../Header";
 import Footer from "../Footer";
 import bg from "../../assets/background.svg";
+import { useNavigate } from "react-router-dom";
+import { loggedIn } from "../../constants";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    localStorage.setItem("loggedIn", "true");
+    loggedIn.value = true;
+    navigate("/");
+  }
+
   return (
     <div className="bodyCont signUp">
       <Header />
@@ -22,6 +32,7 @@ export default function SignUp() {
         <input id="confirm" type="password" />
         <button>Sign Up</button>
         <p className="divider">OR</p>
+        <button id="quickLogin" onClick={handleLogin}>Quick Login</button>
       </form>
       <Footer />
     </div>

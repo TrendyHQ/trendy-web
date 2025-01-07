@@ -1,9 +1,14 @@
 import "../css/Footer.css";
+import { loggedIn } from "../constants";
 
 export default function Footer() {
   return (
-    <footer>
-      <p>&copy; 2025</p>
-    </footer>
+    <>
+      {loggedIn.value && (
+        <footer>
+          <p>&copy; 2025</p>
+        </footer>
+      )}
+    </>
   );
 }

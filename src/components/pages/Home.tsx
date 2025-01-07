@@ -6,12 +6,18 @@ import bg from "../../assets/background.svg";
 import { loggedIn } from "../../constants";
 
 export default function Home() {
-  const prevLoggedIn = localStorage.getItem("loggedIn");
+  const prevLoggedIn: string | null = localStorage.getItem("loggedIn");
   loggedIn.value = prevLoggedIn === "true";
 
   return (
     <div className="bodyCont">
-      <img className="homeBackground" src={bg} alt="geometric shapes" />
+      <div className="bg-container">
+        <img
+          className={`homeBackground ${loggedIn.value ? "dark" : ""}`}
+          src={bg}
+          alt="geometric shapes"
+        />
+      </div>
       <Header />
       {!loggedIn.value && (
         <div className="content">

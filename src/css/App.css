@@ -34,7 +34,8 @@ body {
 
 .bodyCont.signUp{
   align-items: center;
-  min-height: calc(100dvh + 60px);
+  min-height: 100dvh;
+  justify-content: center;
 }
 
 @media (prefers-color-scheme: light) {

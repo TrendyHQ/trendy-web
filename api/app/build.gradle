@@ -20,6 +20,39 @@ dependencies {
     // This dependency is used by the application.
     implementation libs.guava
     implementation 'com.sparkjava:spark-core:2.9.3'
+
+    // Add JUnit Jupiter API for testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.1'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'Server'
 }
 
 testing {
@@ -30,16 +63,4 @@ testing {
             useJUnitJupiter('5.11.1')
         }
     }
-}
-
-// Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-application {
-    // Define the main class for the application.
-    mainClass = 'Server'
 }

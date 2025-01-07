@@ -11,13 +11,13 @@ export default function Home() {
 
   return (
     <div className="bodyCont">
-      <div className="bg-container">
+      {!loggedIn.value && <div className="bg-container">
         <img
           className={`homeBackground ${loggedIn.value ? "dark" : ""}`}
           src={bg}
           alt="geometric shapes"
         />
-      </div>
+      </div>}
       <Header />
       {!loggedIn.value && (
         <div className="content">
@@ -29,10 +29,6 @@ export default function Home() {
       )}
       {loggedIn.value && (
         <div className="content">
-          <div className="title">
-            <h1 id="titleText">Welcome back!</h1>
-            <Link to="/profile">Profile</Link>
-          </div>
         </div>
       )}
       <Footer />

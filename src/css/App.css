@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -8,7 +10,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #F0F0F0;
+  color: #f0f0f0;
   background-color: #242424;
 
   font-synthesis: none;
@@ -23,7 +25,7 @@ body {
   min-height: 100dvh;
 }
 
-.bodyCont{
+.bodyCont {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -32,7 +34,7 @@ body {
   min-height: 100dvh;
 }
 
-.bodyCont.signUp{
+.bodyCont.signUp {
   align-items: center;
   min-height: 100dvh;
   justify-content: center;
@@ -41,6 +43,6 @@ body {
 @media (prefers-color-scheme: light) {
   :root {
     color: #333333;
-    background-color: #FFFFF5;
+    background-color: #fffff5;
   }
 }

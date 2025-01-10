@@ -2,7 +2,7 @@ import "../css/Header.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { CircleUserRound, LogOut, Settings } from "lucide-react";
-import { loggedIn } from "../constants";
+import { loggedIn } from "../Constants";
 import logo from "../assets/logo.svg";
 
 export default function Header() {

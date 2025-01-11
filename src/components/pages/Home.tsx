@@ -127,14 +127,17 @@ export default function Home() {
         <div className="content bottom">
           <div className="header-wrapper">
             <div className="header-cont">
-              <h1 className="section-title header">
-                Evaluate the trends of the world with a simple click, using AI
-              </h1>
-              <p className="section-text header">
-                Explore current and upcoming trends to find all sorts of
-                statistics like relevancy, start date, and more.
-              </p>
-              <button id="try-it-button">Try It Now</button>
+              <div className="text">
+                <h1 className="section-title header">
+                  Evaluate the trends of the world with a simple click, using AI
+                </h1>
+                <p className="section-text header">
+                  Explore current and upcoming trends to find all sorts of
+                  statistics like relevancy, start date, and more.
+                </p>
+                <button id="try-it-button">Try It Now</button>
+              </div>
+              <div className="geometric-bg"></div>
             </div>
           </div>
           <div className="body-wrapper">

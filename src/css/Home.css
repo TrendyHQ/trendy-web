@@ -105,7 +105,7 @@
 .header-cont {
   background-color: #333333;
   border-radius: 16px;
-  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   align-items: left;
@@ -118,7 +118,7 @@
   height: 50px;
   font-family: "M PLUS 2", Josefin Sans, sans-serif;
   background-color: #ff5733;
-  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(255, 255, 255, 0.1);
   border-radius: 25px;
   border: none;
   font-weight: bold;
@@ -168,7 +168,7 @@
   height: 386px;
   background-color: #333333;
   border-radius: 16px;
-  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
   padding-bottom: 20px;
 }
 
@@ -180,7 +180,7 @@
   height: 386px;
   background-color: #333333;
   border-radius: 16px;
-  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
 }
 
 .categoryButton {
@@ -189,7 +189,6 @@
   border: none;
   width: 68px;
   aspect-ratio: 1;
-  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
   cursor: pointer;
   transition: background-color 0.15s ease;
   position: relative;
@@ -242,8 +241,8 @@
   content: "Fitness";
 }
 
-.categoryButton.lifestyle::before {
-  content: "Lifestyle";
+.categoryButton.wellness::before {
+  content: "Wellness";
 }
 
 .categoryButton.business::before {
@@ -275,6 +274,51 @@
   stroke-width: 1.6px;
 }
 
+.top-trends-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-left: 31px;
+  gap: 3px;
+}
+
+.top-trend-name{
+  font-family: "M PLUS 2", Josefin Sans, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #bdbdbd;
+  margin: 0;
+}
+
+.top-trend-icon{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #484848;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.top-trend-icon svg{
+  color: #bdbdbd;
+  stroke-width: 1.6px;
+}
+
+.trend-divider {
+  width: 85%;
+  height: 2px;
+  border-radius: 1px;
+  background-color: #484848;
+}
+
+.top-trend{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 @media (prefers-color-scheme: light) {
   .title a:hover {
     color: #c70000;
@@ -290,14 +334,17 @@
 
   .header-cont {
     background-color: #f0f0f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   .left-body-cont {
     background-color: #f0f0f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   .right-body-cont {
     background-color: #f0f0f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   .categoryButton {
@@ -309,7 +356,7 @@
   }
 
   .categoryButton:hover {
-    background-color: #818181;
+    background-color: #a6a6a6;
   }
 
   .categoryButton::before {

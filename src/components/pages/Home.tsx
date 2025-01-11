@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import bg from "../../assets/background.svg";
 import { loggedIn } from "../../Constants";
 import {
+  ArrowDown,
+  ArrowUp,
   Banknote,
   Clapperboard,
   CupSoda,
@@ -23,6 +25,83 @@ import { football } from "@lucide/lab";
 export default function Home() {
   const prevLoggedIn: string | null = localStorage.getItem("loggedIn");
   loggedIn.value = prevLoggedIn === "true";
+
+  interface Trend {
+    category: string;
+    name: string;
+    more_relevant: boolean;
+  }
+
+  const topTrends: Trend[] = [
+    {
+      name: "TikTok",
+      category: "social",
+      more_relevant: true,
+    },
+    {
+      name: "Sustainable and Genderless Clothing",
+      category: "fashion",
+      more_relevant: true,
+    },
+    {
+      name: "Mindfulness and Mental Health Apps",
+      category: "wellness",
+      more_relevant: true,
+    },
+    {
+      name: "Facebook Usage",
+      category: "social",
+      more_relevant: false,
+    },
+    {
+      name: "Esports and Gaming Communities",
+      category: "entertainment",
+      more_relevant: false,
+    },
+    {
+      name: "Anime",
+      category: "entertainment",
+      more_relevant: true,
+    },
+  ];
+  const getIcon = (categorie: string) => {
+    const size = 30;
+
+    switch (categorie) {
+      case "fashion":
+        return <Shirt size={size} />;
+      case "tech":
+        return <Headset size={size} />;
+      case "food":
+        return <CupSoda size={size} />;
+      case "entertainment":
+        return <Clapperboard size={size} />;
+      case "social":
+        return <MessageCircle size={size} />;
+      case "fitness":
+        return <Dumbbell size={size} />;
+      case "wellness":
+        return <HeartPulse size={size} />;
+      case "business":
+        return <Banknote size={size} />;
+      case "education":
+        return <GraduationCap size={size} />;
+      case "travel":
+        return <Plane size={size} />;
+      case "science":
+        return <FlaskConical size={size} />;
+      case "sports":
+        return <Icon iconNode={football} size={size} />;
+    }
+  };
+
+  const getRelevancy = (moreRelevant: boolean) => {
+    if (moreRelevant) {
+      return <ArrowUp size={30} color="#0E8800" />;
+    } else {
+      return <ArrowDown size={30} color="#D80000" />;
+    }
+  };
 
   return (
     <div className="bodyCont">
@@ -92,8 +171,8 @@ export default function Home() {
                     <Dumbbell size={42} />
                   </button>
                 </Link>
-                <Link to="/categories/lifestyle">
-                  <button className="categoryButton lifestyle">
+                <Link to="/categories/wellness">
+                  <button className="categoryButton wellness">
                     <HeartPulse size={42} />
                   </button>
                 </Link>
@@ -126,6 +205,22 @@ export default function Home() {
             </div>
             <div className="right-body-cont">
               <h1 className="section-title">Hot 🔥🔥🔥</h1>
+              <div className="top-trends-wrapper">
+                {topTrends.map((trend: Trend, index: number) => (
+                  <>
+                    <div key={"a" + index} className="top-trend">
+                      <div className="top-trend-icon">
+                        {getIcon(trend.category)}
+                      </div>
+                      <h2 className="top-trend-name">{trend.name}</h2>
+                      <div>{getRelevancy(trend.more_relevant)}</div>
+                    </div>
+                    {index < 5 && (
+                      <div className="trend-divider" key={"b" + index}></div>
+                    )}
+                  </>
+                ))}
+              </div>
             </div>
           </div>
         </div>

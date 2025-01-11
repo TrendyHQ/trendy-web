@@ -45,87 +45,87 @@ export default function Home() {
         </div>
       )}
       {loggedIn.value && (
-        <div className="content">
+        <div className="content bottom">
           <div className="header-wrapper">
             <div className="header-cont">
-              <h1>
+              <h1 className="section-title header">
                 Evaluate the trends of the world with a simple click, using AI
               </h1>
-              <p>
+              <p className="section-text header">
                 Explore current and upcoming trends to find all sorts of
                 statistics like relevancy, start date, and more.
               </p>
-              <button>Try It Now</button>
+              <button id="try-it-button">Try It Now</button>
             </div>
           </div>
           <div className="body-wrapper">
             <div className="left-body-cont">
-              <h1>Categories</h1>
-              <div className="categorieButtons">
+              <h1 className="section-title">Categories</h1>
+              <div className="categories-wrapper">
                 <Link to="/categories/fashion">
-                  <button>
-                    <Shirt size={32} color="333333" />
+                  <button className="categoryButton fashion">
+                    <Shirt size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/technology">
-                  <button>
-                    <Headset size={32} color="333333" />
+                  <button className="categoryButton technology">
+                    <Headset size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/foodandbeverages">
-                  <button>
-                    <CupSoda size={32} color="333333" />
+                  <button className="categoryButton food">
+                    <CupSoda size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/entertainment">
-                  <button>
-                    <Clapperboard size={32} color="333333" />
+                  <button className="categoryButton entertainment">
+                    <Clapperboard size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/socialmedia">
-                  <button>
-                    <MessageCircle size={32} color="333333" />
+                  <button className="categoryButton social">
+                    <MessageCircle size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/fitness">
-                  <button>
-                    <Dumbbell size={32} color="333333" />
+                  <button className="categoryButton fitness">
+                    <Dumbbell size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/lifestyle">
-                  <button>
-                    <HeartPulse size={32} color="333333" />
+                  <button className="categoryButton lifestyle">
+                    <HeartPulse size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/business">
-                  <button>
-                    <Banknote size={32} color="333333" />
+                  <button className="categoryButton business">
+                    <Banknote size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/education">
-                  <button>
-                    <GraduationCap size={32} color="333333" />
+                  <button className="categoryButton education">
+                    <GraduationCap size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/travel">
-                  <button>
-                    <Plane size={32} color="333333" />
+                  <button className="categoryButton travel">
+                    <Plane size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/science">
-                  <button>
-                    <FlaskConical size={32} color="333333" />
+                  <button className="categoryButton science">
+                    <FlaskConical size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/sports">
-                  <button>
-                    <Icon iconNode={football} size={32} color="333333" />
+                  <button className="categoryButton sports">
+                    <Icon iconNode={football} size={42} />
                   </button>
                 </Link>
               </div>
             </div>
             <div className="right-body-cont">
-              <h1>Hot 🔥🔥🔥</h1>
+              <h1 className="section-title">Hot 🔥🔥🔥</h1>
             </div>
           </div>
         </div>

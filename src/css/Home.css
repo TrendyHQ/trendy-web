@@ -105,8 +105,7 @@
 .header-cont {
   background-color: #333333;
   border-radius: 16px;
-  box-shadow: 0px 16px 32px -4px rgba(12, 12, 13, 0.1),
-    0px 4px 4px -4px rgba(12, 12, 13, 0.05);
+  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
   display: flex;
   flex-direction: column;
   align-items: left;
@@ -119,19 +118,24 @@
   height: 50px;
   font-family: "M PLUS 2", Josefin Sans, sans-serif;
   background-color: #ff5733;
-  box-shadow: 0px 16px 32px -4px rgba(12, 12, 13, 0.1),
-    0px 4px 4px -4px rgba(12, 12, 13, 0.05);
+  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
   border-radius: 25px;
   border: none;
   font-weight: bold;
   color: #ffffff;
   font-size: 20px;
   margin-left: 31px;
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+
+#try-it-button:hover {
+  background-color: #ff8c66;
 }
 
 .section-title {
   text-align: left;
-  width: 100%;
+  width: fit-content;
   font-family: "M PLUS 2", Josefin Sans, sans-serif;
   font-weight: 500;
   font-size: 32px;
@@ -144,7 +148,7 @@
 
 .section-text {
   text-align: left;
-  width: 100%;
+  width: fit-content;
   font-family: "M PLUS 2", Josefin Sans, sans-serif;
   font-weight: 500;
   font-size: 20px;
@@ -159,30 +163,24 @@
 .left-body-cont {
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  align-items: center;
-  min-width: 340px;
+  align-items: left;
   width: 31%;
   height: 386px;
   background-color: #333333;
   border-radius: 16px;
-  box-shadow: 0px 16px 32px -4px rgba(12, 12, 13, 0.1),
-    0px 4px 4px -4px rgba(12, 12, 13, 0.05);
+  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
   padding-bottom: 20px;
 }
 
 .right-body-cont {
   display: flex;
   flex-direction: column;
-  justify-content: left;
-  align-items: center;
-  min-width: 600px;
+  align-items: left;
   width: 62%;
   height: 386px;
   background-color: #333333;
   border-radius: 16px;
-  box-shadow: 0px 16px 32px -4px rgba(12, 12, 13, 0.1),
-    0px 4px 4px -4px rgba(12, 12, 13, 0.05);
+  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
 }
 
 .categoryButton {
@@ -191,8 +189,7 @@
   border: none;
   width: 68px;
   aspect-ratio: 1;
-  box-shadow: 0px 16px 32px -4px rgba(12, 12, 13, 0.1),
-    0px 4px 4px -4px rgba(12, 12, 13, 0.05);
+  box-shadow: 0px 16px 32px -8px rgba(12, 12, 13, 0.4);
   cursor: pointer;
   transition: background-color 0.15s ease;
   position: relative;
@@ -287,6 +284,10 @@
     filter: blur(6px) brightness(2);
   }
 
+  #try-it-button:hover {
+    background-color: #db3d1a;
+  }
+
   .header-cont {
     background-color: #f0f0f0;
   }
@@ -309,5 +310,13 @@
 
   .categoryButton:hover {
     background-color: #818181;
+  }
+
+  .categoryButton::before {
+    color: #4d4d4d;
+  }
+
+  .section-text {
+    color: #4d4d4d;
   }
 }

@@ -2,13 +2,12 @@ import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { CircleUserRound, LogOut, Settings } from "lucide-react";
-import logo from "../assets/logo.svg";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
   const [profileDown, setProfileDown] = useState<boolean>(false);
   const location = useLocation();
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const isDarkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)")
     .matches
     ? true
@@ -28,7 +27,7 @@ export default function Header() {
         )}
         {isAuthenticated && (
           <img
-            src={logo}
+            src={user?.picture}
             className="userImg"
             onClick={handleProfileClick}
           ></img>

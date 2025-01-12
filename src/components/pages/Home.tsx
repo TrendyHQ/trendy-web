@@ -22,14 +22,9 @@ import {
 } from "lucide-react";
 import { football } from "@lucide/lab";
 import { Trend } from "../../types";
-import { useEffect } from "react";
 
 export default function Home() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
-
-  useEffect(() => {
-    console.log(isAuthenticated);
-  }, [isAuthenticated]);
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
 
   if (isLoading) {
     return (
@@ -38,7 +33,8 @@ export default function Home() {
       </div>
     );
   }
-  
+
+  console.log(user);
 
   const topTrends: Trend[] = [
     {
@@ -218,18 +214,16 @@ export default function Home() {
               <h1 className="section-title">Hot 🔥🔥🔥</h1>
               <div className="top-trends-wrapper">
                 {topTrends.map((trend: Trend, index: number) => (
-                  <>
-                    <div key={"a" + index} className="top-trend">
+                  <div key={"topTrend" + index}>
+                    <div className="top-trend">
                       <div className="top-trend-icon">
                         {getIcon(trend.category)}
                       </div>
                       <h2 className="top-trend-name">{trend.name}</h2>
                       <div>{getRelevancy(trend.more_relevant)}</div>
                     </div>
-                    {index < 5 && (
-                      <div className="trend-divider" key={"b" + index}></div>
-                    )}
-                  </>
+                    {index < 5 && <div className="trend-divider"></div>}
+                  </div>
                 ))}
               </div>
             </div>

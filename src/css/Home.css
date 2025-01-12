@@ -13,7 +13,7 @@
 .content.bottom {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
 }
 
 .homeBackground {
@@ -189,8 +189,8 @@
   position: absolute;
   inset: -145%;
   rotate: -45deg;
-  --c: #fa0;
-  --c1: #f00;
+  --c: hsl(11, 100%, 36%);
+  --c1: hsl(40, 100%, 16%);
   background-image: radial-gradient(4px 100px at 0px 235px, var(--c), #0000),
     radial-gradient(4px 100px at 300px 235px, var(--c), #0000),
     radial-gradient(3px 4px at 150px 117.5px, var(--c1) 100%, #0000 150%),
@@ -450,6 +450,7 @@
   }
 }
 */
+
 #try-it-button {
   width: 147px;
   height: 50px;

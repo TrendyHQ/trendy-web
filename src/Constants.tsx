@@ -1,5 +1,4 @@
-import { signal } from "@preact/signals-react";
+// import { signal } from "@preact/signals-react";
 
-const loggedIn = signal<boolean>(false);
 
-export { loggedIn };
+// export { };

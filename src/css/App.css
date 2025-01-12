@@ -1,3 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Josefin+Sans:100,200,300,regular,500,600,700,100italic,200italic,300italic,italic,500italic,600italic,700italic);
+@import url(https://fonts.googleapis.com/css?family=M+PLUS+2:100,200,300,regular,500,600,700,800,900);
+
 *,
 *::before,
 *::after {
@@ -5,7 +8,8 @@
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "M PLUS 2", Josefin Sans, sans-serif Inter, system-ui, Avenir,
+    Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

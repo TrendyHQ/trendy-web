@@ -3,7 +3,7 @@ import Footer from "../Footer";
 import "../../css/Home.css";
 import { Link } from "react-router-dom";
 import bg from "../../assets/background.svg";
-import { loggedIn } from "../../Constants";
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowDown,
   ArrowUp,
@@ -21,16 +21,24 @@ import {
   Shirt,
 } from "lucide-react";
 import { football } from "@lucide/lab";
+import { Trend } from "../../types";
+import { useEffect } from "react";
 
 export default function Home() {
-  const prevLoggedIn: string | null = localStorage.getItem("loggedIn");
-  loggedIn.value = prevLoggedIn === "true";
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
-  interface Trend {
-    category: string;
-    name: string;
-    more_relevant: boolean;
+  useEffect(() => {
+    console.log(isAuthenticated);
+  }, [isAuthenticated]);
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <p>Loading...</p>
+      </div>
+    );
   }
+  
 
   const topTrends: Trend[] = [
     {
@@ -105,25 +113,25 @@ export default function Home() {
 
   return (
     <div className="bodyCont">
-      {!loggedIn.value && (
+      {!isAuthenticated && (
         <div className="bg-container">
           <img
-            className={`homeBackground ${loggedIn.value ? "dark" : ""}`}
+            className={`homeBackground ${isAuthenticated ? "dark" : ""}`}
             src={bg}
             alt="geometric shapes"
           />
         </div>
       )}
       <Header />
-      {!loggedIn.value && (
+      {!isAuthenticated && (
         <div className="content">
           <div className="title">
             <h1 id="titleText">Sign up and discover the latest trends today</h1>
-            <Link to="/signUp">Sign Up</Link>
+            <a onClick={() => loginWithRedirect()}>Sign Up</a>
           </div>
         </div>
       )}
-      {loggedIn.value && (
+      {isAuthenticated && (
         <div className="content bottom">
           <div className="header-wrapper">
             <div className="header-cont">

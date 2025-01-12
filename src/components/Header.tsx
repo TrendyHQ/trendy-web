@@ -1,48 +1,43 @@
 import "../css/Header.css";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { CircleUserRound, LogOut, Settings } from "lucide-react";
-import { loggedIn } from "../Constants";
 import logo from "../assets/logo.svg";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
   const [profileDown, setProfileDown] = useState<boolean>(false);
-  const navigate = useNavigate();
   const location = useLocation();
-  const isDarkTheme: boolean = window.matchMedia('(prefers-color-scheme: dark)').matches ? true : false;
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const isDarkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)")
+    .matches
+    ? true
+    : false;
 
   const handleProfileClick = () => {
     setProfileDown(!profileDown);
   };
 
-  const handleLogOut = () => {
-    localStorage.setItem("loggedIn", "false");
-    navigate("/");
-    window.location.reload();
-  };
-
   return (
     <>
-      <header className={!loggedIn.value ? "transparent" : ""}>
+      <header className={!isAuthenticated ? "transparent" : ""}>
         {location.pathname != "/signUp" && (
-          <Link to="/" className={loggedIn.value ? "logo" : "logo big"}>
+          <Link to="/" className={isAuthenticated ? "logo" : "logo big"}>
             <h1>TRENDY</h1>
           </Link>
         )}
-        {loggedIn.value && (
+        {isAuthenticated && (
           <img
             src={logo}
             className="userImg"
             onClick={handleProfileClick}
           ></img>
         )}
-        {!loggedIn.value && location.pathname != "/signUp" && (
-          <Link to="/signUp">
-            <button>Sign Up</button>
-          </Link>
+        {!isAuthenticated && location.pathname != "/signUp" && (
+          <button onClick={() => loginWithRedirect()}>Sign Up</button>
         )}
       </header>
-      {loggedIn.value && (
+      {isAuthenticated && (
         <div className={`dropDown ${profileDown ? "show" : ""}`}>
           <div className="buttons">
             <Link to="/profile">
@@ -63,7 +58,7 @@ export default function Header() {
                 Settings
               </button>
             </Link>
-            <button onClick={handleLogOut}>
+            <button onClick={() => logout()}>
               <LogOut size={32} color={isDarkTheme ? "#f0f0f0" : "#333333"} />{" "}
               Logout
             </button>

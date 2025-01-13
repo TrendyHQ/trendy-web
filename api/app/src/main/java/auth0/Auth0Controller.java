@@ -17,12 +17,16 @@ public class Auth0Controller {
     @PutMapping("/update-nickname")
     public void publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
 
+        final String DOMAIN = System.getenv("VITE_AUTH0_DOMAIN");
+        final String CLIENT_ID = System.getenv("VITE_MANAGEMENT_AUTH0_CLIENT_ID");
+        final String CLIENT_SECRET = System.getenv("VITE_MANAGEMENT_AUTH0_CLIENT_SECRET");
+
         String user_id = request.getUserId();
         String newNickname = request.getNewNickname();
         
-        HttpResponse<String> response = Unirest.post("https://dev-8a32t01frjlto3t2.us.auth0.com/oauth/token")
+        HttpResponse<String> response = Unirest.post("https://" + DOMAIN + "/oauth/token")
                 .header("content-type", "application/json")
-                .body("{\"client_id\":\"fZ9S04REX4XhJ3qWnYv2SH0DJKXtxiEo\",\"client_secret\":\"BwJ0Un39L62e2iJpDtE3Nlh-y92_Dn043PSJyQHoRcGgB3wSU5ULWx-4u85mjYki\",\"audience\":\"https://dev-8a32t01frjlto3t2.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}")
+                .body("{\"client_id\":" + CLIENT_ID + ",\"client_secret\":" + CLIENT_SECRET + ",\"audience\":\"https://dev-8a32t01frjlto3t2.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}")
                 .asString();
 
         JsonObject jsonResponse = JsonParser.parseString(response.getBody()).getAsJsonObject();
@@ -32,7 +36,7 @@ public class Auth0Controller {
 
         @SuppressWarnings("unused")
         HttpResponse<String> auth0ApiResponse = Unirest
-                .put("https://dev-8a32t01frjlto3t2.us.auth0.com/api/v2/users/" + user_id)
+                .put("https://" + DOMAIN + "/api/v2/users/" + user_id)
                 .header("Authorization", "Bearer " + accessToken) // Include the authorization token
                 .header("Content-Type", "application/json")
                 .body(requestBody) // Pass the new nickname in the request body

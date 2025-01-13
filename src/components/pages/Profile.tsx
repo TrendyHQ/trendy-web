@@ -18,7 +18,7 @@ export default function Profile() {
         newNickname: newNickname,
       }
 
-      await axios.post('http://localhost:8080/api/update-nickname', requestBody, {
+      await axios.put('http://localhost:8080/api/update-nickname', requestBody, {
         headers: {
           'Content-Type': 'application/json', // Set content type to JSON
         }

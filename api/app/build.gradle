@@ -27,6 +27,7 @@ dependencies {
 
     implementation 'com.mashape.unirest:unirest-java:1.4.9'
     implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
     // Optional: Spring Boot DevTools for better development experience
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

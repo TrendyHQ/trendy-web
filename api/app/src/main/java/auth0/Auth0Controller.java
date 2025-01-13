@@ -8,6 +8,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.HttpResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.github.cdimascio.dotenv.Dotenv;
 
 @RestController
 @RequestMapping("/api") // Define the base URL for your endpoints
@@ -17,16 +18,21 @@ public class Auth0Controller {
     @PutMapping("/update-nickname")
     public void publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
 
-        final String DOMAIN = System.getenv("VITE_AUTH0_DOMAIN");
-        final String CLIENT_ID = System.getenv("VITE_MANAGEMENT_AUTH0_CLIENT_ID");
-        final String CLIENT_SECRET = System.getenv("VITE_MANAGEMENT_AUTH0_CLIENT_SECRET");
+        Dotenv dotenv = Dotenv.load();
+
+        final String DOMAIN = dotenv.get("VITE_AUTH0_DOMAIN");
+        final String CLIENT_ID = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_ID");
+        final String CLIENT_SECRET = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_SECRET");
 
         String user_id = request.getUserId();
         String newNickname = request.getNewNickname();
+        String jsonBody = "{\"client_id\":\"" + CLIENT_ID + "\",\"client_secret\":\"" + CLIENT_SECRET + "\",\"audience\":\"https://" + DOMAIN + "/api/v2/\",\"grant_type\":\"client_credentials\"}";
+        
+        System.out.println("\n\n\n\n" + jsonBody + "\n\n\n\n");
         
         HttpResponse<String> response = Unirest.post("https://" + DOMAIN + "/oauth/token")
                 .header("content-type", "application/json")
-                .body("{\"client_id\":" + CLIENT_ID + ",\"client_secret\":" + CLIENT_SECRET + ",\"audience\":\"https://dev-8a32t01frjlto3t2.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}")
+                .body(jsonBody)
                 .asString();
 
         JsonObject jsonResponse = JsonParser.parseString(response.getBody()).getAsJsonObject();
@@ -47,7 +53,6 @@ public class Auth0Controller {
     public static class UserUpdateRequest {
         private String userId;
         private String newNickname;
-        private String accessToken;
 
         // Getters and setters for userId, newNickname, and accessToken
         public String getUserId() {
@@ -56,10 +61,6 @@ public class Auth0Controller {
 
         public String getNewNickname() {
             return newNickname;
-        }
-
-        public String getAccessToken() {
-            return accessToken;
         }
     }
 }

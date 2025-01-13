@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
 import "../../css/Profile.css";
 
 export default function Profile() {
@@ -9,20 +10,23 @@ export default function Profile() {
     return <Navigate to="/" replace />;
   }
 
-  const updateNickname = async (nickname: string) => {
+  const updateNickname = async (newNickname: string) => {
     try {
-      const response = await fetch("http://localhost:4567/api/update-nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: user?.sub, nickname }),
-      });
+      // Get the Management API access token
+      const requestBody = {
+        user_id: user?.sub,
+        newNickname: newNickname,
+      }
 
-      const result = await response.json();
-      console.log(result.message);
-    } catch (err) {
-      console.error("Error updating nickname:", err);
+      await axios.post('http://localhost:8080/api/update-nickname', requestBody, {
+        headers: {
+          'Content-Type': 'application/json', // Set content type to JSON
+        }
+      });
+      alert(`Nickname updated to ${user?.nickname}`);
+    } catch (error) {
+      console.error("Error updating nickname:", error);
+      alert("Failed to update nickname.");
     }
   };
 

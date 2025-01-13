@@ -18,12 +18,14 @@ repositories {
 dependencies {
     // Spring Boot dependencies
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Auth0 Management API SDK
     implementation 'com.auth0:auth0:1.34.0'
+
+    implementation 'com.mashape.unirest:unirest-java:1.4.9'
+    implementation 'com.google.code.gson:gson:2.11.0'
 
     // Optional: Spring Boot DevTools for better development experience
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

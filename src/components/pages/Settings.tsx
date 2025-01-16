@@ -1,13 +1,15 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-import "../../css/Profile.css";
+import "../../css/Settings.css";
+import { useState } from "react";
 
-export default function Profile() {
-  const { user, isAuthenticated } = useAuth0();
+export default function Settings() {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const [nicknameCharacters, setNicknameCharacters] = useState<string>("");
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+  if (!isAuthenticated && !isLoading) {
+    return <Navigate to="/" />;
   }
 
   const updateNickname = async (newNickname: string) => {
@@ -28,8 +30,7 @@ export default function Profile() {
         }
       );
       alert(`Nickname updated to ${newNickname}`);
-    } catch (error) {
-      console.error("Error updating nickname:", error);
+    } catch {
       alert("Failed to update nickname.");
     }
   };
@@ -38,7 +39,15 @@ export default function Profile() {
     const maxFileSize = 10 * 1024 * 1024; // 10MB
 
     if (image.size > maxFileSize) {
-      alert('File size exceeds 10MB. Current file is ' + image.size + ' bytes.');
+      alert(
+        "File size exceeds 10MB. Current file is " + image.size + " bytes."
+      );
+      return;
+    }
+    if (!["image/jpeg", "image/jpg", "image/png"].includes(image.type)) {
+      alert(
+        "File type not supported. Please upload a .jpg, .jpeg, or .png file."
+      );
       return;
     }
 
@@ -54,14 +63,14 @@ export default function Profile() {
         },
       });
       alert(`Picture updated successfully`);
-    } catch (error) {
-      console.error("Error updating pciture:", error);
+      window.location.reload();
+    } catch {
       alert("Failed to update picture.");
     }
   };
 
   return (
-    <div>
+    <div className="bodyCont settingsPage">
       <img src={user?.picture} className="pfp"></img>
       <input
         type="file"
@@ -70,15 +79,25 @@ export default function Profile() {
           if (e.target.files?.[0]) updatePfp(e.target.files?.[0]);
         }}
       />
-      <input
-        type="text"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            updateNickname((e.target as HTMLInputElement).value);
-          }
-        }}
-        defaultValue={user?.nickname}
-      />
+      <div>
+        <input
+          type="text"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              updateNickname((e.target as HTMLInputElement).value);
+            }
+          }}
+          onChange={(e) => {
+            const target = e.target as HTMLInputElement;
+            if (target.value.length > 15) {
+              target.value = target.value.slice(0, 15);
+            }
+            setNicknameCharacters(target.value.length + "/15 characters");
+          }}
+          defaultValue={user?.nickname}
+        />
+        <p>{nicknameCharacters}</p>
+      </div>
     </div>
   );
 }

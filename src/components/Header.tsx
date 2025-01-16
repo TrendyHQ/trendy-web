@@ -1,7 +1,11 @@
 import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { CircleUserRound, LogOut, Settings } from "lucide-react";
+import {
+  LogOut,
+  MessageSquareWarning,
+  Settings,
+} from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
@@ -16,6 +20,8 @@ export default function Header() {
   const handleProfileClick = () => {
     setProfileDown(!profileDown);
   };
+
+  const iconSize: number = 26;
 
   return (
     <>
@@ -38,29 +44,39 @@ export default function Header() {
       </header>
       {isAuthenticated && (
         <div className={`dropDown ${profileDown ? "show" : ""}`}>
-          <div className="buttons">
-            <Link to="/profile">
+          <div className="upperQuadrant">
+            <div className="profileShowcase">
+              <img src={user?.picture} alt="Picture of User" className="pfp" />
+              <h3>{user?.nickname}</h3>
+            </div>
+          </div>
+          <div className="lowerQuadrant">
+            <div className="buttons">
               <button>
-                <CircleUserRound
-                  size={32}
-                  color={isDarkTheme ? "#f0f0f0" : "#333333"}
-                />{" "}
-                Profile
+                <div className="greyCircle">
+                  <Settings
+                    size={iconSize}
+                    color={isDarkTheme ? "#f0f0f0" : "#333333"}
+                  />
+                </div>{" "}
+                <Link to="/settings">Settings</Link>
               </button>
-            </Link>
-            <Link to="/settings">
               <button>
-                <Settings
-                  size={32}
-                  color={isDarkTheme ? "#f0f0f0" : "#333333"}
-                />{" "}
-                Settings
+                <div className="greyCircle">
+                  <MessageSquareWarning
+                    size={iconSize}
+                    color={isDarkTheme ? "#f0f0f0" : "#333333"}
+                  />
+                </div>{" "}
+                Give Feedback
               </button>
-            </Link>
-            <button onClick={() => logout()}>
-              <LogOut size={32} color={isDarkTheme ? "#f0f0f0" : "#333333"} />{" "}
-              Logout
-            </button>
+              <button onClick={() => logout()}>
+                <div className="greyCircle">
+                  <LogOut size={iconSize} color={isDarkTheme ? "#f0f0f0" : "#333333"} />
+                </div>{" "}
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -617,7 +617,7 @@
   flex-direction: column;
   height: 100%;
   margin-left: 31px;
-  gap: 3px;
+  gap: 4px;
 }
 
 .top-trend-name {
@@ -655,6 +655,7 @@
   display: flex;
   gap: 20px;
   align-items: center;
+  margin-bottom: 4px;
 }
 
 @media (prefers-color-scheme: light) {

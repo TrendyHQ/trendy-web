@@ -68,6 +68,13 @@ header a {
   cursor: pointer;
 }
 
+.loadingPfp{
+  height: 75%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #333333;
+}
+
 .dropDown {
   position: fixed;
   top: 0px;

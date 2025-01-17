@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export default function Settings() {
   const { user, isAuthenticated, isLoading } = useAuth0();
+  const [apiIsLoading, setApiIsLoading] = useState<boolean>(false);
   const [nicknameCharacters, setNicknameCharacters] = useState<string>("");
 
   if (!isAuthenticated && !isLoading) {
@@ -20,6 +21,8 @@ export default function Settings() {
         newNickname: newNickname,
       };
 
+      setApiIsLoading(true);
+
       await axios.put(
         "http://localhost:8080/api/update-nickname",
         requestBody,
@@ -29,8 +32,11 @@ export default function Settings() {
           },
         }
       );
+
+      setApiIsLoading(false);
       alert(`Nickname updated to ${newNickname}`);
     } catch {
+      setApiIsLoading(false);
       alert("Failed to update nickname.");
     }
   };
@@ -51,6 +57,8 @@ export default function Settings() {
       return;
     }
 
+    setApiIsLoading(true);
+
     try {
       const formData = new FormData();
 
@@ -62,12 +70,22 @@ export default function Settings() {
           "Content-Type": "multipart/form-data",
         },
       });
+      setApiIsLoading(false);
       alert(`Picture updated successfully`);
       window.location.reload();
     } catch {
+      setApiIsLoading(false);
       alert("Failed to update picture.");
     }
   };
+
+  if (isLoading || apiIsLoading) {
+    return (
+      <div className="loading-container">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bodyCont settingsPage">

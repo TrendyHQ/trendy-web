@@ -26,14 +26,6 @@ import { Trend } from "../../types";
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
 
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-  
   console.log(user);
 
   const topTrends: Trend[] = [
@@ -107,27 +99,28 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="bodyCont">
-      {!isAuthenticated && (
-        <div className="bg-container">
-          <img
-            className={`homeBackground ${isAuthenticated ? "dark" : ""}`}
-            src={bg}
-            alt="geometric shapes"
-          />
-        </div>
-      )}
-      <Header />
-      {!isAuthenticated && (
-        <div className="content">
-          <div className="title">
-            <h1 id="titleText">Sign up and discover the latest trends today</h1>
-            <a onClick={() => loginWithRedirect()}>Sign Up</a>
+  if (isLoading) {
+    return (
+      <div className="bodyCont">
+        <Header />
+        <div className="content bottom">
+          <div className="header-wrapper">
+            <div className="header-cont loading"></div>
+          </div>
+          <div className="body-wrapper">
+            <div className="left-body-cont loading"></div>
+            <div className="right-body-cont loading"></div>
           </div>
         </div>
-      )}
-      {isAuthenticated && (
+        <Footer />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return (
+      <div className="bodyCont">
+        <Header />
         <div className="content bottom">
           <div className="header-wrapper">
             <div className="header-cont">
@@ -229,8 +222,24 @@ export default function Home() {
             </div>
           </div>
         </div>
-      )}
-      <Footer />
-    </div>
-  );
+        <Footer />
+      </div>
+    );
+  } else {
+    return (
+      <div className="bodyCont">
+        <div className="bg-container">
+          <img className="homeBackground" src={bg} alt="geometric shapes" />
+        </div>
+        <Header />
+        <div className="content">
+          <div className="title">
+            <h1 id="titleText">Sign up and discover the latest trends today</h1>
+            <a onClick={() => loginWithRedirect()}>Sign Up</a>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 }

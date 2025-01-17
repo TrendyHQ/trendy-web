@@ -1,17 +1,14 @@
 import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import {
-  LogOut,
-  MessageSquareWarning,
-  Settings,
-} from "lucide-react";
+import { LogOut, MessageSquareWarning, Settings } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
   const [profileDown, setProfileDown] = useState<boolean>(false);
   const location = useLocation();
-  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, user, isLoading } =
+    useAuth0();
   const isDarkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)")
     .matches
     ? true
@@ -22,6 +19,17 @@ export default function Header() {
   };
 
   const iconSize: number = 26;
+
+  if (isLoading) {
+    return (
+      <header>
+        <h1 className="logo">TRENDY</h1>
+          <div
+            className="loadingPfp"
+          ></div>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -72,7 +80,10 @@ export default function Header() {
               </button>
               <button onClick={() => logout()}>
                 <div className="greyCircle">
-                  <LogOut size={iconSize} color={isDarkTheme ? "#f0f0f0" : "#333333"} />
+                  <LogOut
+                    size={iconSize}
+                    color={isDarkTheme ? "#f0f0f0" : "#333333"}
+                  />
                 </div>{" "}
                 Logout
               </button>

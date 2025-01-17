@@ -583,8 +583,8 @@
   content: "Wellness";
 }
 
-.categoryButton.business::before {
-  content: "Business";
+.categoryButton.music::before {
+  content: "Music";
 }
 
 .categoryButton.education::before {

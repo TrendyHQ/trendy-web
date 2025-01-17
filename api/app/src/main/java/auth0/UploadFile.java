@@ -10,7 +10,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 
 public class UploadFile {
 
-    public void setProperties(){
+    public void setProperties() {
         Dotenv dotenv = Dotenv.load();
 
         String keyId = dotenv.get("AWS_ACCESS_KEY_ID");
@@ -26,6 +26,9 @@ public class UploadFile {
         String bucketName = "trendy-assets";
         String fileName = file.getOriginalFilename();
 
+        if (fileName != null) {
+            fileName = fileName.replaceAll(" ", "_");
+        }
         // Initialize S3 client
         setProperties();
         S3Client s3 = S3Client.create();

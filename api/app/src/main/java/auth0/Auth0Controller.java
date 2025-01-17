@@ -1,5 +1,6 @@
 package auth0;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,36 +25,49 @@ public class Auth0Controller {
     final String CLIENT_SECRET = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_SECRET");
 
     @PutMapping("/update-nickname")
-    public void publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
+    public ResponseEntity<String> publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
+        try {
 
-        String user_id = request.getUserId();
-        String newNickname = request.getNewNickname();
+            String user_id = request.getUserId();
+            String newNickname = request.getNewNickname();
 
-        String accessToken = getAccessToken();
+            String accessToken = getAccessToken();
 
-        JsonObject requestBodyJson = new JsonObject();
-        requestBodyJson.addProperty("nickname", newNickname);
-        String requestBody = requestBodyJson.toString();
+            JsonObject requestBodyJson = new JsonObject();
+            requestBodyJson.addProperty("nickname", newNickname);
+            String requestBody = requestBodyJson.toString();
 
-        setUserProperty(requestBody, accessToken, user_id);
+            setUserProperty(requestBody, accessToken, user_id);
+            return ResponseEntity.ok("Nickname updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update nickname");
+        }
     }
 
     @PutMapping("/update-picture")
-    public void updatePicture(
+    public ResponseEntity<String> updatePicture(
             @RequestParam("userId") String userId,
             @RequestPart("file") MultipartFile file) throws Exception {
-        String user_id = userId;
-        MultipartFile newPicture = file;
+        try {
+            String user_id = userId;
+            MultipartFile newPicture = file;
 
-        String fileUrl = new UploadFile().uploadToS3(newPicture);
+            String fileUrl = new UploadFile().uploadToS3(newPicture);
 
-        String accessToken = getAccessToken();
+            String accessToken = getAccessToken();
 
-        JsonObject requestBodyJson = new JsonObject();
-        requestBodyJson.addProperty("picture", fileUrl);
-        String requestBody = requestBodyJson.toString();
+            JsonObject requestBodyJson = new JsonObject();
+            requestBodyJson.addProperty("picture", fileUrl);
+            String requestBody = requestBodyJson.toString();
 
-        setUserProperty(requestBody, accessToken, user_id);
+            setUserProperty(requestBody, accessToken, user_id);
+
+            return ResponseEntity.ok("Nickname updated successfully");
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update nickname");
+        }
+
     }
 
     public static class UserUpdateRequest {

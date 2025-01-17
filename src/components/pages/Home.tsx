@@ -7,7 +7,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowDown,
   ArrowUp,
-  Banknote,
   Clapperboard,
   CupSoda,
   Dumbbell,
@@ -17,6 +16,7 @@ import {
   HeartPulse,
   Icon,
   MessageCircle,
+  Music,
   Plane,
   Shirt,
 } from "lucide-react";
@@ -33,7 +33,7 @@ export default function Home() {
       </div>
     );
   }
-
+  
   console.log(user);
 
   const topTrends: Trend[] = [
@@ -86,8 +86,8 @@ export default function Home() {
         return <Dumbbell size={size} />;
       case "wellness":
         return <HeartPulse size={size} />;
-      case "business":
-        return <Banknote size={size} />;
+      case "music":
+        return <Music size={size} />;
       case "education":
         return <GraduationCap size={size} />;
       case "travel":
@@ -183,9 +183,9 @@ export default function Home() {
                     <HeartPulse size={42} />
                   </button>
                 </Link>
-                <Link to="/categories/business">
-                  <button className="categoryButton business">
-                    <Banknote size={42} />
+                <Link to="/categories/music">
+                  <button className="categoryButton music">
+                    <Music size={42} />
                   </button>
                 </Link>
                 <Link to="/categories/education">

@@ -25,7 +25,7 @@ export default function Header() {
       <header>
         <h1 className="logo">TRENDY</h1>
           <div
-            className="loadingPfp"
+            className="loadingPfp loading"
           ></div>
       </header>
     );
@@ -55,7 +55,7 @@ export default function Header() {
           <div className="upperQuadrant">
             <div className="profileShowcase">
               <img src={user?.picture} alt="Picture of User" className="pfp" />
-              <h3>{user?.nickname}</h3>
+              <h3 className="userName">{user?.nickname}</h3>
             </div>
           </div>
           <div className="lowerQuadrant">

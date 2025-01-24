@@ -32,7 +32,7 @@ export default function Home() {
     {
       name: "TikTok",
       category: "social",
-      more_relevant: true,
+      more_relevant: false,
     },
     {
       name: "Sustainable and Genderless Clothing",
@@ -225,21 +225,20 @@ export default function Home() {
         <Footer />
       </div>
     );
-  } else {
-    return (
-      <div className="bodyCont">
-        <div className="bg-container">
-          <img className="homeBackground" src={bg} alt="geometric shapes" />
-        </div>
-        <Header />
-        <div className="content">
-          <div className="title">
-            <h1 id="titleText">Sign up and discover the latest trends today</h1>
-            <a onClick={() => loginWithRedirect()}>Sign Up</a>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
   }
+  return (
+    <div className="bodyCont">
+      <div className="bg-container">
+        {/* <img className="homeBackground" src={bg} alt="geometric shapes" /> */}
+      </div>
+      <Header />
+      <div className="content">
+        <div className="title">
+          <h1 id="titleText">Sign up and discover the latest trends today</h1>
+          <a onClick={() => loginWithRedirect()}>Sign Up</a>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
 }

@@ -13,18 +13,19 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.HttpResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import socialData.RedditData;
 import io.github.cdimascio.dotenv.Dotenv;
 
 @RestController
 @RequestMapping("/api") // Define the base URL for your endpoints
-public class Auth0Controller {
+public class MainController {
     Dotenv dotenv = Dotenv.load();
 
     final String DOMAIN = dotenv.get("VITE_AUTH0_DOMAIN");
     final String CLIENT_ID = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_ID");
     final String CLIENT_SECRET = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_SECRET");
 
-    @PutMapping("/update-nickname")
+    @PutMapping("auth0/update-nickname")
     public ResponseEntity<String> publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
         try {
 
@@ -44,7 +45,7 @@ public class Auth0Controller {
         }
     }
 
-    @PutMapping("/update-picture")
+    @PutMapping("auth0/update-picture")
     public ResponseEntity<String> updatePicture(
             @RequestParam("userId") String userId,
             @RequestPart("file") MultipartFile file) throws Exception {
@@ -68,6 +69,15 @@ public class Auth0Controller {
             return ResponseEntity.badRequest().body("Failed to update nickname");
         }
 
+    }
+
+    @PutMapping("socialData/twitter")
+    public ResponseEntity<String> updatePicture() {
+        try {
+            return ResponseEntity.ok(new RedditData().getData());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update nickname");
+        }
     }
 
     public static class UserUpdateRequest {

@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class Auth0Application {
     public static void main(String[] args) {
-        SpringApplication.run(Auth0Application.class, args);
+        SpringApplication.run(MainController.class, args);
     }
 }

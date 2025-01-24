@@ -523,9 +523,10 @@
 
 .left-body-cont.loading,
 .right-body-cont.loading,
-.header-cont.loading {
+.header-cont.loading,
+.loadingPfp.loading {
   background-color: #424242;
-  animation: loading 1.8s ease-in infinite ;
+  animation: loading 1.5s ease-in infinite;
 }
 
 .categoryButton {

@@ -24,7 +24,7 @@ export default function Settings() {
       setApiIsLoading(true);
 
       await axios.put(
-        "http://localhost:8080/api/update-nickname",
+        "http://localhost:8080/api/auth0/update-nickname",
         requestBody,
         {
           headers: {
@@ -65,7 +65,7 @@ export default function Settings() {
       formData.append("userId", user?.sub || "");
       formData.append("file", image);
 
-      await axios.put("http://localhost:8080/api/update-picture", formData, {
+      await axios.put("http://localhost:8080/api/auth0/update-picture", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

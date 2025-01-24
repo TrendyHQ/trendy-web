@@ -68,7 +68,7 @@ header a {
   cursor: pointer;
 }
 
-.loadingPfp{
+.loadingPfp {
   height: 75%;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -114,7 +114,7 @@ header a {
   align-items: center;
 }
 
-.dropDown .upperQuadrant{
+.dropDown .upperQuadrant {
   background-color: #242424;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -161,11 +161,23 @@ header a {
 }
 
 .profileShowcase .pfp {
-  width: 50px;
+  width: 42px;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 50%;
   overflow: hidden;
+}
+
+.profileShowcase {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profileShowcase .userName {
+  font-size: 1rem;
+  font-family: "M PLUS 2", Josefin Sans, sans-serif;
+  font-weight: bold;
 }
 
 .greyCircle {

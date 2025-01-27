@@ -13,8 +13,9 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.HttpResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import socialData.RedditData;
+
 import io.github.cdimascio.dotenv.Dotenv;
+import trendData.RedditData;
 
 @RestController
 @RequestMapping("/api") // Define the base URL for your endpoints

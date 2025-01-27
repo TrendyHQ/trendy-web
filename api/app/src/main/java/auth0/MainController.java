@@ -72,7 +72,7 @@ public class MainController {
 
     }
 
-    @PutMapping("socialData/twitter")
+    @PutMapping("trendData/reddit")
     public ResponseEntity<String> updatePicture() {
         try {
             return ResponseEntity.ok(new RedditData().getData());

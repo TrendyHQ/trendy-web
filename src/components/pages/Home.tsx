@@ -2,7 +2,6 @@ import Header from "../Header";
 import Footer from "../Footer";
 import "../../css/Home.css";
 import { Link } from "react-router-dom";
-import bg from "../../assets/background.svg";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowDown,

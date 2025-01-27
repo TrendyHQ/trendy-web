@@ -12,12 +12,7 @@ import net.dean.jraw.references.SubredditReference;
 import net.dean.jraw.models.SubredditSort;
 
 public class RedditData {
-    public static void main(String[] args) {
-        String data = getData();
-        System.out.println(data);
-    }
-
-    public static String getData() {
+    public String getData() {
         // Load environment variables
         Dotenv dotenv = Dotenv.load();
 

@@ -16,8 +16,10 @@ export default function Settings() {
   const updateNickname = async (newNickname: string) => {
     try {
       // Get the Management API access token
+      const encodedUserId = encodeURIComponent(user?.sub || ""); 
+
       const requestBody = {
-        userId: user?.sub,
+        userId: encodedUserId,
         newNickname: newNickname,
       };
 
@@ -35,9 +37,10 @@ export default function Settings() {
 
       setApiIsLoading(false);
       alert(`Nickname updated to ${newNickname}`);
-    } catch {
+    } catch (e) {
       setApiIsLoading(false);
       alert("Failed to update nickname.");
+      console.error(e);
     }
   };
 

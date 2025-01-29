@@ -22,45 +22,45 @@ import {
 import { football } from "@lucide/lab";
 import { Trend } from "../../types";
 import axios from "axios";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
 
   console.log(user);
 
-  const topTrends: Trend[] = [
+  const [topTrends, setTopTrends] = useState<Trend[]>([
     {
-      name: "TikTok",
+      title: "TikTok",
       category: "social",
       more_relevant: false,
     },
     {
-      name: "Sustainable and Genderless Clothing",
+      title: "Sustainable and Genderless Clothing",
       category: "fashion",
       more_relevant: true,
     },
     {
-      name: "Mindfulness and Mental Health Apps",
+      title: "Mindfulness and Mental Health Apps",
       category: "wellness",
       more_relevant: true,
     },
     {
-      name: "Facebook Usage",
+      title: "Facebook Usage",
       category: "social",
       more_relevant: false,
     },
     {
-      name: "Esports and Gaming Communities",
+      title: "Esports and Gaming Communities",
       category: "entertainment",
       more_relevant: false,
     },
     {
-      name: "Anime",
+      title: "Anime",
       category: "entertainment",
       more_relevant: true,
     },
-  ];
+  ]);
 
   const getIcon = (categorie: string) => {
     const size = 30;
@@ -93,15 +93,15 @@ export default function Home() {
     }
   };
 
-  const getTopTrends = () => {
+  const updateTopTrends = useCallback(() => {
     axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
-      console.log(res);
+      setTopTrends(res.data);
     });
-  };
+  }, []);
 
   useEffect(() => {
-    getTopTrends();
-  }, []);
+    updateTopTrends();
+  }, [updateTopTrends]);
 
   const getRelevancy = (moreRelevant: boolean) => {
     if (moreRelevant) {
@@ -224,7 +224,7 @@ export default function Home() {
                       <div className="top-trend-icon">
                         {getIcon(trend.category)}
                       </div>
-                      <h2 className="top-trend-name">{trend.name}</h2>
+                      <h2 className="top-trend-name">{trend.title}</h2>
                       <div>{getRelevancy(trend.more_relevant)}</div>
                     </div>
                     {index < 5 && <div className="trend-divider"></div>}

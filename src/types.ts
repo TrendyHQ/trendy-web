@@ -1,6 +1,6 @@
 interface Trend {
   category: string;
-  name: string;
+  title: string;
   more_relevant: boolean;
 }
 

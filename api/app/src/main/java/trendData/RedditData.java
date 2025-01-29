@@ -1,6 +1,11 @@
 package trendData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.github.cdimascio.dotenv.Dotenv;
+
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.OkHttpNetworkAdapter;
 import net.dean.jraw.http.UserAgent;
@@ -12,7 +17,7 @@ import net.dean.jraw.references.SubredditReference;
 import net.dean.jraw.models.SubredditSort;
 
 public class RedditData {
-    public String getData() {
+    public Object getData(String subredditName) {
         // Load environment variables
         Dotenv dotenv = Dotenv.load();
 
@@ -20,6 +25,8 @@ public class RedditData {
         String password = dotenv.get("REDDIT_PASSWORD");
         String clientId = dotenv.get("REDDIT_CLIENT_ID");
         String clientSecret = dotenv.get("REDDIT_CLIENT_SECRET");
+
+        final Map<String, PostData> postHistory = new HashMap<>();
 
         // Set up Reddit API credentials
         Credentials credentials = Credentials.script(
@@ -32,25 +39,67 @@ public class RedditData {
         UserAgent userAgent = new UserAgent("bot", "com.example.redditapp", "v1.0", username);
 
         // Authenticate with the Reddit API
-        RedditClient redditClient = OAuthHelper.automatic(
-                new OkHttpNetworkAdapter(userAgent),
-                credentials);
+        RedditClient redditClient = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);
 
         // Access a subreddit
-        SubredditReference subreddit = redditClient.subreddit("fashion");
+        SubredditReference subreddit = redditClient.subreddit(subredditName);
 
         // Fetch top posts
         DefaultPaginator<Submission> topPosts = subreddit.posts()
-                .sorting(SubredditSort.HOT)
-                .limit(5) // Fetch top 5 posts
+                .sorting(SubredditSort.BEST)
+                .limit(2) // Fetch top 5 posts
                 .build();
 
         // Collect the titles of the top posts
-        StringBuilder result = new StringBuilder("Top posts from /r/fashion:\n");
+        ArrayList<RedditPost> posts = new ArrayList<>();
         for (Submission post : topPosts.next()) {
-            result.append("- ").append(post.getTitle()).append("\n");
-        }
+            String postId = post.getId();
+            int score = post.getScore();
+            int numComments = post.getCommentCount();
 
-        return result.toString();
+            // Check if this post has been seen before
+            boolean more_relevant = false;
+            if (postHistory.containsKey(postId)) {
+                PostData previousData = postHistory.get(postId);
+
+                // Determine trend status
+                boolean scoreIncreasing = score > previousData.score;
+                boolean commentsIncreasing = numComments > previousData.numComments;
+
+                // Post is "more relevant" if it's gaining score and engagement
+                more_relevant = scoreIncreasing && commentsIncreasing;
+            }
+
+            // Store updated post data
+            if(!post.getTitle().contains("r/") && !post.isNsfw()) {
+                postHistory.put(postId, new PostData(score, numComments));
+                posts.add(new RedditPost(post.getTitle(), subredditName, more_relevant)); 
+            }
+        }
+        posts.forEach(redditPost -> System.out.println(redditPost));
+        
+        return posts;
+    }
+
+    private static class PostData {
+        int score;
+        int numComments;
+
+        public PostData(int score, int numComments) {
+            this.score = score;
+            this.numComments = numComments;
+        }
+    }
+
+    private static class RedditPost{
+        String title;
+        String category;
+        boolean more_relevant;
+
+        public RedditPost(String title, String category, boolean more_relevant){
+            this.title = title;
+            this.category = category;
+            this.more_relevant = more_relevant;
+        }
     }
 }

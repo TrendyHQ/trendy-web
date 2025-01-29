@@ -84,7 +84,7 @@ public class MainController {
     @PostMapping("/trendData/reddit")
     public ResponseEntity<String> updatePicture() {
         try {
-            return ResponseEntity.ok(new RedditData().getData());
+            return ResponseEntity.ok(new RedditData().getData("fashion").toString());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update nickname: " + e.getMessage());
         }

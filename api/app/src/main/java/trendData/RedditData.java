@@ -38,6 +38,7 @@ public class RedditData {
         UserAgent userAgent = new UserAgent("bot", "com.example.redditapp", "v1.0", username);
 
         // Authenticate with the Reddit API
+        // ! This is the line that throws an error often
         RedditClient redditClient = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);
 
         // Access a subreddit
@@ -80,6 +81,13 @@ public class RedditData {
                     }
                 }
             }
+            
+            System.out.println("Post history contents:");
+            for (Map.Entry<String, PostData> entry : postHistory.entrySet()) {
+                System.out.println("ID: " + entry.getKey() + " | Score: " + entry.getValue().score + " | Comments: "
+                        + entry.getValue().numComments);
+            }
+
         }
 
         return posts;
@@ -95,11 +103,12 @@ public class RedditData {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class RedditPost {
+        private int score;
         private String title;
         private String category;
         private boolean more_relevant;
-        private int score;
 
         public RedditPost(String title, String category, boolean more_relevant, int score) {
             this.title = title;

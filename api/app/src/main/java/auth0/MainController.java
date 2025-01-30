@@ -27,6 +27,7 @@ import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
 import trendData.RedditData;
 import trendData.RedditData.RedditPost;
+import java.util.concurrent.CompletableFuture;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @RestController
@@ -92,23 +93,41 @@ public class MainController {
     public ResponseEntity<String> getRedditData() {
         try {
             RedditData redditData = new RedditData();
+            CompletableFuture<RedditPost[]> fashionFuture = CompletableFuture.supplyAsync(() -> redditData.getData("fashion"));
+            CompletableFuture<RedditPost[]> technologyFuture = CompletableFuture.supplyAsync(() -> redditData.getData("technology"));
+            CompletableFuture<RedditPost[]> foodFuture = CompletableFuture.supplyAsync(() -> redditData.getData("food"));
+            CompletableFuture<RedditPost[]> entertainmentFuture = CompletableFuture.supplyAsync(() -> redditData.getData("entertainment"));
+            CompletableFuture<RedditPost[]> socialMediaFuture = CompletableFuture.supplyAsync(() -> redditData.getData("socialmedia"));
+            CompletableFuture<RedditPost[]> fitnessFuture = CompletableFuture.supplyAsync(() -> redditData.getData("fitness"));
+            CompletableFuture<RedditPost[]> wellnessFuture = CompletableFuture.supplyAsync(() -> redditData.getData("wellness"));
+            CompletableFuture<RedditPost[]> musicFuture = CompletableFuture.supplyAsync(() -> redditData.getData("music"));
+            CompletableFuture<RedditPost[]> educationFuture = CompletableFuture.supplyAsync(() -> redditData.getData("education"));
+            CompletableFuture<RedditPost[]> travelFuture = CompletableFuture.supplyAsync(() -> redditData.getData("travel"));
+            CompletableFuture<RedditPost[]> scienceFuture = CompletableFuture.supplyAsync(() -> redditData.getData("science"));
+            CompletableFuture<RedditPost[]> sportsFuture = CompletableFuture.supplyAsync(() -> redditData.getData("sports"));
 
-            RedditPost[] fashionData = redditData.getData("fashion");
-            RedditPost[] technologyData = redditData.getData("technology");
-            RedditPost[] foodData = redditData.getData("food");
-            RedditPost[] entertainmentData = redditData.getData("entertainment");
-            RedditPost[] socialMediaData = redditData.getData("socialmedia");
-            RedditPost[] fitnessData = redditData.getData("fitness");
-            RedditPost[] wellnessData = redditData.getData("wellness");
-            RedditPost[] musicData = redditData.getData("music");
-            RedditPost[] educationData = redditData.getData("education");
-            RedditPost[] travelData = redditData.getData("travel");
-            RedditPost[] scienceData = redditData.getData("science");
-            RedditPost[] sportsData = redditData.getData("sports");
+            CompletableFuture.allOf(
+                fashionFuture, technologyFuture, foodFuture, entertainmentFuture,
+                socialMediaFuture, fitnessFuture, wellnessFuture, musicFuture,
+                educationFuture, travelFuture, scienceFuture, sportsFuture
+            ).join();
+
+            RedditPost[] fashionData = fashionFuture.get();
+            RedditPost[] technologyData = technologyFuture.get();
+            RedditPost[] foodData = foodFuture.get();
+            RedditPost[] entertainmentData = entertainmentFuture.get();
+            RedditPost[] socialMediaData = socialMediaFuture.get();
+            RedditPost[] fitnessData = fitnessFuture.get();
+            RedditPost[] wellnessData = wellnessFuture.get();
+            RedditPost[] musicData = musicFuture.get();
+            RedditPost[] educationData = educationFuture.get();
+            RedditPost[] travelData = travelFuture.get();
+            RedditPost[] scienceData = scienceFuture.get();
+            RedditPost[] sportsData = sportsFuture.get();
 
             RedditPost[][] data = {
-                    fashionData, technologyData, foodData, entertainmentData, socialMediaData,
-                    fitnessData, wellnessData, musicData, educationData, travelData, scienceData, sportsData
+                fashionData, technologyData, foodData, entertainmentData, socialMediaData,
+                fitnessData, wellnessData, musicData, educationData, travelData, scienceData, sportsData
             };
 
             // Collect all posts into a single list

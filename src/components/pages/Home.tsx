@@ -25,9 +25,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
-  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
-
-  console.log(user);
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[]>([
     {
@@ -68,7 +66,7 @@ export default function Home() {
     switch (categorie) {
       case "fashion":
         return <Shirt size={size} />;
-      case "tech":
+      case "technology":
         return <Headset size={size} />;
       case "food":
         return <CupSoda size={size} />;
@@ -132,6 +130,11 @@ export default function Home() {
         <Footer />
       </div>
     );
+  }
+
+  const getTrendTitle = (trend: Trend) => {
+    if(trend.title.length <= 40) return trend.title; 
+    else return trend.title.slice(0, 37) + "...";
   }
 
   if (isAuthenticated) {
@@ -229,7 +232,7 @@ export default function Home() {
                       <div className="top-trend-icon">
                         {getIcon(trend.category)}
                       </div>
-                      <h2 className="top-trend-name">{trend.title.slice(0, 36) + " ..."}</h2>
+                      <h2 className="top-trend-name">{getTrendTitle(trend)}</h2>
                       <div>{getRelevancy(trend.more_relevant)}</div>
                     </div>
                     {index < 5 && <div className="trend-divider"></div>}

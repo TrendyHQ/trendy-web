@@ -133,9 +133,11 @@ export default function Home() {
   }
 
   const getTrendTitle = (trend: Trend) => {
-    if(trend.title.length <= 40) return trend.title; 
-    else return trend.title.slice(0, 37) + "...";
-  }
+    if (trend.title.length <= 48) return trend.title;
+    const slicePoint = trend.title.indexOf(" ", 45);
+    if (slicePoint !== -1) return trend.title.slice(0, slicePoint) + "...";
+    return trend.title.slice(0, 45) + "...";
+  };
 
   if (isAuthenticated) {
     return (

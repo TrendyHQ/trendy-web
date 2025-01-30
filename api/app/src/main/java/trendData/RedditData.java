@@ -46,7 +46,7 @@ public class RedditData {
 
         // Fetch top posts
         DefaultPaginator<Submission> topPosts = subreddit.posts()
-                .sorting(SubredditSort.HOT)
+                .sorting(SubredditSort.TOP)
                 .limit(2) // Fetch top 2 posts
                 .build();
 
@@ -81,7 +81,7 @@ public class RedditData {
                     }
                 }
             }
-            
+
             System.out.println("Post history contents:");
             for (Map.Entry<String, PostData> entry : postHistory.entrySet()) {
                 System.out.println("ID: " + entry.getKey() + " | Score: " + entry.getValue().score + " | Comments: "

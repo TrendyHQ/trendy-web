@@ -95,9 +95,14 @@ export default function Home() {
 
   const updateTopTrends = useCallback(() => {
     axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
+      console.log(res.data);
       setTopTrends(res.data);
     });
   }, []);
+
+  setInterval(() => {
+    updateTopTrends();
+  }, 180000);
 
   useEffect(() => {
     updateTopTrends();
@@ -224,7 +229,7 @@ export default function Home() {
                       <div className="top-trend-icon">
                         {getIcon(trend.category)}
                       </div>
-                      <h2 className="top-trend-name">{trend.title}</h2>
+                      <h2 className="top-trend-name">{trend.title.slice(0, 36) + " ..."}</h2>
                       <div>{getRelevancy(trend.more_relevant)}</div>
                     </div>
                     {index < 5 && <div className="trend-divider"></div>}

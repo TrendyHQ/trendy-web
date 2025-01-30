@@ -9,10 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -20,6 +26,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
 import trendData.RedditData;
+import trendData.RedditData.RedditPost;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @RestController
@@ -82,11 +89,54 @@ public class MainController {
     }
 
     @PostMapping("/trendData/reddit")
-    public ResponseEntity<String> updatePicture() {
+    public ResponseEntity<String> getRedditData() {
         try {
-            return ResponseEntity.ok(new RedditData().getData("fashion").toString());
+            RedditData redditData = new RedditData();
+
+            RedditPost[] fashionData = redditData.getData("fashion");
+            RedditPost[] technologyData = redditData.getData("technology");
+            RedditPost[] foodData = redditData.getData("food");
+            RedditPost[] entertainmentData = redditData.getData("entertainment");
+            RedditPost[] socialMediaData = redditData.getData("socialmedia");
+            RedditPost[] fitnessData = redditData.getData("fitness");
+            RedditPost[] wellnessData = redditData.getData("wellness");
+            RedditPost[] musicData = redditData.getData("music");
+            RedditPost[] educationData = redditData.getData("education");
+            RedditPost[] travelData = redditData.getData("travel");
+            RedditPost[] scienceData = redditData.getData("science");
+            RedditPost[] sportsData = redditData.getData("sports");
+
+            RedditPost[][] data = {
+                    fashionData, technologyData, foodData, entertainmentData, socialMediaData,
+                    fitnessData, wellnessData, musicData, educationData, travelData, scienceData, sportsData
+            };
+
+            // Collect all posts into a single list
+            List<RedditPost> allPosts = new ArrayList<>();
+            for (RedditPost[] subredditData : data) {
+                if (subredditData != null) { // Ensure that the subredditData is not null
+                    Collections.addAll(allPosts, subredditData);
+                }
+            }
+
+            // Sort posts by score in descending order
+            allPosts.sort((p1, p2) -> {
+                if (p1 != null && p2 != null) {
+                    return Integer.compare(p2.getScore(), p1.getScore());
+                }
+                return 0; // If either p1 or p2 is null, consider them equal for sorting purposes
+            });
+
+            // Take top 6 posts or as many as are available
+            RedditPost[] topPosts = new RedditPost[Math.min(6, allPosts.size())];
+            for (int i = 0; i < topPosts.length; i++) {
+                topPosts[i] = allPosts.get(i);
+            }
+
+            return ResponseEntity.ok(new Gson().toJson(topPosts));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to update nickname: " + e.getMessage());
+            System.err.println(e);
+            return ResponseEntity.badRequest().body("Failed to recieve data: " + e.getMessage());
         }
     }
 

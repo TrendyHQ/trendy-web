@@ -1,6 +1,5 @@
 package trendData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import net.dean.jraw.references.SubredditReference;
 import net.dean.jraw.models.SubredditSort;
 
 public class RedditData {
-    public Object getData(String subredditName) {
+    public RedditPost[] getData(String subredditName) {
         // Load environment variables
         Dotenv dotenv = Dotenv.load();
 
@@ -46,12 +45,13 @@ public class RedditData {
 
         // Fetch top posts
         DefaultPaginator<Submission> topPosts = subreddit.posts()
-                .sorting(SubredditSort.BEST)
-                .limit(2) // Fetch top 5 posts
+                .sorting(SubredditSort.HOT)
+                .limit(2) // Fetch top 2 posts
                 .build();
 
         // Collect the titles of the top posts
-        ArrayList<RedditPost> posts = new ArrayList<>();
+        RedditPost[] posts = new RedditPost[2];
+
         for (Submission post : topPosts.next()) {
             String postId = post.getId();
             int score = post.getScore();
@@ -71,13 +71,17 @@ public class RedditData {
             }
 
             // Store updated post data
-            if(!post.getTitle().contains("r/") && !post.isNsfw()) {
+            if (!post.getTitle().contains("r/") && !post.isNsfw()) {
                 postHistory.put(postId, new PostData(score, numComments));
-                posts.add(new RedditPost(post.getTitle(), subredditName, more_relevant)); 
+                for (int i = 0; i < posts.length; i++) {
+                    if (posts[i] == null) {
+                        posts[i] = new RedditPost(post.getTitle(), subredditName, more_relevant, score);
+                        break;
+                    }
+                }
             }
         }
-        posts.forEach(redditPost -> System.out.println(redditPost));
-        
+
         return posts;
     }
 
@@ -91,15 +95,21 @@ public class RedditData {
         }
     }
 
-    private static class RedditPost{
-        String title;
-        String category;
-        boolean more_relevant;
+    public static class RedditPost {
+        private String title;
+        private String category;
+        private boolean more_relevant;
+        private int score;
 
-        public RedditPost(String title, String category, boolean more_relevant){
+        public RedditPost(String title, String category, boolean more_relevant, int score) {
             this.title = title;
             this.category = category;
             this.more_relevant = more_relevant;
+            this.score = score;
+        }
+
+        public int getScore() {
+            return score;
         }
     }
 }

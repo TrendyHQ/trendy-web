@@ -65,7 +65,7 @@ sourceSets {
 }
 
 application {
-    mainClass = 'auth0.Auth0Application'
+    mainClass = 'auth0.MainController'
 }
 
 testing {

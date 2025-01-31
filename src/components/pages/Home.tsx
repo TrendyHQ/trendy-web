@@ -100,7 +100,7 @@ export default function Home() {
 
   setInterval(() => {
     updateTopTrends();
-  }, 180000);
+  }, 60000);
 
   useEffect(() => {
     updateTopTrends();

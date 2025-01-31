@@ -1,7 +1,6 @@
 package trendData.reddit;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -16,7 +15,7 @@ import net.dean.jraw.references.SubredditReference;
 import net.dean.jraw.models.SubredditSort;
 
 public class RedditData {
-    public RedditPost[] getData(String subredditName) {
+    public RedditPost[] getData(String subredditName) throws SQLException {
         // Load environment variables
         Dotenv dotenv = Dotenv.load();
 
@@ -24,8 +23,6 @@ public class RedditData {
         String password = dotenv.get("REDDIT_PASSWORD");
         String clientId = dotenv.get("REDDIT_CLIENT_ID");
         String clientSecret = dotenv.get("REDDIT_CLIENT_SECRET");
-
-        final Map<String, PostData> postHistory = new HashMap<>();
 
         // Set up Reddit API credentials
         Credentials credentials = Credentials.script(
@@ -38,7 +35,6 @@ public class RedditData {
         UserAgent userAgent = new UserAgent("bot", "com.example.redditapp", "v1.0", username);
 
         // Authenticate with the Reddit API
-        // ! This is the line that throws an error often
         RedditClient redditClient = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);
 
         // Access a subreddit
@@ -46,7 +42,7 @@ public class RedditData {
 
         // Fetch top posts
         DefaultPaginator<Submission> topPosts = subreddit.posts()
-                .sorting(SubredditSort.TOP)
+                .sorting(SubredditSort.HOT)
                 .limit(2) // Fetch top 2 posts
                 .build();
 
@@ -56,24 +52,16 @@ public class RedditData {
         for (Submission post : topPosts.next()) {
             String postId = post.getId();
             int score = post.getScore();
-            int numComments = post.getCommentCount();
 
             // Check if this post has been seen before
-            boolean more_relevant = false;
-            if (postHistory.containsKey(postId)) {
-                PostData previousData = postHistory.get(postId);
-
-                // Determine trend status
-                boolean scoreIncreasing = score > previousData.score;
-                boolean commentsIncreasing = numComments > previousData.numComments;
-
-                // Post is "more relevant" if it's gaining score and engagement
-                more_relevant = scoreIncreasing && commentsIncreasing;
-            }
+            boolean more_relevant = new TrendAnalyzer().isPostGoingUp(postId);
 
             // Store updated post data
             if (!post.getTitle().contains("r/") && !post.isNsfw()) {
-                postHistory.put(postId, new PostData(score, numComments));
+                RedditDataStorage storage = new RedditDataStorage();
+
+                storage.storeRedditPostData(post);
+
                 for (int i = 0; i < posts.length; i++) {
                     if (posts[i] == null) {
                         posts[i] = new RedditPost(post.getTitle(), subredditName, more_relevant, score);
@@ -81,26 +69,9 @@ public class RedditData {
                     }
                 }
             }
-
-            System.out.println("Post history contents:");
-            for (Map.Entry<String, PostData> entry : postHistory.entrySet()) {
-                System.out.println("ID: " + entry.getKey() + " | Score: " + entry.getValue().score + " | Comments: "
-                        + entry.getValue().numComments);
-            }
-
         }
 
         return posts;
-    }
-
-    private static class PostData {
-        int score;
-        int numComments;
-
-        public PostData(int score, int numComments) {
-            this.score = score;
-            this.numComments = numComments;
-        }
     }
 
     @SuppressWarnings("unused")

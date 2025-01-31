@@ -1,4 +1,4 @@
-package trendData;
+package trendData.reddit;
 
 import java.util.HashMap;
 import java.util.Map;

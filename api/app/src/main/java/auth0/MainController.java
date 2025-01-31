@@ -25,8 +25,9 @@ import com.google.gson.JsonParser;
 import io.github.cdimascio.dotenv.Dotenv;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
-import trendData.RedditData;
-import trendData.RedditData.RedditPost;
+import trendData.reddit.RedditData;
+import trendData.reddit.RedditData.RedditPost;
+
 import java.util.concurrent.CompletableFuture;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })

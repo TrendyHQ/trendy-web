@@ -2,6 +2,10 @@ package trendData.reddit;
 
 import java.sql.SQLException;
 
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.pagination.DefaultPaginator;
@@ -10,6 +14,10 @@ import net.dean.jraw.models.SubredditSort;
 
 public class RedditData {
     public RedditPost[] getData(String subredditName, RedditClientManager redditClientManager) throws SQLException {
+
+        // Disable logging for JRAW
+        Logger jrawLogger = (Logger) LoggerFactory.getLogger("net.dean.jraw");
+        jrawLogger.setLevel(Level.OFF);
 
         if (redditClientManager.getClient() == null) {
             redditClientManager.autherizeClient();

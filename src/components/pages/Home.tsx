@@ -23,12 +23,13 @@ import {
 import { football } from "@lucide/lab";
 import { Trend } from "../../types";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
+  const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
 
   const getIcon = (categorie: string) => {
     const size = 30;
@@ -61,12 +62,33 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    try {
+      if (hotTrendsLoading == false) {
+        console.log("updating top trends");
+        setHotTrendsLoading(true);
+        axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
+          console.log(res.data);
+          setTopTrends(res.data);
+          setHotTrendsLoading(false);
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   const updateTopTrends = () => {
     try {
-      axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
-        console.log(res.data);
-        setTopTrends(res.data);
-      });
+      if (hotTrendsLoading == false) {
+        setHotTrendsLoading(true);
+        console.log("updating top trends");
+        axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
+          console.log(res.data);
+          setTopTrends(res.data);
+          setHotTrendsLoading(false);
+        });
+      }
     } catch (e) {
       console.log(e);
     }

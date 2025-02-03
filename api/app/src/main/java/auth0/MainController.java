@@ -97,16 +97,27 @@ public class MainController {
             RedditData redditData = new RedditData();
 
             CompletableFuture<RedditPost[]> fashionFuture = requestDataFromReddit(redditData, "fashion");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> technologyFuture = requestDataFromReddit(redditData, "technology");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> foodFuture = requestDataFromReddit(redditData, "food");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> entertainmentFuture = requestDataFromReddit(redditData, "entertainment");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> socialMediaFuture = requestDataFromReddit(redditData, "socialmedia");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> fitnessFuture = requestDataFromReddit(redditData, "fitness");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> wellnessFuture = requestDataFromReddit(redditData, "wellness");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> musicFuture = requestDataFromReddit(redditData, "music");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> educationFuture = requestDataFromReddit(redditData, "education");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> travelFuture = requestDataFromReddit(redditData, "travel");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> scienceFuture = requestDataFromReddit(redditData, "science");
+            waitForSeconds();
             CompletableFuture<RedditPost[]> sportsFuture = requestDataFromReddit(redditData, "sports");
 
             CompletableFuture.allOf(
@@ -210,5 +221,13 @@ public class MainController {
             }
             return null;
         });
+    }
+
+    private void waitForSeconds() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

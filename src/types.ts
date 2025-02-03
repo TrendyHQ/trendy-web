@@ -1,7 +1,7 @@
 interface Trend {
   category: string;
   title: string;
-  more_relevant: boolean;
+  moreRelevantValue: number;
 }
 
 export type { Trend };

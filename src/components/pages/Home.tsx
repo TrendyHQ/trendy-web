@@ -15,6 +15,7 @@ import {
   HeartPulse,
   Icon,
   MessageCircle,
+  Minus,
   Music,
   Plane,
   Shirt,
@@ -27,38 +28,7 @@ import { useCallback, useEffect, useState } from "react";
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
-  const [topTrends, setTopTrends] = useState<Trend[]>([
-    {
-      title: "TikTok",
-      category: "social",
-      more_relevant: false,
-    },
-    {
-      title: "Sustainable and Genderless Clothing",
-      category: "fashion",
-      more_relevant: true,
-    },
-    {
-      title: "Mindfulness and Mental Health Apps",
-      category: "wellness",
-      more_relevant: true,
-    },
-    {
-      title: "Facebook Usage",
-      category: "social",
-      more_relevant: false,
-    },
-    {
-      title: "Esports and Gaming Communities",
-      category: "entertainment",
-      more_relevant: false,
-    },
-    {
-      title: "Anime",
-      category: "entertainment",
-      more_relevant: true,
-    },
-  ]);
+  const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
 
   const getIcon = (categorie: string) => {
     const size = 30;
@@ -92,25 +62,30 @@ export default function Home() {
   };
 
   const updateTopTrends = useCallback(() => {
-    axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
+    try {axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
       console.log(res.data);
       setTopTrends(res.data);
-    });
+    });} catch (e) {
+      console.log(e);
+      // updateTopTrends();
+    }
   }, []);
 
   setInterval(() => {
     updateTopTrends();
-  }, 60000);
+  }, 180000);
 
   useEffect(() => {
     updateTopTrends();
   }, [updateTopTrends]);
 
-  const getRelevancy = (moreRelevant: boolean) => {
-    if (moreRelevant) {
+  const getRelevancy = (moreRelevantValue: number) => {
+    if (moreRelevantValue === 1) {
       return <ArrowUp size={30} color="#0E8800" />;
-    } else {
+    } else if(moreRelevantValue === 0) {
       return <ArrowDown size={30} color="#D80000" />;
+    } else if(moreRelevantValue === -1) {
+      return <Minus size={30} color="#858585" />;
     }
   };
 
@@ -228,18 +203,21 @@ export default function Home() {
             <div className="right-body-cont">
               <h1 className="section-title">Hot 🔥🔥🔥</h1>
               <div className="top-trends-wrapper">
-                {topTrends.map((trend: Trend, index: number) => (
-                  <div key={"topTrend" + index}>
-                    <div className="top-trend">
-                      <div className="top-trend-icon">
-                        {getIcon(trend.category)}
+                {topTrends &&
+                  topTrends.map((trend: Trend, index: number) => (
+                    <div key={"topTrend" + index}>
+                      <div className="top-trend">
+                        <div className="top-trend-icon">
+                          {getIcon(trend.category)}
+                        </div>
+                        <h2 className="top-trend-name">
+                          {getTrendTitle(trend)}
+                        </h2>
+                        <div>{getRelevancy(trend.moreRelevantValue)}</div>
                       </div>
-                      <h2 className="top-trend-name">{getTrendTitle(trend)}</h2>
-                      <div>{getRelevancy(trend.more_relevant)}</div>
+                      {index < 5 && <div className="trend-divider"></div>}
                     </div>
-                    {index < 5 && <div className="trend-divider"></div>}
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>

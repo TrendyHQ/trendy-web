@@ -32,46 +32,52 @@ public class RedditData {
                 clientSecret);
 
         // Create a UserAgent
-        UserAgent userAgent = new UserAgent("bot", "com.example.redditapp", "v1.0", username);
+        UserAgent userAgent = new UserAgent("bot", "com.trendy.dataFetcher", "v1.0", username);
 
         // Authenticate with the Reddit API
-        RedditClient redditClient = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);
+        RedditClient redditClient = null;
+        try {
+            redditClient = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // Access a subreddit
-        SubredditReference subreddit = redditClient.subreddit(subredditName);
+        if (redditClient != null) {
+            // Access a subreddit
+            SubredditReference subreddit = redditClient.subreddit(subredditName);
 
-        // Fetch top posts
-        DefaultPaginator<Submission> topPosts = subreddit.posts()
-                .sorting(SubredditSort.HOT)
-                .limit(2) // Fetch top 2 posts
-                .build();
+            // Fetch top posts
+            DefaultPaginator<Submission> topPosts = subreddit.posts()
+                    .sorting(SubredditSort.HOT)
+                    .limit(2) // Fetch top 2 posts
+                    .build();
 
-        // Collect the titles of the top posts
-        RedditPost[] posts = new RedditPost[2];
+            // Collect the titles of the top posts
+            RedditPost[] posts = new RedditPost[2];
 
-        for (Submission post : topPosts.next()) {
-            String postId = post.getId();
-            int score = post.getScore();
+            for (Submission post : topPosts.next()) {
+                String postId = post.getId();
+                int score = post.getScore();
 
-            // Check if this post has been seen before
-            boolean more_relevant = new TrendAnalyzer().isPostGoingUp(postId);
+                // Store updated post data
+                if (!post.getTitle().contains("r/") && !post.isNsfw()) {
+                    RedditDataStorage storage = new RedditDataStorage();
+                    int moreRelevantValue = new TrendAnalyzer().isPostGoingUp(postId, post);
 
-            // Store updated post data
-            if (!post.getTitle().contains("r/") && !post.isNsfw()) {
-                RedditDataStorage storage = new RedditDataStorage();
+                    storage.storeRedditPostData(post);
 
-                storage.storeRedditPostData(post);
-
-                for (int i = 0; i < posts.length; i++) {
-                    if (posts[i] == null) {
-                        posts[i] = new RedditPost(post.getTitle(), subredditName, more_relevant, score);
-                        break;
+                    for (int i = 0; i < posts.length; i++) {
+                        if (posts[i] == null) {
+                            posts[i] = new RedditPost(post.getTitle(), subredditName, moreRelevantValue, score);
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        return posts;
+            return posts;
+        }
+        return null;
     }
 
     @SuppressWarnings("unused")
@@ -79,12 +85,12 @@ public class RedditData {
         private int score;
         private String title;
         private String category;
-        private boolean more_relevant;
+        private int moreRelevantValue;
 
-        public RedditPost(String title, String category, boolean more_relevant, int score) {
+        public RedditPost(String title, String category, int moreRelevantValue, int score) {
             this.title = title;
             this.category = category;
-            this.more_relevant = more_relevant;
+            this.moreRelevantValue = moreRelevantValue;
             this.score = score;
         }
 

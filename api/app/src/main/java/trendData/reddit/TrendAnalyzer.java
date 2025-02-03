@@ -42,11 +42,9 @@ public class TrendAnalyzer {
                 } else {
                     result = 0;
                 }
-                System.out.println(result);
                 return result;
             } else {
                 // No previous day's record found
-                System.out.println("Previous day's record not found.");
                 return -1; // or handle as needed
             }
         }

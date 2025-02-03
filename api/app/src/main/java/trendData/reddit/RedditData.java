@@ -2,45 +2,19 @@ package trendData.reddit;
 
 import java.sql.SQLException;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.OkHttpNetworkAdapter;
-import net.dean.jraw.http.UserAgent;
-import net.dean.jraw.oauth.Credentials;
-import net.dean.jraw.oauth.OAuthHelper;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.references.SubredditReference;
 import net.dean.jraw.models.SubredditSort;
 
 public class RedditData {
-    public RedditPost[] getData(String subredditName) throws SQLException {
-        // Load environment variables
-        Dotenv dotenv = Dotenv.load();
+    public RedditPost[] getData(String subredditName, RedditClientManager redditClientManager) throws SQLException {
 
-        String username = dotenv.get("REDDIT_USERNAME");
-        String password = dotenv.get("REDDIT_PASSWORD");
-        String clientId = dotenv.get("REDDIT_CLIENT_ID");
-        String clientSecret = dotenv.get("REDDIT_CLIENT_SECRET");
-
-        // Set up Reddit API credentials
-        Credentials credentials = Credentials.script(
-                username,
-                password,
-                clientId,
-                clientSecret);
-
-        // Create a UserAgent
-        UserAgent userAgent = new UserAgent("bot", "com.trendy.dataFetcher", "v1.0", username);
-
-        // Authenticate with the Reddit API
-        RedditClient redditClient = null;
-        try {
-            redditClient = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), credentials);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (redditClientManager.getClient() == null) {
+            redditClientManager.autherizeClient();
         }
+        RedditClient redditClient = redditClientManager.getClient();
 
         if (redditClient != null) {
             // Access a subreddit
@@ -61,9 +35,9 @@ public class RedditData {
 
                 // Store updated post data
                 if (!post.getTitle().contains("r/") && !post.isNsfw()) {
-                    RedditDataStorage storage = new RedditDataStorage();
                     int moreRelevantValue = new TrendAnalyzer().isPostGoingUp(postId, post);
 
+                    RedditDataStorage storage = new RedditDataStorage();
                     storage.storeRedditPostData(post);
 
                     for (int i = 0; i < posts.length; i++) {

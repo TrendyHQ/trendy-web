@@ -26,6 +26,7 @@ import com.google.gson.JsonParser;
 import io.github.cdimascio.dotenv.Dotenv;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
+import trendData.reddit.RedditClientManager;
 import trendData.reddit.RedditData;
 import trendData.reddit.RedditData.RedditPost;
 
@@ -95,30 +96,42 @@ public class MainController {
     public ResponseEntity<String> getRedditData() throws SQLException {
         try {
             RedditData redditData = new RedditData();
+            RedditClientManager redditClientManager = new RedditClientManager();
 
-            CompletableFuture<RedditPost[]> fashionFuture = requestDataFromReddit(redditData, "fashion");
+            CompletableFuture<RedditPost[]> fashionFuture = requestDataFromReddit(redditData, "fashion",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> technologyFuture = requestDataFromReddit(redditData, "technology");
+            CompletableFuture<RedditPost[]> technologyFuture = requestDataFromReddit(redditData, "technology",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> foodFuture = requestDataFromReddit(redditData, "food");
+            CompletableFuture<RedditPost[]> foodFuture = requestDataFromReddit(redditData, "food", redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> entertainmentFuture = requestDataFromReddit(redditData, "entertainment");
+            CompletableFuture<RedditPost[]> entertainmentFuture = requestDataFromReddit(redditData, "entertainment",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> socialMediaFuture = requestDataFromReddit(redditData, "socialmedia");
+            CompletableFuture<RedditPost[]> socialMediaFuture = requestDataFromReddit(redditData, "socialmedia",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> fitnessFuture = requestDataFromReddit(redditData, "fitness");
+            CompletableFuture<RedditPost[]> fitnessFuture = requestDataFromReddit(redditData, "fitness",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> wellnessFuture = requestDataFromReddit(redditData, "wellness");
+            CompletableFuture<RedditPost[]> wellnessFuture = requestDataFromReddit(redditData, "wellness",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> musicFuture = requestDataFromReddit(redditData, "music");
+            CompletableFuture<RedditPost[]> musicFuture = requestDataFromReddit(redditData, "music",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> educationFuture = requestDataFromReddit(redditData, "education");
+            CompletableFuture<RedditPost[]> educationFuture = requestDataFromReddit(redditData, "education",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> travelFuture = requestDataFromReddit(redditData, "travel");
+            CompletableFuture<RedditPost[]> travelFuture = requestDataFromReddit(redditData, "travel",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> scienceFuture = requestDataFromReddit(redditData, "science");
+            CompletableFuture<RedditPost[]> scienceFuture = requestDataFromReddit(redditData, "science",
+                    redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> sportsFuture = requestDataFromReddit(redditData, "sports");
+            CompletableFuture<RedditPost[]> sportsFuture = requestDataFromReddit(redditData, "sports",
+                    redditClientManager);
 
             CompletableFuture.allOf(
                     fashionFuture, technologyFuture, foodFuture, entertainmentFuture,
@@ -212,10 +225,11 @@ public class MainController {
                 .asString();
     }
 
-    private CompletableFuture<RedditPost[]> requestDataFromReddit(RedditData redditData, String subredditName) {
+    private CompletableFuture<RedditPost[]> requestDataFromReddit(RedditData redditData, String subredditName,
+            RedditClientManager redditClientManager) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return redditData.getData(subredditName);
+                return redditData.getData(subredditName, redditClientManager);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -225,7 +239,7 @@ public class MainController {
 
     private void waitForSeconds() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

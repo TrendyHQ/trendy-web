@@ -23,7 +23,7 @@ import {
 import { football } from "@lucide/lab";
 import { Trend } from "../../types";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
@@ -61,30 +61,27 @@ export default function Home() {
     }
   };
 
-  const updateTopTrends = useCallback(() => {
-    try {axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
-      console.log(res.data);
-      setTopTrends(res.data);
-    });} catch (e) {
+  const updateTopTrends = () => {
+    try {
+      axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
+        console.log(res.data);
+        setTopTrends(res.data);
+      });
+    } catch (e) {
       console.log(e);
-      // updateTopTrends();
     }
-  }, []);
+  };
 
   setInterval(() => {
     updateTopTrends();
   }, 180000);
 
-  useEffect(() => {
-    updateTopTrends();
-  }, [updateTopTrends]);
-
   const getRelevancy = (moreRelevantValue: number) => {
     if (moreRelevantValue === 1) {
       return <ArrowUp size={30} color="#0E8800" />;
-    } else if(moreRelevantValue === 0) {
+    } else if (moreRelevantValue === 0) {
       return <ArrowDown size={30} color="#D80000" />;
-    } else if(moreRelevantValue === -1) {
+    } else if (moreRelevantValue === -1) {
       return <Minus size={30} color="#858585" />;
     }
   };

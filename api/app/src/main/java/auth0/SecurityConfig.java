@@ -13,7 +13,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults()) // Enable CORS
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
+            .csrf(withDefaults()) // Enable CSRF
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/**").permitAll()
             );

@@ -62,7 +62,7 @@ public class MainController {
             setUserProperty(requestBody, accessToken, user_id);
             return ResponseEntity.ok("Nickname updated successfully");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to update nickname: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to update nickname");
         }
     }
 
@@ -87,7 +87,7 @@ public class MainController {
             return ResponseEntity.ok("Nickname updated successfully");
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to update nickname: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to update nickname");
         }
 
     }
@@ -181,7 +181,7 @@ public class MainController {
             return ResponseEntity.ok(new Gson().toJson(topPosts));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Failed to recieve data: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to recieve data");
         }
     }
 

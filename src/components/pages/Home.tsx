@@ -153,8 +153,12 @@ export default function Home() {
             <div className="clickable" onClick={handleTrendOffClick}></div>
             <div className="trendBox">
               {fullTrendName}
-              <br /> <br />
-              {trendDescription && trendDescription}
+              {trendDescription && (
+                <>
+                  <br /> <br />
+                  trendDescription
+                </>
+              )}
             </div>
           </div>
         )}

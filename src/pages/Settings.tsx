@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-import "../../css/Settings.css";
+import "../css/Settings.css";
 import { useState } from "react";
 
 export default function Settings() {

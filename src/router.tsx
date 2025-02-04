@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./components/pages/Home";
-import Categories from "./components/pages/Categories";
-import Settings from "./components/pages/Settings";
+import Home from "./pages/Home";
+import Categories from "./pages/Categories";
+import Settings from "./pages/Settings";
 
 export default function Router() {
   return (

@@ -1,6 +1,6 @@
-import Header from "../Header";
-import Footer from "../Footer";
-import "../../css/Home.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import "../css/Home.css";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -21,7 +21,7 @@ import {
   Shirt,
 } from "lucide-react";
 import { football } from "@lucide/lab";
-import { Trend } from "../../types";
+import { Trend } from "../types";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 

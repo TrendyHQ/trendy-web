@@ -14,7 +14,7 @@ export default function Settings() {
   }
 
   const updateNickname = async (newNickname: string) => {
-    try {
+    try {    
       // Get the Management API access token
       const encodedUserId = encodeURIComponent(user?.sub || ""); 
 
@@ -32,6 +32,7 @@ export default function Settings() {
           headers: {
             "Content-Type": "application/json", // Set content type to JSON
           },
+          withCredentials: true, // Send cookies
         }
       );
 
@@ -62,7 +63,7 @@ export default function Settings() {
 
     setApiIsLoading(true);
 
-    try {
+    try {    
       const formData = new FormData();
 
       formData.append("userId", user?.sub || "");
@@ -72,6 +73,7 @@ export default function Settings() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true, // Send cookies
       });
       setApiIsLoading(false);
       alert(`Picture updated successfully`);

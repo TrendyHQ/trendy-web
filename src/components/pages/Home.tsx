@@ -77,7 +77,11 @@ export default function Home() {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/trendData/reddit"
+        "http://localhost:8080/api/trendData/reddit",
+        {},
+        {
+          withCredentials: true, // Send cookies
+        }
       );
       console.log(res.data);
       setTopTrends(res.data);

@@ -10,7 +10,6 @@ import {
   CupSoda,
   Dumbbell,
   FlaskConical,
-  GraduationCap,
   Headset,
   HeartPulse,
   Icon,
@@ -19,6 +18,7 @@ import {
   Music,
   Plane,
   Shirt,
+  Flag,
 } from "lucide-react";
 import { football } from "@lucide/lab";
 import { Trend } from "../types";
@@ -32,6 +32,7 @@ export default function Home() {
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
   const [fullTrendName, setFullTrendName] = useState<string | null>(null);
   const [trendDescription, setTrendDescription] = useState<string | null>(null);
+  const [trendLink, setTrendLink] = useState<string | null>(null);
 
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
@@ -57,8 +58,8 @@ export default function Home() {
         return <HeartPulse size={size} />;
       case "music":
         return <Music size={size} />;
-      case "education":
-        return <GraduationCap size={size} />;
+      case "politics":
+        return <Flag size={size} />;
       case "travel":
         return <Plane size={size} />;
       case "science":
@@ -72,12 +73,11 @@ export default function Home() {
     // Prevent a new update if one is already in progress
     if (hotTrendsLoading) return;
 
-    console.log("updating top trends");
     setHotTrendsLoading(true);
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/trendData/reddit",
+        "http://localhost:8080/api/reddit/topReddit",
         {},
         {
           withCredentials: true, // Send cookies
@@ -124,11 +124,13 @@ export default function Home() {
   const handleTrendClick = (trend: Trend) => {
     setFullTrendName(trend.title);
     if (trend.moreInfo !== "") setTrendDescription(trend.moreInfo);
+    else setTrendLink(trend.link);
   };
 
   const handleTrendOffClick = () => {
     setFullTrendName(null);
     setTrendDescription(null);
+    setTrendLink(null);
   };
 
   if (isLoading) {
@@ -160,7 +162,16 @@ export default function Home() {
               {trendDescription && (
                 <>
                   <br /> <br />
-                  trendDescription
+                  {trendDescription}
+                </>
+              )}
+              {trendLink && (
+                <>
+                  <br />
+                  <br />
+                  <a href={trendLink} target="blank">
+                    {trendLink}
+                  </a>
                 </>
               )}
             </div>
@@ -187,7 +198,9 @@ export default function Home() {
             </div>
             <div className="body-wrapper">
               <div className="left-body-cont">
-                <h1 className="section-title">Categories</h1>
+                <Link to="/categories">
+                  <h1 className="section-title">Categories</h1>
+                </Link>
                 <div className="categories-wrapper">
                   <Link to="/categories/fashion">
                     <button className="categoryButton fashion">
@@ -229,9 +242,9 @@ export default function Home() {
                       <Music size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/education">
-                    <button className="categoryButton education">
-                      <GraduationCap size={42} />
+                  <Link to="/categories/politics">
+                    <button className="categoryButton politics">
+                      <Flag size={42} />
                     </button>
                   </Link>
                   <Link to="/categories/travel">

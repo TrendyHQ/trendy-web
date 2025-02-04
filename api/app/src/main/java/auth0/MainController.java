@@ -27,8 +27,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
 import trendData.reddit.RedditClientManager;
-import trendData.reddit.RedditData;
-import trendData.reddit.RedditData.RedditPost;
+import trendData.reddit.TopRedditData;
+import trendData.reddit.TopRedditData.RedditPost;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -92,11 +92,12 @@ public class MainController {
 
     }
 
-    @PostMapping("/trendData/reddit")
-    public ResponseEntity<String> getRedditData() throws SQLException {
+    RedditClientManager redditClientManager = new RedditClientManager();
+
+    @PostMapping("/reddit/topReddit")
+    public ResponseEntity<String> getTopRedditData() throws SQLException {
         try {
-            RedditData redditData = new RedditData();
-            RedditClientManager redditClientManager = new RedditClientManager();
+            TopRedditData redditData = new TopRedditData();
 
             CompletableFuture<RedditPost[]> fashionFuture = requestDataFromReddit(redditData, "fashion",
                     redditClientManager);
@@ -121,7 +122,7 @@ public class MainController {
             CompletableFuture<RedditPost[]> musicFuture = requestDataFromReddit(redditData, "music",
                     redditClientManager);
             waitForSeconds();
-            CompletableFuture<RedditPost[]> educationFuture = requestDataFromReddit(redditData, "education",
+            CompletableFuture<RedditPost[]> politicsFuture = requestDataFromReddit(redditData, "politics",
                     redditClientManager);
             waitForSeconds();
             CompletableFuture<RedditPost[]> travelFuture = requestDataFromReddit(redditData, "travel",
@@ -136,7 +137,7 @@ public class MainController {
             CompletableFuture.allOf(
                     fashionFuture, technologyFuture, foodFuture, entertainmentFuture,
                     socialMediaFuture, fitnessFuture, wellnessFuture, musicFuture,
-                    educationFuture, travelFuture, scienceFuture, sportsFuture).join();
+                    politicsFuture, travelFuture, scienceFuture, sportsFuture).join();
 
             RedditPost[] fashionData = fashionFuture.get();
             RedditPost[] technologyData = technologyFuture.get();
@@ -146,14 +147,14 @@ public class MainController {
             RedditPost[] fitnessData = fitnessFuture.get();
             RedditPost[] wellnessData = wellnessFuture.get();
             RedditPost[] musicData = musicFuture.get();
-            RedditPost[] educationData = educationFuture.get();
+            RedditPost[] politicsData = politicsFuture.get();
             RedditPost[] travelData = travelFuture.get();
             RedditPost[] scienceData = scienceFuture.get();
             RedditPost[] sportsData = sportsFuture.get();
 
             RedditPost[][] data = {
                     fashionData, technologyData, foodData, entertainmentData, socialMediaData,
-                    fitnessData, wellnessData, musicData, educationData, travelData, scienceData, sportsData
+                    fitnessData, wellnessData, musicData, politicsData, travelData, scienceData, sportsData
             };
 
             // Collect all posts into a single list
@@ -181,6 +182,33 @@ public class MainController {
             return ResponseEntity.ok(new Gson().toJson(topPosts));
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.badRequest().body("Failed to recieve data");
+        }
+    }
+
+    @PostMapping("/reddit/topTrendsForCategory")
+    public ResponseEntity<String> getTopTrendsForCategory(@RequestBody String entity) {
+        try {
+            int limit = 20;
+            TopRedditData redditData = new TopRedditData();
+            RedditPost[] posts = redditData.getData(entity, redditClientManager, limit);
+
+            // Collect all posts into a single list
+            List<RedditPost> allPosts = new ArrayList<>();
+            if (posts != null) {
+                Collections.addAll(allPosts, posts);
+            }
+
+            // Sort posts by score in descending order
+            allPosts.sort((p1, p2) -> {
+                if (p1 != null && p2 != null) {
+                    return Integer.compare(p2.getScore(), p1.getScore());
+                }
+                return 0; // If either p1 or p2 is null, consider them equal for sorting purposes
+            });
+
+            return ResponseEntity.ok(new Gson().toJson(allPosts));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to recieve data");
         }
     }
@@ -225,11 +253,11 @@ public class MainController {
                 .asString();
     }
 
-    private CompletableFuture<RedditPost[]> requestDataFromReddit(RedditData redditData, String subredditName,
+    private CompletableFuture<RedditPost[]> requestDataFromReddit(TopRedditData redditData, String subredditName,
             RedditClientManager redditClientManager) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return redditData.getData(subredditName, redditClientManager);
+                return redditData.getData(subredditName, redditClientManager, 2);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -239,7 +267,7 @@ public class MainController {
 
     private void waitForSeconds() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

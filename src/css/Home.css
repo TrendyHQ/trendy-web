@@ -478,6 +478,8 @@
   font-weight: 500;
   font-size: 32px;
   margin: 18px 0 22px 31px;
+  text-decoration: none;
+  color: white;
 }
 
 .section-title.header {
@@ -508,6 +510,11 @@
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
   padding-bottom: 20px;
+}
+
+.left-body-cont a{
+  text-decoration: none;
+  width: fit-content;
 }
 
 .right-body-cont {
@@ -595,8 +602,8 @@
   content: "Music";
 }
 
-.categoryButton.education::before {
-  content: "Education";
+.categoryButton.politics::before {
+  content: "Politics";
 }
 
 .categoryButton.travel::before {

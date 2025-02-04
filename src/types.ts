@@ -3,6 +3,7 @@ interface Trend {
   title: string;
   moreRelevantValue: number;
   moreInfo: string;
+  link: string;
 }
 
 export type { Trend };

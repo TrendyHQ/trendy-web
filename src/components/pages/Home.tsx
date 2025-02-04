@@ -23,13 +23,19 @@ import {
 import { football } from "@lucide/lab";
 import { Trend } from "../../types";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
+  const [fullTrendName, setFullTrendName] = useState<string | null>(null);
+  const [trendDescription, setTrendDescription] = useState<string | null>(null);
+
+  const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null
+  );
 
   const getIcon = (categorie: string) => {
     const size = 30;
@@ -62,41 +68,44 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    try {
-      if (hotTrendsLoading == false) {
-        console.log("updating top trends");
-        setHotTrendsLoading(true);
-        axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
-          console.log(res.data);
-          setTopTrends(res.data);
-          setHotTrendsLoading(false);
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  const updateTopTrends = async () => {
+    // Prevent a new update if one is already in progress
+    if (hotTrendsLoading) return;
 
-  const updateTopTrends = () => {
+    console.log("updating top trends");
+    setHotTrendsLoading(true);
+
     try {
-      if (hotTrendsLoading == false) {
-        setHotTrendsLoading(true);
-        console.log("updating top trends");
-        axios.post("http://localhost:8080/api/trendData/reddit").then((res) => {
-          console.log(res.data);
-          setTopTrends(res.data);
-          setHotTrendsLoading(false);
-        });
-      }
-    } catch (e) {
-      console.log(e);
+      const res = await axios.post(
+        "http://localhost:8080/api/trendData/reddit"
+      );
+      console.log(res.data);
+      setTopTrends(res.data);
+    } catch (error) {
+      console.error("Error updating top trends:", error);
+    } finally {
+      setHotTrendsLoading(false);
     }
   };
 
-  setInterval(() => {
+  useEffect(() => {
+    // Perform an immediate update on component mount
     updateTopTrends();
-  }, 180000);
+
+    // Set up the interval if it's not already set
+    if (updateTrendsIntervalRef.current === null) {
+      updateTrendsIntervalRef.current = setInterval(() => {
+        updateTopTrends();
+      }, 180000); // 180,000ms = 3 minutes
+    }
+
+    // Clean up the interval on component unmount
+    return () => {
+      if (updateTrendsIntervalRef.current !== null) {
+        clearInterval(updateTrendsIntervalRef.current);
+      }
+    };
+  }, []);
 
   const getRelevancy = (moreRelevantValue: number) => {
     if (moreRelevantValue === 1) {
@@ -106,6 +115,16 @@ export default function Home() {
     } else if (moreRelevantValue === -1) {
       return <Minus size={30} color="#858585" />;
     }
+  };
+
+  const handleTrendClick = (trend: Trend) => {
+    setFullTrendName(trend.title);
+    if (trend.moreInfo !== "") setTrendDescription(trend.moreInfo);
+  };
+
+  const handleTrendOffClick = () => {
+    setFullTrendName(null);
+    setTrendDescription(null);
   };
 
   if (isLoading) {
@@ -126,123 +145,134 @@ export default function Home() {
     );
   }
 
-  const getTrendTitle = (trend: Trend) => {
-    if (trend.title.length <= 48) return trend.title;
-    const slicePoint = trend.title.indexOf(" ", 45);
-    if (slicePoint !== -1) return trend.title.slice(0, slicePoint) + "...";
-    return trend.title.slice(0, 45) + "...";
-  };
-
   if (isAuthenticated) {
     return (
-      <div className="bodyCont">
-        <Header />
-        <div className="content bottom">
-          <div className="header-wrapper">
-            <div className="header-cont">
-              <div className="text">
-                <h1 className="section-title header">
-                  Evaluate the trends of the world with a simple click, using AI
-                </h1>
-                <p className="section-text header">
-                  Explore current and upcoming trends to find all sorts of
-                  statistics like relevancy, start date, and more.
-                </p>
-                <button id="try-it-button">Try It Now</button>
-              </div>
-              <div className="geometric-bg"></div>
+      <>
+        {fullTrendName && (
+          <div className="trendContainer">
+            <div className="clickable" onClick={handleTrendOffClick}></div>
+            <div className="trendBox">
+              {fullTrendName}
+              <br /> <br />
+              {trendDescription && trendDescription}
             </div>
           </div>
-          <div className="body-wrapper">
-            <div className="left-body-cont">
-              <h1 className="section-title">Categories</h1>
-              <div className="categories-wrapper">
-                <Link to="/categories/fashion">
-                  <button className="categoryButton fashion">
-                    <Shirt size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/technology">
-                  <button className="categoryButton technology">
-                    <Headset size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/foodandbeverages">
-                  <button className="categoryButton food">
-                    <CupSoda size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/entertainment">
-                  <button className="categoryButton entertainment">
-                    <Clapperboard size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/socialmedia">
-                  <button className="categoryButton social">
-                    <MessageCircle size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/fitness">
-                  <button className="categoryButton fitness">
-                    <Dumbbell size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/wellness">
-                  <button className="categoryButton wellness">
-                    <HeartPulse size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/music">
-                  <button className="categoryButton music">
-                    <Music size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/education">
-                  <button className="categoryButton education">
-                    <GraduationCap size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/travel">
-                  <button className="categoryButton travel">
-                    <Plane size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/science">
-                  <button className="categoryButton science">
-                    <FlaskConical size={42} />
-                  </button>
-                </Link>
-                <Link to="/categories/sports">
-                  <button className="categoryButton sports">
-                    <Icon iconNode={football} size={42} />
-                  </button>
-                </Link>
+        )}
+        <div className="bodyCont">
+          <Header />
+          <div className="content bottom">
+            <div className="header-wrapper">
+              <div className="header-cont">
+                <div className="text">
+                  <h1 className="section-title header">
+                    Evaluate the trends of the world with a simple click, using
+                    AI
+                  </h1>
+                  <p className="section-text header">
+                    Explore current and upcoming trends to find all sorts of
+                    statistics like relevancy, start date, and more.
+                  </p>
+                  <button id="try-it-button">Try It Now</button>
+                </div>
+                <div className="geometric-bg"></div>
               </div>
             </div>
-            <div className="right-body-cont">
-              <h1 className="section-title">Hot 🔥🔥🔥</h1>
-              <div className="top-trends-wrapper">
-                {topTrends &&
-                  topTrends.map((trend: Trend, index: number) => (
-                    <div key={"topTrend" + index}>
-                      <div className="top-trend">
-                        <div className="top-trend-icon">
-                          {getIcon(trend.category)}
+            <div className="body-wrapper">
+              <div className="left-body-cont">
+                <h1 className="section-title">Categories</h1>
+                <div className="categories-wrapper">
+                  <Link to="/categories/fashion">
+                    <button className="categoryButton fashion">
+                      <Shirt size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/technology">
+                    <button className="categoryButton technology">
+                      <Headset size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/foodandbeverages">
+                    <button className="categoryButton food">
+                      <CupSoda size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/entertainment">
+                    <button className="categoryButton entertainment">
+                      <Clapperboard size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/socialmedia">
+                    <button className="categoryButton social">
+                      <MessageCircle size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/fitness">
+                    <button className="categoryButton fitness">
+                      <Dumbbell size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/wellness">
+                    <button className="categoryButton wellness">
+                      <HeartPulse size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/music">
+                    <button className="categoryButton music">
+                      <Music size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/education">
+                    <button className="categoryButton education">
+                      <GraduationCap size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/travel">
+                    <button className="categoryButton travel">
+                      <Plane size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/science">
+                    <button className="categoryButton science">
+                      <FlaskConical size={42} />
+                    </button>
+                  </Link>
+                  <Link to="/categories/sports">
+                    <button className="categoryButton sports">
+                      <Icon iconNode={football} size={42} />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+              <div className="right-body-cont">
+                <h1 className="section-title">Hot 🔥🔥🔥</h1>
+                <div className="top-trends-wrapper">
+                  {topTrends &&
+                    topTrends.map((trend: Trend, index: number) => (
+                      <div key={"topTrend" + index}>
+                        <div
+                          className="top-trend"
+                          onClick={() => handleTrendClick(trend)}
+                        >
+                          <div className="top-trend-icon">
+                            {getIcon(trend.category)}
+                          </div>
+                          <h2 className="top-trend-name">
+                            {trend.title.length > 50
+                              ? trend.title.substring(0, 50) + "..."
+                              : trend.title}
+                          </h2>
+                          <div>{getRelevancy(trend.moreRelevantValue)}</div>
                         </div>
-                        <h2 className="top-trend-name">
-                          {getTrendTitle(trend)}
-                        </h2>
-                        <div>{getRelevancy(trend.moreRelevantValue)}</div>
+                        {index < 5 && <div className="trend-divider"></div>}
                       </div>
-                      {index < 5 && <div className="trend-divider"></div>}
-                    </div>
-                  ))}
+                    ))}
+                </div>
               </div>
             </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </>
     );
   }
   return (

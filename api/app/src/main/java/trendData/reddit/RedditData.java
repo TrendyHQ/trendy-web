@@ -40,6 +40,7 @@ public class RedditData {
             for (Submission post : topPosts.next()) {
                 String postId = post.getId();
                 int score = post.getScore();
+                String moreInfo = post.getSelfText();
 
                 // Store updated post data
                 if (!post.getTitle().contains("r/") && !post.isNsfw()) {
@@ -50,7 +51,7 @@ public class RedditData {
 
                     for (int i = 0; i < posts.length; i++) {
                         if (posts[i] == null) {
-                            posts[i] = new RedditPost(post.getTitle(), subredditName, moreRelevantValue, score);
+                            posts[i] = new RedditPost(post.getTitle(), subredditName, moreRelevantValue, score, moreInfo);
                             break;
                         }
                     }
@@ -68,12 +69,14 @@ public class RedditData {
         private String title;
         private String category;
         private int moreRelevantValue;
+        private String moreInfo;
 
-        public RedditPost(String title, String category, int moreRelevantValue, int score) {
+        public RedditPost(String title, String category, int moreRelevantValue, int score, String moreInfo) {
             this.title = title;
             this.category = category;
             this.moreRelevantValue = moreRelevantValue;
             this.score = score;
+            this.moreInfo = moreInfo;
         }
 
         public int getScore() {

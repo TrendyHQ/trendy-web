@@ -21,6 +21,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --main-font: "M PLUS 2", Josefin Sans, sans-serif;
 }
 
 body {
@@ -38,10 +40,8 @@ body {
   min-height: 100dvh;
 }
 
-.bodyCont.signUp {
-  align-items: center;
-  min-height: 100dvh;
-  justify-content: center;
+.bodyCont.darkened{
+  filter: brightness(0.7);
 }
 
 @media (prefers-color-scheme: light) {

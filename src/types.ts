@@ -6,4 +6,11 @@ interface Trend {
   link: string;
 }
 
-export type { Trend };
+interface SpecificTrend {
+  id: string;
+  title: string;
+  moreInfo: string;
+  link: string;
+}
+
+export type { Trend, SpecificTrend };

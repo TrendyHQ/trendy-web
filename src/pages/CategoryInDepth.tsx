@@ -1,9 +1,14 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { SpecificTrend } from "../types";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function CategoryInDepth() {
   const location = useLocation();
+
+  const [trends, setTrends] = useState<SpecificTrend[]>([]);
 
   const checkCategory = () => {
     const path = location.pathname;
@@ -23,6 +28,7 @@ export default function CategoryInDepth() {
         )
         .then((res) => {
           console.log(res.data);
+          setTrends(res.data);
         });
     } catch (error) {
       console.error(error);
@@ -34,8 +40,31 @@ export default function CategoryInDepth() {
   }, []);
 
   return (
-    <div>
-      <h1>Category In Depth {checkCategory()}</h1>
+    <div className="bodyCont">
+      <Header />
+      <div className="category-boxes-wrapper">
+        {trends.reduce((groups: JSX.Element[], _, index) => {
+          if (index % 3 === 0) {
+            const group = trends.slice(index, index + 3);
+            groups.push(
+              <div className="box-container" key={`group-${index}`}>
+                {group.map((trend, i) => (
+                  <div className="category-box" key={`${trend.id}-${i}`}>
+                    {trend.title} <br />
+                    <br />
+                    {trend.moreInfo !== "" && trend.moreInfo}
+                    {trend.moreInfo === "" && (
+                      <a href={trend.link}>{trend.link}</a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            );
+          }
+          return groups;
+        }, [])}
+      </div>
+      <Footer />
     </div>
   );
 }

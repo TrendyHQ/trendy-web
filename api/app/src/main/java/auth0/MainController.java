@@ -26,7 +26,7 @@ import com.google.gson.JsonParser;
 import io.github.cdimascio.dotenv.Dotenv;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
-import trendData.aiData.Phi4;
+import trendData.aiData.AiModelRequest;
 import trendData.redditData.RedditClientManager;
 import trendData.redditData.TopRedditData;
 import trendData.redditData.TopRedditData.RedditPost;
@@ -214,10 +214,10 @@ public class MainController {
         }
     }
 
-    @PostMapping("/ai/phi4")
+    @PostMapping("/ai/AiModelRequest")
     public ResponseEntity<String> getPhi4Data(@RequestBody Phi4Request request) {
         try {
-            Phi4 phi4 = new Phi4();
+            AiModelRequest phi4 = new AiModelRequest();
             String response = phi4.getPhi4Data(request.getMessage(), request.getUserLocation(), request.getUserBirthdate(),
                     request.getUserGender());
             return ResponseEntity.ok(response);

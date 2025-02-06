@@ -5,48 +5,60 @@ import { useAuth0 } from "@auth0/auth0-react";
 export default function AskAi() {
   const { user } = useAuth0();
 
-  let userLocation: string = "";
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        userLocation =
-          "Latitude:" +
-          position.coords.latitude +
-          ", Longitude:" +
-          position.coords.longitude;
-      },
-      (error) => {
-        console.error("Error getting location:", error.message);
+  function getUserLocation(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve(
+              `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`
+            );
+          },
+          (error) => {
+            reject(`Error getting location: ${error.message}`);
+          }
+        );
+      } else {
+        reject("Geolocation is not supported by this browser.");
       }
-    );
-  } else {
-    console.log("Geolocation is not supported by this browser.");
+    });
   }
 
   useEffect(() => {
-    const message: string = window.prompt("Ask me anything") || "";
-    const userAge: string = user?.birthdate || "unknown";
-    const userGender: string = user?.gender || "unknown";
+    async function getResponse() {
+      const message: string = window.prompt("Ask me anything") || "";
+      const userAge: string = user?.birthdate || "unknown";
+      const userGender: string = user?.gender || "unknown";
 
-    axios
-      .post(
-        "http://localhost:8080/api/ai/phi4",
-        {
-          message: message,
-          userLocation: userLocation,
-          userAge: userAge,
-          userGender: userGender,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {
+      try {
+        const location = await getUserLocation() || "unknown";
+
+        axios
+          .post(
+            "http://localhost:8080/api/ai/AiModelRequest",
+            {
+              message: message,
+              userLocation: location,
+              userAge: userAge,
+              userGender: userGender,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } catch (error) {
         console.error(error);
-      });
+      }
+    }
+
+    getResponse();
   }, []);
+
   return <div></div>;
 }

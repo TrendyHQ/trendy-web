@@ -191,7 +191,9 @@ export default function Home() {
                     Explore current and upcoming trends to find all sorts of
                     statistics like relevancy, start date, and more.
                   </p>
-                  <button id="try-it-button">Try It Now</button>
+                  <Link to="/ask-ai">
+                    <button id="try-it-button">Try It Now</button>
+                  </Link>
                 </div>
                 <div className="geometric-bg"></div>
               </div>

@@ -26,9 +26,10 @@ import com.google.gson.JsonParser;
 import io.github.cdimascio.dotenv.Dotenv;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
-import trendData.reddit.RedditClientManager;
-import trendData.reddit.TopRedditData;
-import trendData.reddit.TopRedditData.RedditPost;
+import trendData.aiData.Phi4;
+import trendData.redditData.RedditClientManager;
+import trendData.redditData.TopRedditData;
+import trendData.redditData.TopRedditData.RedditPost;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -213,6 +214,18 @@ public class MainController {
         }
     }
 
+    @PostMapping("/ai/phi4")
+    public ResponseEntity<String> getPhi4Data(@RequestBody Phi4Request request) {
+        try {
+            Phi4 phi4 = new Phi4();
+            String response = phi4.getPhi4Data(request.getMessage(), request.getUserLocation(), request.getUserBirthdate(),
+                    request.getUserGender());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to recieve data");
+        }
+    }
+
     public static class UserUpdateRequest {
         private String userId;
         private String newNickname;
@@ -223,6 +236,29 @@ public class MainController {
 
         public String getNewNickname() {
             return newNickname;
+        }
+    }
+
+    public static class Phi4Request {
+        private String message;
+        private String userLocation;
+        private String userBirthdate;
+        private String userGender;
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getUserLocation() {
+            return userLocation;
+        }
+
+        public String getUserBirthdate() {
+            return userBirthdate;
+        }
+
+        public String getUserGender() {
+            return userGender;
         }
     }
 

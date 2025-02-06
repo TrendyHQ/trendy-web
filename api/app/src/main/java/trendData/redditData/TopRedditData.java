@@ -1,4 +1,4 @@
-package trendData.reddit;
+package trendData.redditData;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class TopRedditData {
                         .sorting(SubredditSearchSort.RELEVANCE)
                         .build();
 
-                int maxSubscribers = 250000;
+                int maxSubscribers = 100000;
 
                 for (Subreddit subreddit : paginator.next()) {
                     try {
@@ -49,11 +49,9 @@ public class TopRedditData {
                             closestMatch = subreddit;
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
             }
 
             String query;

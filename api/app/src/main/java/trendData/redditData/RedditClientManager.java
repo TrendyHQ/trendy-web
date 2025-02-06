@@ -1,4 +1,4 @@
-package trendData.reddit;
+package trendData.redditData;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dean.jraw.RedditClient;

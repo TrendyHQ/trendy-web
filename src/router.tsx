@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import Settings from "./pages/Settings";
 import CategoryInDepth from "./pages/CategoryInDepth";
+import AskAi from "./pages/AskAi";
 
 export default function Router() {
   return (
@@ -12,6 +13,7 @@ export default function Router() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/categories/*" element={<CategoryInDepth />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/ask-ai" element={<AskAi />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

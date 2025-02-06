@@ -1,4 +1,4 @@
-package trendData.reddit;
+package trendData.redditData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

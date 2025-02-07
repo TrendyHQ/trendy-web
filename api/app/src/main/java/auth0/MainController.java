@@ -190,7 +190,7 @@ public class MainController {
     @PostMapping("/reddit/topTrendsForCategory")
     public ResponseEntity<String> getTopTrendsForCategory(@RequestBody String entity) {
         try {
-            int limit = 20;
+            int limit = 30;
             TopRedditData redditData = new TopRedditData();
             RedditPost[] posts = redditData.getData(entity, redditClientManager, limit);
 
@@ -303,7 +303,7 @@ public class MainController {
 
     private void waitForSeconds() {
         try {
-            Thread.sleep(0);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

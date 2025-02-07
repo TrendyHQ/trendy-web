@@ -1,9 +1,11 @@
 import axios from "axios";
-import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 
 export default function AskAi() {
   const { user } = useAuth0();
+
+  const [response, setResponse] = useState<string>("");
 
   function getUserLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -24,15 +26,15 @@ export default function AskAi() {
     });
   }
 
-  useEffect(() => {
-    async function getResponse() {
+  async function getResponse() {
+    if(response == ""){
       const message: string = window.prompt("Ask me anything") || "";
       const userAge: string = user?.birthdate || "unknown";
       const userGender: string = user?.gender || "unknown";
-
+  
       try {
-        const location = await getUserLocation() || "unknown";
-
+        const location = (await getUserLocation()) || "unknown";
+  
         axios
           .post(
             "http://localhost:8080/api/ai/AiModelRequest",
@@ -47,18 +49,18 @@ export default function AskAi() {
             }
           )
           .then((res) => {
-            console.log(res.data);
+            setResponse(res.data);
           })
           .catch((error) => {
             console.error(error);
           });
       } catch (error) {
         console.error(error);
-      }
+      }  
     }
+  }
 
-    getResponse();
-  }, []);
+  getResponse();
 
-  return <div></div>;
+  return <div>{response}</div>;
 }

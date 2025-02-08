@@ -1,11 +1,15 @@
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function AskAi() {
   const { user } = useAuth0();
 
   const [response, setResponse] = useState<string>("");
+  let message: string;
+  const [isFutureRequest, setIsFutureRequest] = useState<boolean | null>(null);
 
   function getUserLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -27,14 +31,15 @@ export default function AskAi() {
   }
 
   async function getResponse() {
-    if(response == ""){
-      const message: string = window.prompt("Ask me anything") || "";
-      const userAge: string = user?.birthdate || "unknown";
-      const userGender: string = user?.gender || "unknown";
-  
+    const userAge: string = user?.birthdate || "unknown";
+    const userGender: string = user?.gender || "unknown";
+
+    console.log(isFutureRequest);
+
+    if (message !== "" && isFutureRequest !== null) {
       try {
         const location = (await getUserLocation()) || "unknown";
-  
+
         axios
           .post(
             "http://localhost:8080/api/ai/AiModelRequest",
@@ -43,6 +48,7 @@ export default function AskAi() {
               userLocation: location,
               userAge: userAge,
               userGender: userGender,
+              isFutureRequest: isFutureRequest,
             },
             {
               withCredentials: true,
@@ -56,11 +62,58 @@ export default function AskAi() {
           });
       } catch (error) {
         console.error(error);
-      }  
+      }
     }
   }
 
-  getResponse();
+  function markdownToHtml(text: string) {
+    // The regex replaces all occurrences of **...** with <strong>...</strong>
+    let newText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    newText = newText.replace(/(\d+\.)/g, "<br>$1");
+    return newText;
+  }
 
-  return <div>{response}</div>;
+  return (
+    <div className="bodyCont">
+      <Header />
+      <input
+        type="text"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            message = e.currentTarget.value;
+            getResponse();
+            e.currentTarget.value = "";
+          }
+        }}
+      />
+      <br />
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="requestType"
+            onChange={() => {
+              setIsFutureRequest(false);
+            }}
+          />
+          Current Trends
+        </label>
+        <label style={{ marginLeft: "1rem" }}>
+          <input
+            type="radio"
+            name="requestType"
+            onChange={() => {
+              setIsFutureRequest(true);
+            }}
+          />
+          Future Trends
+        </label>
+        <br />
+      </div>
+      <p dangerouslySetInnerHTML={{ __html: markdownToHtml(response) }} />
+      <br />
+      <button onClick={() => setResponse("")}>Clear Response</button>
+      <Footer />
+    </div>
+  );
 }

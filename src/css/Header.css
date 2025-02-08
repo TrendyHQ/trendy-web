@@ -96,6 +96,10 @@ header a {
   overflow: hidden;
 }
 
+.dropDown:focus {
+  outline: none;
+}
+
 .dropDown.show {
   visibility: visible;
   top: 60px;

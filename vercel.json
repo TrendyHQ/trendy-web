@@ -6,12 +6,20 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "api/build/libs/api.jar",
+      "use": "@vercel/java",
+      "config": {
+        "buildCommand": "./gradlew build",
+        "entrypoint": "api.jar"
+      }
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/"
+      "destination": "/api/$1"
     },
     {
       "source": "/(.*)",

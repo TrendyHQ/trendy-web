@@ -218,11 +218,12 @@ public class MainController {
     public ResponseEntity<String> getPhi4Data(@RequestBody Phi4Request request) {
         try {
             AiModelRequest phi4 = new AiModelRequest();
-            String response = phi4.getPhi4Data(request.getMessage(), request.getUserLocation(), request.getUserBirthdate(),
-                    request.getUserGender());
+            String response = phi4.getPhi4Data(request.getMessage(), request.getUserLocation(),
+                    request.getUserBirthdate(),
+                    request.getUserGender(), request.getIsFutureRequest());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to recieve data");
+            return ResponseEntity.ok("Error generating response, please try again later or contact support.");
         }
     }
 
@@ -244,6 +245,7 @@ public class MainController {
         private String userLocation;
         private String userBirthdate;
         private String userGender;
+        private boolean isFutureRequest;
 
         public String getMessage() {
             return message;
@@ -259,6 +261,10 @@ public class MainController {
 
         public String getUserGender() {
             return userGender;
+        }
+
+        public boolean getIsFutureRequest() {
+            return isFutureRequest;
         }
     }
 

@@ -26,7 +26,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
@@ -93,23 +93,29 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Perform an immediate update on component mount
-    updateTopTrends();
+    if (isAuthenticated) {
+      // Perform an immediate update on component mount
+      updateTopTrends();
 
-    // Set up the interval if it's not already set
-    if (updateTrendsIntervalRef.current === null) {
-      updateTrendsIntervalRef.current = setInterval(() => {
-        updateTopTrends();
-      }, 180000); // 180,000ms = 3 minutes
-    }
-
-    // Clean up the interval on component unmount
-    return () => {
-      if (updateTrendsIntervalRef.current !== null) {
-        clearInterval(updateTrendsIntervalRef.current);
+      // Set up the interval if it's not already set
+      if (updateTrendsIntervalRef.current === null) {
+        updateTrendsIntervalRef.current = setInterval(() => {
+          updateTopTrends();
+        }, 180000); // 180,000ms = 3 minutes
       }
-    };
+
+      // Clean up the interval on component unmount
+      return () => {
+        if (updateTrendsIntervalRef.current !== null) {
+          clearInterval(updateTrendsIntervalRef.current);
+        }
+      };
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(user);
+  }, [isAuthenticated]);
 
   const getRelevancy = (moreRelevantValue: number) => {
     if (moreRelevantValue === 1) {

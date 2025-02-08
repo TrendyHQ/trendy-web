@@ -71,20 +71,22 @@ export default function Header() {
           <div className="upperQuadrant">
             <div className="profileShowcase">
               <img src={user?.picture} alt="Picture of User" className="pfp" />
-              <h3 className="userName">{user?.given_name}</h3>
+              <h3 className="userName">{user?.nickname}</h3>
             </div>
           </div>
           <div className="lowerQuadrant">
             <div className="buttons">
-              <button>
-                <div className="greyCircle">
-                  <Settings
-                    size={iconSize}
-                    color={isDarkTheme ? "#f0f0f0" : "#333333"}
-                  />
-                </div>{" "}
-                <Link to="/settings">Settings</Link>
-              </button>
+              <Link to="/settings">
+                <button>
+                  <div className="greyCircle">
+                    <Settings
+                      size={iconSize}
+                      color={isDarkTheme ? "#f0f0f0" : "#333333"}
+                    />
+                  </div>{" "}
+                  Settings
+                </button>
+              </Link>
               <button>
                 <div className="greyCircle">
                   <MessageSquareWarning

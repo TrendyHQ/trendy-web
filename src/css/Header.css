@@ -143,12 +143,13 @@ header a {
   transition: 0.1s ease-in-out;
 }
 
-.dropDown button a {
+.dropDown a {
   color: #f0f0f0;
   font-size: 1rem;
   font-family: "M PLUS 2", Josefin Sans, sans-serif;
   font-weight: bold;
   margin: 0;
+  width: 100%;
 }
 
 .dropDown button:hover {

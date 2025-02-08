@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,6 +90,7 @@ public class MainController {
             return ResponseEntity.ok("Nickname updated successfully");
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Failed to update nickname");
         }
 
@@ -285,9 +288,10 @@ public class MainController {
     }
 
     private void setUserProperty(String requestBody, String accessToken, String user_id) throws Exception {
+        String encodedUserId = URLEncoder.encode(user_id, StandardCharsets.UTF_8.toString());
         @SuppressWarnings("unused")
         HttpResponse<String> auth0ApiResponse = Unirest
-                .patch("https://" + DOMAIN + "/api/v2/users/" + user_id)
+                .patch("https://" + DOMAIN + "/api/v2/users/" + encodedUserId)
                 .header("authorization", "Bearer " + accessToken)
                 .header("Content-Type", "application/json")
                 .header("cache-control", "no-cache")

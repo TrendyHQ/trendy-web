@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import "../css/Settings.css";
 import { useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function Settings() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -14,9 +16,9 @@ export default function Settings() {
   }
 
   const updateNickname = async (newNickname: string) => {
-    try {    
+    try {
       // Get the Management API access token
-      const encodedUserId = encodeURIComponent(user?.sub || ""); 
+      const encodedUserId = encodeURIComponent(user?.sub || "");
 
       const requestBody = {
         userId: encodedUserId,
@@ -63,18 +65,22 @@ export default function Settings() {
 
     setApiIsLoading(true);
 
-    try {    
+    try {
       const formData = new FormData();
 
       formData.append("userId", user?.sub || "");
       formData.append("file", image);
 
-      await axios.put("http://localhost:8080/api/auth0/update-picture", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true, // Send cookies
-      });
+      await axios.put(
+        "http://localhost:8080/api/auth0/update-picture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true, // Send cookies
+        }
+      );
       setApiIsLoading(false);
       alert(`Picture updated successfully`);
       window.location.reload();
@@ -94,6 +100,7 @@ export default function Settings() {
 
   return (
     <div className="bodyCont settingsPage">
+      <Header />
       <img src={user?.picture} className="pfp"></img>
       <input
         type="file"
@@ -121,6 +128,7 @@ export default function Settings() {
         />
         <p>{nicknameCharacters}</p>
       </div>
+      <Footer />
     </div>
   );
 }

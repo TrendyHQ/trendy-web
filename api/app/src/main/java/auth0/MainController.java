@@ -96,6 +96,28 @@ public class MainController {
 
     }
 
+    @PostMapping("/auth0/getLoginAmount")
+    public ResponseEntity<Integer> getLoginAmount(@RequestBody LoginRequest request) {
+        try {
+            String accessToken = getAccessToken();
+            String encodedUserId = URLEncoder.encode(request.getUser_id(), StandardCharsets.UTF_8.toString());
+            HttpResponse<String> auth0ApiResponse = Unirest
+                    .get("https://" + DOMAIN + "/api/v2/users/" + encodedUserId)
+                    .header("authorization", "Bearer " + accessToken)
+                    .header("Content-Type", "application/json")
+                    .header("cache-control", "no-cache")
+                    .asString();
+
+            JsonObject jsonResponse = JsonParser.parseString(auth0ApiResponse.getBody()).getAsJsonObject();
+            int loginAmount = jsonResponse.get("logins_count").getAsInt();
+            
+            return ResponseEntity.ok(loginAmount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(0);
+        }
+    }
+
     RedditClientManager redditClientManager = new RedditClientManager();
 
     @PostMapping("/reddit/topReddit")
@@ -268,6 +290,15 @@ public class MainController {
 
         public boolean getIsFutureRequest() {
             return isFutureRequest;
+        }
+    }
+
+    public static class LoginRequest {
+        private String user_id;
+
+        // This getter maps to the axios POST payload key 'user_id'
+        public String getUser_id() {
+            return user_id;
         }
     }
 

@@ -33,6 +33,7 @@ export default function Home() {
   const [fullTrendName, setFullTrendName] = useState<string | null>(null);
   const [trendDescription, setTrendDescription] = useState<string | null>(null);
   const [trendLink, setTrendLink] = useState<string | null>(null);
+  const [loginAmount, setLoginAmount] = useState<number>(0);
 
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
@@ -93,7 +94,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && false) {
       // Perform an immediate update on component mount
       updateTopTrends();
 
@@ -112,6 +113,26 @@ export default function Home() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    async function fetchLoginAmount() {
+      if (user) {
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/api/auth0/getLoginAmount",
+            {
+              user_id: user.sub,
+            }
+          );
+          setLoginAmount(res.data);
+        } catch (error) {
+          console.error("Error fetching first login status:", error);
+        }
+      }
+    }
+
+    fetchLoginAmount();
+  }, [user]);
 
   useEffect(() => {
     console.log(user);
@@ -139,10 +160,18 @@ export default function Home() {
     setTrendLink(null);
   };
 
+  if (loginAmount === 1) {
+    return (
+      <div className="userSetup">
+        <h1>Welcome to the User Setup!</h1>
+        <p>Please complete your profile to get started.</p>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="bodyCont">
-        <Header />
         <div className="content bottom">
           <div className="header-wrapper">
             <div className="header-cont loading"></div>
@@ -152,12 +181,11 @@ export default function Home() {
             <div className="right-body-cont loading"></div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
 
-  if (isAuthenticated) {
+  if (isAuthenticated && loginAmount !== 0) {
     return (
       <>
         {fullTrendName && (
@@ -304,19 +332,36 @@ export default function Home() {
       </>
     );
   }
+
+  if (isAuthenticated === false) {
+    return (
+      <div className="bodyCont">
+        <div className="bg-container">
+          {/* <img className="homeBackground" src={bg} alt="geometric shapes" /> */}
+        </div>
+        <Header />
+        <div className="content">
+          <div className="title">
+            <h1 id="titleText">Sign up and discover the latest trends today</h1>
+            <a onClick={() => loginWithRedirect()}>Sign Up</a>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="bodyCont">
-      <div className="bg-container">
-        {/* <img className="homeBackground" src={bg} alt="geometric shapes" /> */}
-      </div>
-      <Header />
-      <div className="content">
-        <div className="title">
-          <h1 id="titleText">Sign up and discover the latest trends today</h1>
-          <a onClick={() => loginWithRedirect()}>Sign Up</a>
+      <div className="content bottom">
+        <div className="header-wrapper">
+          <div className="header-cont loading"></div>
+        </div>
+        <div className="body-wrapper">
+          <div className="left-body-cont loading"></div>
+          <div className="right-body-cont loading"></div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import { LogOut, MessageSquareWarning, Settings } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
-  const [profileDown, setProfileDown] = useState<boolean>(false);
   const location = useLocation();
   const { isAuthenticated, loginWithRedirect, logout, user, isLoading } =
     useAuth0();
@@ -14,6 +13,9 @@ export default function Header() {
   ).matches;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileImgRef = useRef<HTMLImageElement>(null);
+
+  const [profileDown, setProfileDown] = useState<boolean>(false);
+  const [userNickname, setUserNickname] = useState<string>(user?.nickname || "");
 
   const iconSize: number = 26;
 
@@ -29,6 +31,9 @@ export default function Header() {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+
+    setUserNickname(user?.nickname || "");
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -71,7 +76,7 @@ export default function Header() {
           <div className="upperQuadrant">
             <div className="profileShowcase">
               <img src={user?.picture} alt="Picture of User" className="pfp" />
-              <h3 className="userName">{user?.nickname}</h3>
+              <h3 className="userName">{userNickname}</h3>
             </div>
           </div>
           <div className="lowerQuadrant">

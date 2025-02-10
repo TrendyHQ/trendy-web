@@ -101,7 +101,7 @@ export default function Settings() {
   return (
     <div className="bodyCont settingsPage">
       <Header />
-      <img src={user?.picture} className="pfp"></img>
+      <img src={user?.picture} className="settingsPfp"></img>
       <input
         type="file"
         accept="image/*"

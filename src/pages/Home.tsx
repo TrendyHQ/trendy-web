@@ -33,8 +33,9 @@ export default function Home() {
   const [fullTrendName, setFullTrendName] = useState<string | null>(null);
   const [trendDescription, setTrendDescription] = useState<string | null>(null);
   const [trendLink, setTrendLink] = useState<string | null>(null);
-  const [loginAmount, setLoginAmount] = useState<number>(0);
+  const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(null);
 
+  const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
@@ -67,6 +68,22 @@ export default function Home() {
         return <FlaskConical size={size} />;
       case "sports":
         return <Icon iconNode={football} size={size} />;
+    }
+  };
+
+  const fetchLoginInformation = async () => {
+    if (user) {
+      try {
+        await axios
+          .post("http://localhost:8080/api/auth0/getLoginInformation", {
+            userId: user.sub,
+          })
+          .then((res) => {
+            setHasSetUpAccount(res.data.hasSetUpAccount);
+          });
+      } catch (error) {
+        console.error("Error fetching first login status:", error);
+      }
     }
   };
 
@@ -115,23 +132,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    async function fetchLoginAmount() {
-      if (user) {
-        try {
-          const res = await axios.post(
-            "http://localhost:8080/api/auth0/getLoginAmount",
-            {
-              user_id: user.sub,
-            }
-          );
-          setLoginAmount(res.data);
-        } catch (error) {
-          console.error("Error fetching first login status:", error);
-        }
-      }
-    }
-
-    fetchLoginAmount();
+    fetchLoginInformation();
   }, [user]);
 
   useEffect(() => {
@@ -160,11 +161,41 @@ export default function Home() {
     setTrendLink(null);
   };
 
-  if (loginAmount === 1) {
+  const handleNicknameUpdate = async () => {
+    const nickname = nicknameInputRef.current?.value;
+    if (nickname && user) {
+      try {
+        await axios
+          .put("http://localhost:8080/api/auth0/update-nickname", {
+            userId: user.sub,
+            newNickname: nickname,
+          })
+          .then(async () => {
+            await axios
+              .put("http://localhost:8080/api/auth0/setHasSetUpAccount", {
+                userId: user.sub,
+              })
+              .then(() => {
+                fetchLoginInformation();
+              });
+          });
+      } catch (error) {
+        console.error("Error updating nickname:", error);
+      }
+    }
+  };
+
+  if (hasSetUpAccount == false) {
     return (
       <div className="userSetup">
         <h1>Welcome to the User Setup!</h1>
         <p>Please complete your profile to get started.</p>
+        <input
+          ref={nicknameInputRef}
+          type="text"
+          placeholder="Enter your nickname"
+        />
+        <button onClick={handleNicknameUpdate}>Update Nickname</button>
       </div>
     );
   }
@@ -185,7 +216,7 @@ export default function Home() {
     );
   }
 
-  if (isAuthenticated && loginAmount !== 0) {
+  if (isAuthenticated && hasSetUpAccount) {
     return (
       <>
         {fullTrendName && (

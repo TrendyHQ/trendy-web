@@ -53,7 +53,7 @@ public class MainController {
     public ResponseEntity<String> publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
         try {
 
-            String user_id = request.getUserId();
+            String userId = request.getUserId();
             String newNickname = request.getNewNickname();
 
             String accessToken = getAccessToken();
@@ -62,7 +62,7 @@ public class MainController {
             requestBodyJson.addProperty("nickname", newNickname);
             String requestBody = requestBodyJson.toString();
 
-            setUserProperty(requestBody, accessToken, user_id);
+            setUserProperty(requestBody, accessToken, userId);
             return ResponseEntity.ok("Nickname updated successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update nickname");
@@ -74,7 +74,6 @@ public class MainController {
             @RequestParam("userId") String userId,
             @RequestPart("file") MultipartFile file) throws Exception {
         try {
-            String user_id = userId;
             MultipartFile newPicture = file;
 
             String fileUrl = new UploadFile().uploadToS3(newPicture);
@@ -85,7 +84,7 @@ public class MainController {
             requestBodyJson.addProperty("picture", fileUrl);
             String requestBody = requestBodyJson.toString();
 
-            setUserProperty(requestBody, accessToken, user_id);
+            setUserProperty(requestBody, accessToken, userId);
 
             return ResponseEntity.ok("Nickname updated successfully");
 
@@ -96,11 +95,32 @@ public class MainController {
 
     }
 
-    @PostMapping("/auth0/getLoginAmount")
-    public ResponseEntity<Integer> getLoginAmount(@RequestBody LoginRequest request) {
+    @PutMapping("/auth0/setHasSetUpAccount")
+    public ResponseEntity<String> setHasSetUpAccount(@RequestBody LoginRequest request) {
         try {
             String accessToken = getAccessToken();
-            String encodedUserId = URLEncoder.encode(request.getUser_id(), StandardCharsets.UTF_8.toString());
+
+            JsonObject requestBodyJson = new JsonObject();
+            JsonObject userMetadata = new JsonObject();
+
+            userMetadata.addProperty("hasSetUpAccount", true);
+            requestBodyJson.add("app_metadata", userMetadata);
+
+            String requestBody = requestBodyJson.toString();
+
+            setUserProperty(requestBody, accessToken, request.getUserId());
+            return ResponseEntity.ok("User has set up account");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Failed to set has set up account in");
+        }
+    }
+
+    @PostMapping("/auth0/getLoginInformation")
+    public ResponseEntity<String> getLoginInformation(@RequestBody LoginRequest request) {
+        try {
+            String accessToken = getAccessToken();
+            String encodedUserId = URLEncoder.encode(request.getUserId(), StandardCharsets.UTF_8.toString());
             HttpResponse<String> auth0ApiResponse = Unirest
                     .get("https://" + DOMAIN + "/api/v2/users/" + encodedUserId)
                     .header("authorization", "Bearer " + accessToken)
@@ -110,11 +130,22 @@ public class MainController {
 
             JsonObject jsonResponse = JsonParser.parseString(auth0ApiResponse.getBody()).getAsJsonObject();
             int loginAmount = jsonResponse.get("logins_count").getAsInt();
-            
-            return ResponseEntity.ok(loginAmount);
+            boolean hasSetUpAccount;
+            try {
+                hasSetUpAccount = jsonResponse.get("app_metadata").getAsJsonObject()
+                        .get("hasSetUpAccount").getAsBoolean();
+            } catch (Exception e) {
+                hasSetUpAccount = false;
+            }
+
+            JsonObject result = new JsonObject();
+            result.addProperty("loginAmount", loginAmount);
+            result.addProperty("hasSetUpAccount", hasSetUpAccount);
+
+            return ResponseEntity.ok(result.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(0);
+            return ResponseEntity.badRequest().body("Failed to get login information");
         }
     }
 
@@ -240,7 +271,7 @@ public class MainController {
     }
 
     @PostMapping("/ai/AiModelRequest")
-    public ResponseEntity<String> getPhi4Data(@RequestBody Phi4Request request) {
+    public ResponseEntity<String> getPhi4Data(@RequestBody AiRequest request) {
         try {
             AiModelRequest phi4 = new AiModelRequest();
             String response = phi4.getPhi4Data(request.getMessage(), request.getUserLocation(),
@@ -265,7 +296,7 @@ public class MainController {
         }
     }
 
-    public static class Phi4Request {
+    public static class AiRequest {
         private String message;
         private String userLocation;
         private String userBirthdate;
@@ -294,11 +325,10 @@ public class MainController {
     }
 
     public static class LoginRequest {
-        private String user_id;
+        private String userId;
 
-        // This getter maps to the axios POST payload key 'user_id'
-        public String getUser_id() {
-            return user_id;
+        public String getUserId() {
+            return userId;
         }
     }
 
@@ -318,8 +348,16 @@ public class MainController {
         return accessToken;
     }
 
-    private void setUserProperty(String requestBody, String accessToken, String user_id) throws Exception {
-        String encodedUserId = URLEncoder.encode(user_id, StandardCharsets.UTF_8.toString());
+    private void setUserProperty(String requestBody, String accessToken, String userId) throws Exception {
+        String encodedUserId;
+        if (userId.contains("%")) {
+            encodedUserId = userId;
+        } else {
+            encodedUserId = URLEncoder.encode(userId, StandardCharsets.UTF_8.toString());
+        }
+
+        System.out.println(requestBody);
+
         @SuppressWarnings("unused")
         HttpResponse<String> auth0ApiResponse = Unirest
                 .patch("https://" + DOMAIN + "/api/v2/users/" + encodedUserId)

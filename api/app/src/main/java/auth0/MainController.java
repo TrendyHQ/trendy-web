@@ -97,18 +97,21 @@ public class MainController {
 
     @PutMapping("/auth0/setHasSetUpAccount")
     public ResponseEntity<String> setHasSetUpAccount(@RequestBody LoginRequest request) {
+        final boolean testing = true;
         try {
-            String accessToken = getAccessToken();
+            if (!testing) {
+                String accessToken = getAccessToken();
 
-            JsonObject requestBodyJson = new JsonObject();
-            JsonObject userMetadata = new JsonObject();
+                JsonObject requestBodyJson = new JsonObject();
+                JsonObject userMetadata = new JsonObject();
 
-            userMetadata.addProperty("hasSetUpAccount", true);
-            requestBodyJson.add("app_metadata", userMetadata);
+                userMetadata.addProperty("hasSetUpAccount", true);
+                requestBodyJson.add("app_metadata", userMetadata);
 
-            String requestBody = requestBodyJson.toString();
+                String requestBody = requestBodyJson.toString();
 
-            setUserProperty(requestBody, accessToken, request.getUserId());
+                setUserProperty(requestBody, accessToken, request.getUserId());
+            }
             return ResponseEntity.ok("User has set up account");
         } catch (Exception e) {
             e.printStackTrace();

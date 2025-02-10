@@ -24,6 +24,7 @@ import { football } from "@lucide/lab";
 import { Trend } from "../types";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { testing } from "../Constants";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -111,7 +112,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (isAuthenticated && false) {
+    if (isAuthenticated && !testing) {
       // Perform an immediate update on component mount
       updateTopTrends();
 
@@ -201,19 +202,7 @@ export default function Home() {
   }
 
   if (isLoading) {
-    return (
-      <div className="bodyCont">
-        <div className="content bottom">
-          <div className="header-wrapper">
-            <div className="header-cont loading"></div>
-          </div>
-          <div className="body-wrapper">
-            <div className="left-body-cont loading"></div>
-            <div className="right-body-cont loading"></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <div className="bodyCont"></div>;
   }
 
   if (isAuthenticated && hasSetUpAccount) {

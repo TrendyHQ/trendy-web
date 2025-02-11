@@ -2,14 +2,10 @@ package auth0;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -35,6 +31,9 @@ import trendData.redditData.TopRedditData.RedditPost;
 
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @RestController
 @RequestMapping("/api") // Define the base URL for your endpoints
@@ -49,81 +48,120 @@ public class MainController {
     final String CLIENT_ID = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_ID");
     final String CLIENT_SECRET = dotenv.get("VITE_MANAGEMENT_AUTH0_CLIENT_SECRET");
 
-    @PutMapping("/auth0/update-nickname")
-    public ResponseEntity<String> publicEndpoint(@RequestBody UserUpdateRequest request) throws Exception {
+    /*
+     * @PutMapping("/auth0/update-nickname")
+     * public ResponseEntity<String> publicEndpoint(@RequestBody UserUpdateRequest
+     * request) throws Exception {
+     * try {
+     * 
+     * String userId = request.getUserId();
+     * String newNickname = request.getNewNickname();
+     * 
+     * String accessToken = getAccessToken();
+     * 
+     * JsonObject requestBodyJson = new JsonObject();
+     * requestBodyJson.addProperty("nickname", newNickname);
+     * String requestBody = requestBodyJson.toString();
+     * 
+     * setUserProperty(requestBody, accessToken, userId);
+     * return ResponseEntity.ok("Nickname updated successfully");
+     * } catch (Exception e) {
+     * return ResponseEntity.badRequest().body("Failed to update nickname");
+     * }
+     * }
+     * 
+     * @PutMapping("/auth0/update-picture")
+     * public ResponseEntity<String> updatePicture(
+     * 
+     * @RequestParam("userId") String userId,
+     * 
+     * @RequestPart("file") MultipartFile file) throws Exception {
+     * try {
+     * MultipartFile newPicture = file;
+     * 
+     * String fileUrl = new UploadFile().uploadToS3(newPicture);
+     * 
+     * String accessToken = getAccessToken();
+     * 
+     * JsonObject requestBodyJson = new JsonObject();
+     * requestBodyJson.addProperty("picture", fileUrl);
+     * String requestBody = requestBodyJson.toString();
+     * 
+     * setUserProperty(requestBody, accessToken, userId);
+     * 
+     * return ResponseEntity.ok("Nickname updated successfully");
+     * 
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * return ResponseEntity.badRequest().body("Failed to update nickname");
+     * }
+     * 
+     * }
+     * 
+     * @PutMapping("/auth0/setHasSetUpAccount")
+     * public ResponseEntity<String> setHasSetUpAccount(@RequestBody LoginRequest
+     * request) {
+     * final boolean testing = true;
+     * try {
+     * if (!testing) {
+     * String accessToken = getAccessToken();
+     * 
+     * JsonObject requestBodyJson = new JsonObject();
+     * JsonObject appMetadata = new JsonObject();
+     * 
+     * appMetadata.addProperty("hasSetUpAccount", true);
+     * requestBodyJson.add("app_metadata", appMetadata);
+     * 
+     * String requestBody = requestBodyJson.toString();
+     * 
+     * setUserProperty(requestBody, accessToken, request.getUserId());
+     * }
+     * return ResponseEntity.ok("User has set up account");
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * return
+     * ResponseEntity.badRequest().body("Failed to set has set up account in");
+     * }
+     * }
+     * 
+     * @PutMapping("/auth0/setUserGender")
+     * public ResponseEntity<String> setUserGender(@RequestBody GenderUpdateRequest
+     * request) {
+     * try {
+     * String accessToken = getAccessToken();
+     * 
+     * JsonObject requestBodyJson = new JsonObject();
+     * JsonObject userMetadata = new JsonObject();
+     * 
+     * userMetadata.addProperty("gender", request.getGender());
+     * requestBodyJson.add("user_metadata", userMetadata);
+     * 
+     * String requestBody = requestBodyJson.toString();
+     * setUserProperty(requestBody, accessToken, request.getUserId());
+     * return ResponseEntity.ok("User gender updated successfully");
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * return ResponseEntity.badRequest().body("Failed to set user gender");
+     * }
+     * }
+     */
+
+    @PatchMapping("/auth0/updateUserInformation")
+    public ResponseEntity<String> updateUserInformation(@RequestBody String request) {
         try {
-
-            String userId = request.getUserId();
-            String newNickname = request.getNewNickname();
-
-            String accessToken = getAccessToken();
-
-            JsonObject requestBodyJson = new JsonObject();
-            requestBodyJson.addProperty("nickname", newNickname);
-            String requestBody = requestBodyJson.toString();
-
-            setUserProperty(requestBody, accessToken, userId);
-            return ResponseEntity.ok("Nickname updated successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to update nickname");
-        }
-    }
-
-    @PutMapping("/auth0/update-picture")
-    public ResponseEntity<String> updatePicture(
-            @RequestParam("userId") String userId,
-            @RequestPart("file") MultipartFile file) throws Exception {
-        try {
-            MultipartFile newPicture = file;
-
-            String fileUrl = new UploadFile().uploadToS3(newPicture);
-
-            String accessToken = getAccessToken();
-
-            JsonObject requestBodyJson = new JsonObject();
-            requestBodyJson.addProperty("picture", fileUrl);
-            String requestBody = requestBodyJson.toString();
-
-            setUserProperty(requestBody, accessToken, userId);
-
-            return ResponseEntity.ok("Nickname updated successfully");
-
+            System.out.println("\n\n" + request + "\n\n");  // Debugging: Check if the request is parsed correctly
+            return ResponseEntity.ok(request);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Failed to update nickname");
-        }
-
-    }
-
-    @PutMapping("/auth0/setHasSetUpAccount")
-    public ResponseEntity<String> setHasSetUpAccount(@RequestBody LoginRequest request) {
-        final boolean testing = true;
-        try {
-            if (!testing) {
-                String accessToken = getAccessToken();
-
-                JsonObject requestBodyJson = new JsonObject();
-                JsonObject userMetadata = new JsonObject();
-
-                userMetadata.addProperty("hasSetUpAccount", true);
-                requestBodyJson.add("app_metadata", userMetadata);
-
-                String requestBody = requestBodyJson.toString();
-
-                setUserProperty(requestBody, accessToken, request.getUserId());
-            }
-            return ResponseEntity.ok("User has set up account");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Failed to set has set up account in");
+            return ResponseEntity.badRequest().body("Failed to receive data");
         }
     }
 
-    @PostMapping("/auth0/getLoginInformation")
-    public ResponseEntity<String> getLoginInformation(@RequestBody LoginRequest request) {
+    @GetMapping("/auth0/getLoginInformation")
+    public ResponseEntity<String> getLoginInformation(@RequestParam("userId") String userId) {
         try {
             String accessToken = getAccessToken();
-            String encodedUserId = URLEncoder.encode(request.getUserId(), StandardCharsets.UTF_8.toString());
+            String encodedUserId = URLEncoder.encode(userId, StandardCharsets.UTF_8.toString());
             HttpResponse<String> auth0ApiResponse = Unirest
                     .get("https://" + DOMAIN + "/api/v2/users/" + encodedUserId)
                     .header("authorization", "Bearer " + accessToken)
@@ -133,13 +171,9 @@ public class MainController {
 
             JsonObject jsonResponse = JsonParser.parseString(auth0ApiResponse.getBody()).getAsJsonObject();
             int loginAmount = jsonResponse.get("logins_count").getAsInt();
-            boolean hasSetUpAccount;
-            try {
-                hasSetUpAccount = jsonResponse.get("app_metadata").getAsJsonObject()
-                        .get("hasSetUpAccount").getAsBoolean();
-            } catch (Exception e) {
-                hasSetUpAccount = false;
-            }
+            boolean hasSetUpAccount = jsonResponse.has("app_metadata") &&
+                    jsonResponse.get("app_metadata").getAsJsonObject().has("hasSetUpAccount") &&
+                    jsonResponse.get("app_metadata").getAsJsonObject().get("hasSetUpAccount").getAsBoolean();
 
             JsonObject result = new JsonObject();
             result.addProperty("loginAmount", loginAmount);
@@ -335,6 +369,19 @@ public class MainController {
         }
     }
 
+    public static class GenderUpdateRequest {
+        private String userId;
+        private String gender;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+    }
+
     private String getAccessToken() throws Exception {
 
         String jsonBody = "{\"client_id\":\"" + CLIENT_ID + "\",\"client_secret\":\"" + CLIENT_SECRET
@@ -358,8 +405,6 @@ public class MainController {
         } else {
             encodedUserId = URLEncoder.encode(userId, StandardCharsets.UTF_8.toString());
         }
-
-        System.out.println(requestBody);
 
         @SuppressWarnings("unused")
         HttpResponse<String> auth0ApiResponse = Unirest

@@ -27,7 +27,8 @@ import { useEffect, useRef, useState } from "react";
 import { testing } from "../Constants";
 
 export default function Home() {
-  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user, logout } =
+    useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
@@ -75,13 +76,13 @@ export default function Home() {
   const fetchLoginInformation = async () => {
     if (user) {
       try {
-        await axios
-          .post("http://localhost:8080/api/auth0/getLoginInformation", {
-            userId: user.sub,
-          })
-          .then((res) => {
-            setHasSetUpAccount(res.data.hasSetUpAccount);
-          });
+        const res = await axios.get(
+          "http://localhost:8080/api/auth0/getLoginInformation",
+          {
+            params: { userId: user.sub },
+          }
+        );
+        setHasSetUpAccount(res.data.hasSetUpAccount);
       } catch (error) {
         console.error("Error fetching first login status:", error);
       }
@@ -162,26 +163,41 @@ export default function Home() {
     setTrendLink(null);
   };
 
-  const handleNicknameUpdate = async () => {
+  const updateInformation = async () => {
     const nickname = nicknameInputRef.current?.value;
-    if (nickname && user) {
+    const gender: string = (
+      document.querySelector(
+        'input[name="genderInput"]:checked'
+      ) as HTMLInputElement
+    )?.value;
+
+    const jsonRequest = JSON.stringify({
+      userId: user?.sub,
+      newNickname: nickname,
+      gender: gender,
+    });
+
+    if ((nickname || gender) && user) {
       try {
-        await axios
-          .put("http://localhost:8080/api/auth0/update-nickname", {
-            userId: user.sub,
-            newNickname: nickname,
-          })
-          .then(async () => {
-            await axios
-              .put("http://localhost:8080/api/auth0/setHasSetUpAccount", {
-                userId: user.sub,
-              })
-              .then(() => {
-                fetchLoginInformation();
-              });
-          });
+        const res = await axios.patch(
+          "http://localhost:8080/api/auth0/updateUserInformation",
+          jsonRequest,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // await axios
+        //   .put("http://localhost:8080/api/auth0/setHasSetUpAccount", {
+        //     userId: user.sub,
+        //   })
+        //   .then(() => {
+        //     fetchLoginInformation();
+        //   });
+        console.log(res.data);
       } catch (error) {
-        console.error("Error updating nickname:", error);
+        console.error("Error updating user information:", error);
       }
     }
   };
@@ -196,13 +212,48 @@ export default function Home() {
           type="text"
           placeholder="Enter your nickname"
         />
-        <button onClick={handleNicknameUpdate}>Update Nickname</button>
+        <br />
+        <h3>Gender:</h3>
+        <div>
+          <label htmlFor="genderMale">Male</label>
+          <input type="radio" name="genderInput" value="male" id="genderMale" />
+          <label htmlFor="genderFemale">Female</label>
+          <input
+            type="radio"
+            name="genderInput"
+            value="female"
+            id="genderFemale"
+          />
+          <label htmlFor="genderOther">Other</label>
+          <input
+            type="radio"
+            name="genderInput"
+            value="other"
+            id="genderOther"
+          />
+        </div>
+        <br />
+        <button onClick={updateInformation}>Update Nickname</button>
+        <br />
+        <button onClick={() => logout()}>Log Out</button>
       </div>
     );
   }
 
   if (isLoading) {
-    return <div className="bodyCont"></div>;
+    return (
+      <div className="bodyCont">
+        <div className="content bottom">
+          <div className="header-wrapper">
+            <div className="header-cont loading"></div>
+          </div>
+          <div className="body-wrapper">
+            <div className="left-body-cont loading"></div>
+            <div className="right-body-cont loading"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (isAuthenticated && hasSetUpAccount) {
@@ -371,17 +422,5 @@ export default function Home() {
     );
   }
 
-  return (
-    <div className="bodyCont">
-      <div className="content bottom">
-        <div className="header-wrapper">
-          <div className="header-cont loading"></div>
-        </div>
-        <div className="body-wrapper">
-          <div className="left-body-cont loading"></div>
-          <div className="right-body-cont loading"></div>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="bodyCont"></div>;
 }

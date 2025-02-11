@@ -164,37 +164,37 @@ export default function Home() {
   };
 
   const updateInformation = async () => {
-    const nickname = nicknameInputRef.current?.value;
-    const gender: string = (
+    const nickname: string | null = nicknameInputRef.current?.value || null;
+    const gender: string | null = (
       document.querySelector(
         'input[name="genderInput"]:checked'
       ) as HTMLInputElement
-    )?.value;
+    )?.value || null;
 
     const jsonRequest = JSON.stringify({
-      userId: user?.sub,
-      newNickname: nickname,
-      gender: gender,
+      nickname: nickname,
+      app_metadata: {
+        hasSetUpAccount: true,
+      },
+      user_metadata: {
+        gender: gender,
+      },
     });
 
     if ((nickname || gender) && user) {
       try {
         const res = await axios.patch(
           "http://localhost:8080/api/auth0/updateUserInformation",
-          jsonRequest,
+          {
+            userId: user.sub,
+            toUpdate: jsonRequest,
+          },
           {
             headers: {
               "Content-Type": "application/json",
             },
           }
         );
-        // await axios
-        //   .put("http://localhost:8080/api/auth0/setHasSetUpAccount", {
-        //     userId: user.sub,
-        //   })
-        //   .then(() => {
-        //     fetchLoginInformation();
-        //   });
         console.log(res.data);
       } catch (error) {
         console.error("Error updating user information:", error);

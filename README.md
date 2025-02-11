@@ -14,7 +14,7 @@ The Trendy App Front-End leverages modern web technologies to present real-time 
 
 2. **User-Centric Interface**  
    - **Responsive Design:** Optimized for desktops, tablets, and mobile devices to ensure a consistent experience.
-   - **Intuitive Navigation:** A clean, modern layout allows users to easily access detailed trend information.
+   - **Intuitive Navigation:** A clean, modern layout allows users to access detailed trend information easily.
 
 3. **Customizable Insights**  
    - **Advanced Filtering:** Personalize the data view by filtering trends based on age, location, interests, and more.
@@ -35,22 +35,5 @@ The Trendy App Front-End leverages modern web technologies to present real-time 
 ## Technologies Used
 
 - **HTML5 & CSS3:** For semantic markup and modern styling.
-- **JavaScript/TypeScript:** To power dynamic interactions and component-based architecture.
-- **Front-End Frameworks:** Built with [React/Vue/Angular] (choose the one you’re using) for a robust, scalable UI.
-- **Charting Libraries:** Implementation of libraries like Chart.js or D3.js to create interactive and responsive data visualizations.
-- **Responsive Frameworks:** Utilizing frameworks such as Bootstrap or Tailwind CSS to ensure a fluid, responsive design.
-
-## Getting Started
-
-To set up the front-end locally for development or testing, follow these steps:
-
-### Prerequisites
-
-- **Node.js** (v12 or higher)
-- **npm** or **yarn** package manager
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/trendy-app-frontend.git
+- **TypeScript:** To power dynamic interactions and component-based architecture.
+- **React:** Built with React for a robust, scalable UI.

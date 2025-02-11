@@ -32,7 +32,15 @@ export default function AskAi() {
 
   async function getResponse() {
     const userAge: string = user?.birthdate || "unknown";
-    const userGender: string = user?.gender || "unknown";
+    const userGender: string =
+      (
+        await axios.get("https://localhost:8080/api/auth0/getUserProperty", {
+          params: {
+            property: "gender",
+            userId: user?.sub,
+          },
+        })
+      ).data || "unknown";
 
     console.log(isFutureRequest);
 

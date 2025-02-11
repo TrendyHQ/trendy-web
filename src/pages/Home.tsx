@@ -73,16 +73,19 @@ export default function Home() {
     }
   };
 
-  const fetchLoginInformation = async () => {
+  const fetchUserProperty = async (property: string) => {
     if (user) {
       try {
         const res = await axios.get(
-          "http://localhost:8080/api/auth0/getLoginInformation",
+          "http://localhost:8080/api/auth0/getUserProperty",
           {
-            params: { userId: user.sub },
+            params: { 
+              userId: user.sub, 
+              property: property
+            },
           }
         );
-        setHasSetUpAccount(res.data.hasSetUpAccount);
+        setHasSetUpAccount(res.data);
       } catch (error) {
         console.error("Error fetching first login status:", error);
       }
@@ -134,7 +137,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetchLoginInformation();
+    fetchUserProperty("hasSetUpAccount");
   }, [user]);
 
   useEffect(() => {
@@ -183,7 +186,7 @@ export default function Home() {
 
     if ((nickname || gender) && user) {
       try {
-        const res = await axios.patch(
+        await axios.patch(
           "http://localhost:8080/api/auth0/updateUserInformation",
           {
             userId: user.sub,
@@ -195,7 +198,8 @@ export default function Home() {
             },
           }
         );
-        console.log(res.data);
+
+        setHasSetUpAccount(true);
       } catch (error) {
         console.error("Error updating user information:", error);
       }

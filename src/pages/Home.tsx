@@ -41,6 +41,7 @@ export default function Home() {
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
+  const birthDateInputRef = useRef<HTMLInputElement | null>(null);
 
   const getIcon = (categorie: string) => {
     const size = 30;
@@ -79,9 +80,9 @@ export default function Home() {
         const res = await axios.get(
           "http://localhost:8080/api/auth0/getUserProperty",
           {
-            params: { 
-              userId: user.sub, 
-              property: property
+            params: {
+              userId: user.sub,
+              property: property,
             },
           }
         );
@@ -168,11 +169,13 @@ export default function Home() {
 
   const updateInformation = async () => {
     const nickname: string | null = nicknameInputRef.current?.value || null;
-    const gender: string | null = (
-      document.querySelector(
-        'input[name="genderInput"]:checked'
-      ) as HTMLInputElement
-    )?.value || null;
+    const gender: string | null =
+      (
+        document.querySelector(
+          'input[name="genderInput"]:checked'
+        ) as HTMLInputElement
+      )?.value || null;
+    const birthDate: string | null = birthDateInputRef.current?.value || null;
 
     const jsonRequest = JSON.stringify({
       nickname: nickname,
@@ -181,6 +184,7 @@ export default function Home() {
       },
       user_metadata: {
         gender: gender,
+        birthDate: birthDate,
       },
     });
 
@@ -237,7 +241,10 @@ export default function Home() {
           />
         </div>
         <br />
-        <button onClick={updateInformation}>Update Nickname</button>
+        <h3>Birth Date:</h3>
+        <input type="date" ref={birthDateInputRef} />
+        <br />
+        <button onClick={updateInformation}>Update Information</button>
         <br />
         <button onClick={() => logout()}>Log Out</button>
       </div>

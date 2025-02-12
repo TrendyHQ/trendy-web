@@ -31,10 +31,19 @@ export default function AskAi() {
   }
 
   async function getResponse() {
-    const userAge: string = user?.birthdate || "unknown";
+    const birthDate: string =
+      (
+        await axios.get("http://localhost:8080/api/auth0/getUserProperty", {
+          params: {
+            property: "birthDate",
+            userId: user?.sub,
+          },
+        })
+      ).data || "unknown";
+
     const userGender: string =
       (
-        await axios.get("https://localhost:8080/api/auth0/getUserProperty", {
+        await axios.get("http://localhost:8080/api/auth0/getUserProperty", {
           params: {
             property: "gender",
             userId: user?.sub,
@@ -42,32 +51,25 @@ export default function AskAi() {
         })
       ).data || "unknown";
 
-    console.log(isFutureRequest);
-
     if (message !== "" && isFutureRequest !== null) {
       try {
         const location = (await getUserLocation()) || "unknown";
 
-        axios
-          .post(
-            "http://localhost:8080/api/ai/AiModelRequest",
-            {
-              message: message,
-              userLocation: location,
-              userAge: userAge,
-              userGender: userGender,
-              isFutureRequest: isFutureRequest,
-            },
-            {
-              withCredentials: true,
-            }
-          )
-          .then((res) => {
-            setResponse(res.data);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        const res = await axios.post(
+          "http://localhost:8080/api/ai/AiModelRequest",
+          {
+            message: message,
+            userLocation: location,
+            userAge: birthDate,
+            userGender: userGender,
+            isFutureRequest: isFutureRequest,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        setResponse(res.data);
       } catch (error) {
         console.error(error);
       }

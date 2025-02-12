@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import "../css/Settings.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -11,41 +11,12 @@ export default function Settings() {
   const [apiIsLoading, setApiIsLoading] = useState<boolean>(false);
   const [nicknameCharacters, setNicknameCharacters] = useState<string>("");
 
+  const nicknameInputRef = useRef<HTMLInputElement>(null);
+  const birthDateInputRef = useRef<HTMLInputElement>(null);
+
   if (!isAuthenticated && !isLoading) {
     return <Navigate to="/" />;
   }
-
-  const updateNickname = async (newNickname: string) => {
-    try {
-      // Get the Management API access token
-      const encodedUserId = encodeURIComponent(user?.sub || "");
-
-      const requestBody = {
-        userId: encodedUserId,
-        newNickname: newNickname,
-      };
-
-      setApiIsLoading(true);
-
-      await axios.put(
-        "http://localhost:8080/api/auth0/update-nickname",
-        requestBody,
-        {
-          headers: {
-            "Content-Type": "application/json", // Set content type to JSON
-          },
-          withCredentials: true, // Send cookies
-        }
-      );
-
-      setApiIsLoading(false);
-      alert(`Nickname updated to ${newNickname}`);
-    } catch (e) {
-      setApiIsLoading(false);
-      alert("Failed to update nickname.");
-      console.error(e);
-    }
-  };
 
   const updatePfp = async (image: File) => {
     const maxFileSize = 10 * 1024 * 1024; // 10MB
@@ -90,6 +61,50 @@ export default function Settings() {
     }
   };
 
+  const updateUserInformation = async () => {
+    setApiIsLoading(true);
+
+    const nickname: string | null = nicknameInputRef.current?.value || null;
+    const birthDate: string | null = birthDateInputRef.current?.value || null;
+    const gender: string | null =
+      (
+        document.querySelector(
+          'input[name="genderInput"]:checked'
+        ) as HTMLInputElement
+      )?.value || null;
+
+    const jsonRequest = JSON.stringify({
+      nickname: nickname,
+      user_metadata: {
+        gender: gender,
+        birthDate: birthDate,
+      },
+    });
+
+    if ((nickname || gender) && user) {
+      try {
+        await axios.patch(
+          "http://localhost:8080/api/auth0/updateUserInformation",
+          {
+            userId: user.sub,
+            toUpdate: jsonRequest,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        setApiIsLoading(false);
+        alert("User information updated successfully");
+      } catch (error) {
+        setApiIsLoading(false);
+        console.error("Error updating user information:", error);
+      }
+    }
+  };
+
   if (isLoading || apiIsLoading) {
     return (
       <div className="loading-container">
@@ -112,11 +127,7 @@ export default function Settings() {
       <div>
         <input
           type="text"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              updateNickname((e.target as HTMLInputElement).value);
-            }
-          }}
+          ref={nicknameInputRef}
           onChange={(e) => {
             const target = e.target as HTMLInputElement;
             if (target.value.length > 15) {
@@ -127,6 +138,30 @@ export default function Settings() {
           defaultValue={user?.nickname}
         />
         <p>{nicknameCharacters}</p>
+        <br />
+        <h3>Birth Date:</h3>
+        <input type="date" ref={birthDateInputRef} />
+        <br />
+        <div>
+          <label htmlFor="genderMale">Male</label>
+          <input type="radio" name="genderInput" value="male" id="genderMale" />
+          <label htmlFor="genderFemale">Female</label>
+          <input
+            type="radio"
+            name="genderInput"
+            value="female"
+            id="genderFemale"
+          />
+          <label htmlFor="genderOther">Other</label>
+          <input
+            type="radio"
+            name="genderInput"
+            value="other"
+            id="genderOther"
+          />
+          <br />
+          <button onClick={updateUserInformation}>Update Information</button>
+        </div>
       </div>
       <Footer />
     </div>

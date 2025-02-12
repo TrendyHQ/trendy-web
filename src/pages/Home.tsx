@@ -34,6 +34,7 @@ export default function Home() {
   const [trendDescription, setTrendDescription] = useState<string | null>(null);
   const [trendLink, setTrendLink] = useState<string | null>(null);
   const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(null);
+  const [savedTrends, setSavedTrends] = useState<string[] | null>(null);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -68,17 +69,26 @@ export default function Home() {
     console.log("Updating top trends...");
 
     try {
-      const res = await axios.post(
+      const trendsRes = await axios.post(
         "http://localhost:8080/api/reddit/topReddit",
         {},
         {
           withCredentials: true, // Send cookies
         }
       );
-      console.log(res.data);
+      
+      console.log(trendsRes.data);
+
+      const savedTrendsRes = await axios.get("http://localhost:8080/api/users/getSavedTrends", {
+        params: {
+          userId: user?.sub,
+        },
+      });
+
+      setSavedTrends(savedTrendsRes.data);
 
       setHotTrendsLoading(false);
-      setTopTrends(res.data);
+      setTopTrends(trendsRes.data);
     } catch (error) {
       console.error("Error updating top trends:", error);
     } finally {
@@ -105,7 +115,7 @@ export default function Home() {
         }
       };
     }
-  }, []);
+  }, [isAuthenticated, hasSetUpAccount]);
 
   useEffect(() => {
     fetchUserProperty("hasSetUpAccount");
@@ -350,6 +360,7 @@ export default function Home() {
                           setTrendDescription,
                           setTrendLink,
                         }}
+                        savedTrends={savedTrends}
                       />
                     ))}
                 </div>

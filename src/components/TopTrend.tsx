@@ -19,11 +19,14 @@ import {
 } from "lucide-react";
 import { Trend } from "../types";
 import { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
 
 export default function TopTrend({
   trend,
   index,
   functions,
+  savedTrends,
 }: {
   trend: Trend;
   index: number;
@@ -32,10 +35,14 @@ export default function TopTrend({
     setTrendDescription: (description: string) => void;
     setTrendLink: (link: string) => void;
   };
+  savedTrends: string[] | null;
 }) {
+  const { user } = useAuth0();
+
   const { setFullTrendName, setTrendDescription, setTrendLink } = functions;
-  
-  const [trendSaved, setTrendSaved] = useState<boolean>(false);
+
+  const isTrendSaved = savedTrends?.includes(trend.id) || false;
+  const [trendSaved, setTrendSaved] = useState<boolean>(isTrendSaved);
 
   const getRelevancy = (moreRelevantValue: number) => {
     if (moreRelevantValue === 1) {
@@ -84,22 +91,37 @@ export default function TopTrend({
     }
   };
 
-  const handleTrendSave = () => {
+  const handleTrendSave = async () => {
     setTrendSaved(!trendSaved);
-  }
+
+    await axios.patch("http://localhost:8080/api/users/saveTrend", {
+      userId: user?.sub,
+      trendId: trend.id,
+      saveTrend: !trendSaved,
+    });
+  };
 
   return (
     <div key={"topTrend" + index}>
       <div className="top-trend">
-        <Star size={30} color="yellow" fill={trendSaved ? "yellow" : "none"} onClick={handleTrendSave} />
+        <Star
+          size={30}
+          color="yellow"
+          fill={trendSaved ? "yellow" : "none"}
+          onClick={handleTrendSave}
+        />
         <div className="vertical-divider"></div>
-        <div className="top-trend-icon" onClick={() => handleTrendClick(trend)}>{getIcon(trend.category)}</div>
+        <div className="top-trend-icon" onClick={() => handleTrendClick(trend)}>
+          {getIcon(trend.category)}
+        </div>
         <h2 className="top-trend-name" onClick={() => handleTrendClick(trend)}>
           {trend.title.length > 50
             ? trend.title.substring(0, 50) + "..."
             : trend.title}
         </h2>
-        <div onClick={() => handleTrendClick(trend)}>{getRelevancy(trend.moreRelevantValue)}</div>
+        <div onClick={() => handleTrendClick(trend)}>
+          {getRelevancy(trend.moreRelevantValue)}
+        </div>
       </div>
       {index < 5 && <div className="trend-divider"></div>}
     </div>

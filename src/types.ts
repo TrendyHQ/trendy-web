@@ -4,6 +4,7 @@ interface Trend {
   moreRelevantValue: number;
   moreInfo: string;
   link: string;
+  id: string;
 }
 
 interface SpecificTrend {

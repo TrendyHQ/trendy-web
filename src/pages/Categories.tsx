@@ -2,8 +2,16 @@ import CategoryBox from "../components/CategoryBox";
 import "../css/Categories.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Navigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Categories() {
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  if (!isAuthenticated && !isLoading) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className="bodyCont">
       <Header />

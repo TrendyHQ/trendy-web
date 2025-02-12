@@ -3,9 +3,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Navigate } from "react-router-dom";
 
 export default function AskAi() {
-  const { user } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
   const [response, setResponse] = useState<string>("");
   let message: string;
@@ -81,6 +82,10 @@ export default function AskAi() {
     let newText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     newText = newText.replace(/(\d+\.)/g, "<br>$1");
     return newText;
+  }
+
+  if (!isAuthenticated && !isLoading) {
+    return <Navigate to="/" />;
   }
 
   return (

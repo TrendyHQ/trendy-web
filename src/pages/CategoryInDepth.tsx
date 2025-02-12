@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { SpecificTrend } from "../types";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function CategoryInDepth() {
+  const { isAuthenticated, isLoading } = useAuth0();
+
   const location = useLocation();
 
   const [trends, setTrends] = useState<SpecificTrend[]>([]);
@@ -38,6 +41,10 @@ export default function CategoryInDepth() {
   useEffect(() => {
     getTrendsForCategory();
   }, []);
+
+  if (!isAuthenticated && !isLoading) {
+    return <Navigate to="/" />;
+}
 
   return (
     <div className="bodyCont">

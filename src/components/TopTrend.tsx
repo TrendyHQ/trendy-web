@@ -106,8 +106,8 @@ export default function TopTrend({
       <div className="top-trend">
         <Star
           size={30}
-          color="yellow"
-          fill={trendSaved ? "yellow" : "none"}
+          color="#FFD700"
+          fill={trendSaved ? "#FFD700" : "none"}
           onClick={handleTrendSave}
         />
         <div className="vertical-divider"></div>

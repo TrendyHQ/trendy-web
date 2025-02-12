@@ -76,14 +76,17 @@ export default function Home() {
           withCredentials: true, // Send cookies
         }
       );
-      
+
       console.log(trendsRes.data);
 
-      const savedTrendsRes = await axios.get("http://localhost:8080/api/users/getSavedTrends", {
-        params: {
-          userId: user?.sub,
-        },
-      });
+      const savedTrendsRes = await axios.get(
+        "http://localhost:8080/api/users/getSavedTrends",
+        {
+          params: {
+            userId: user?.sub,
+          },
+        }
+      );
 
       setSavedTrends(savedTrendsRes.data);
 
@@ -226,6 +229,10 @@ export default function Home() {
             <div className="left-body-cont loading"></div>
             <div className="right-body-cont loading"></div>
           </div>
+          <div className="body-wrapper">
+            <div className="right-body-cont loading"></div>
+            <div className="left-body-cont loading"></div>
+          </div>
         </div>
       </div>
     );
@@ -364,6 +371,16 @@ export default function Home() {
                       />
                     ))}
                 </div>
+              </div>
+            </div>
+            <div className="body-wrapper">
+              <div className="right-body-cont">
+                <h1 className="section-title">TBD</h1>
+              </div>
+              <div className="left-body-cont">
+                <Link to="/favorites">
+                  <h1 className="section-title">Favorites</h1>
+                </Link>
               </div>
             </div>
           </div>

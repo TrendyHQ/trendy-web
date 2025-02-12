@@ -668,8 +668,9 @@
 
 .top-trend {
   display: flex;
-  gap: 20px;
+  justify-content: left;
   align-items: center;
+  gap: 15px;
   margin-bottom: 4px;
   cursor: pointer;
 }
@@ -711,6 +712,13 @@
   top: 50%;
   translate: -50% -50%;
   z-index: 1001;
+}
+
+.vertical-divider{
+  width: 3px;
+  height: 35px;
+  background-color: #484848;
+  border-radius: 2px;
 }
 
 @keyframes loading {

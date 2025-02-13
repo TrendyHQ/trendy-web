@@ -5,6 +5,7 @@ import Settings from "./pages/Settings";
 import CategoryInDepth from "./pages/CategoryInDepth";
 import AskAi from "./pages/AskAi";
 import FavoritesPage from "./pages/FavoritesPage";
+import SpecificTrendPage from "./pages/SpecificTrendPage";
 
 export default function Router() {
   return (
@@ -16,6 +17,7 @@ export default function Router() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/ask-ai" element={<AskAi />} />
         <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/trend/*" element={<SpecificTrendPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

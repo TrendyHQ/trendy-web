@@ -43,7 +43,7 @@ export default function Settings() {
       formData.append("file", image);
 
       await axios.put(
-        "http://localhost:8080/api/auth0/update-picture",
+        "http://localhost:8080/api/users/update-picture",
         formData,
         {
           headers: {
@@ -84,7 +84,7 @@ export default function Settings() {
     if ((nickname || gender) && user) {
       try {
         await axios.patch(
-          "http://localhost:8080/api/auth0/updateUserInformation",
+          "http://localhost:8080/api/users/updateUserInformation",
           {
             userId: user.sub,
             toUpdate: jsonRequest,

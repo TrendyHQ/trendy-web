@@ -24,5 +24,13 @@ CREATE TABLE IF NOT EXISTS user_trends (
     PRIMARY KEY (user_id, post_id, date),
     FOREIGN KEY (post_id) REFERENCES reddit_posts(post_id) ON DELETE CASCADE
 );
+
+-- Create a table to store a trend on trendy with its corresponding id and comments
+CREATE TABLE IF NOT EXISTS trend_information (
+    trend_id VARCHAR(255) PRIMARY KEY,
+    trend_comments JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create an index on post_trends.date for faster trend analysis
 CREATE INDEX idx_post_trends_date ON post_trends (date);

@@ -46,7 +46,7 @@ export default function Home() {
     if (user) {
       try {
         const res = await axios.get(
-          "http://localhost:8080/api/auth0/getUserProperty",
+          "http://localhost:8080/api/users/getUserProperty",
           {
             params: {
               userId: user.sub,
@@ -158,7 +158,7 @@ export default function Home() {
     if ((nickname || gender) && user) {
       try {
         await axios.patch(
-          "http://localhost:8080/api/auth0/updateUserInformation",
+          "http://localhost:8080/api/users/updateUserInformation",
           {
             userId: user.sub,
             toUpdate: jsonRequest,
@@ -282,7 +282,7 @@ export default function Home() {
                     <button id="try-it-button">Try It Now</button>
                   </Link>
                 </div>
-                <div className="geometric-bg"></div>
+                {/* <div className="geometric-bg"></div> */}
               </div>
             </div>
             <div className="body-wrapper">

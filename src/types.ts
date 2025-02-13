@@ -8,10 +8,19 @@ interface Trend {
 }
 
 interface SpecificTrend {
+  category: string;
   id: string;
   title: string;
   moreInfo: string;
   link: string;
+  comments: CommentObject[];
 }
 
-export type { Trend, SpecificTrend };
+interface CommentObject {
+  userId: string;
+  value: string;
+  datePublished: string;
+  nick: string;
+}
+
+export type { Trend, SpecificTrend, CommentObject };

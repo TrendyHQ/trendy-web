@@ -34,7 +34,7 @@ export default function AskAi() {
   async function getResponse() {
     const birthDate: string =
       (
-        await axios.get("http://localhost:8080/api/auth0/getUserProperty", {
+        await axios.get("http://localhost:8080/api/users/getUserProperty", {
           params: {
             property: "birthDate",
             userId: user?.sub,
@@ -44,7 +44,7 @@ export default function AskAi() {
 
     const userGender: string =
       (
-        await axios.get("http://localhost:8080/api/auth0/getUserProperty", {
+        await axios.get("http://localhost:8080/api/users/getUserProperty", {
           params: {
             property: "gender",
             userId: user?.sub,

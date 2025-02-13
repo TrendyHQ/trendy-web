@@ -30,9 +30,6 @@ export default function Home() {
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
-  const [fullTrendName, setFullTrendName] = useState<string | null>(null);
-  const [trendDescription, setTrendDescription] = useState<string | null>(null);
-  const [trendLink, setTrendLink] = useState<string | null>(null);
   const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(null);
   const [savedTrends, setSavedTrends] = useState<string[] | null>(null);
 
@@ -127,12 +124,6 @@ export default function Home() {
   useEffect(() => {
     console.log(user);
   }, [isAuthenticated]);
-
-  const handleTrendOffClick = () => {
-    setFullTrendName(null);
-    setTrendDescription(null);
-    setTrendLink(null);
-  };
 
   const updateInformation = async () => {
     const nickname: string | null = nicknameInputRef.current?.value || null;
@@ -241,29 +232,6 @@ export default function Home() {
   if (isAuthenticated && hasSetUpAccount) {
     return (
       <>
-        {fullTrendName && (
-          <div className="trendContainer">
-            <div className="clickable" onClick={handleTrendOffClick}></div>
-            <div className="trendBox">
-              {fullTrendName}
-              {trendDescription && (
-                <>
-                  <br /> <br />
-                  {trendDescription}
-                </>
-              )}
-              {trendLink && (
-                <>
-                  <br />
-                  <br />
-                  <a href={trendLink} target="blank">
-                    {trendLink}
-                  </a>
-                </>
-              )}
-            </div>
-          </div>
-        )}
         <div className="bodyCont">
           <Header />
           <div className="content bottom">
@@ -362,11 +330,6 @@ export default function Home() {
                         key={index}
                         trend={trend}
                         index={index}
-                        functions={{
-                          setFullTrendName,
-                          setTrendDescription,
-                          setTrendLink,
-                        }}
                         savedTrends={savedTrends}
                       />
                     ))}

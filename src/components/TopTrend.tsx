@@ -25,21 +25,13 @@ import axios from "axios";
 export default function TopTrend({
   trend,
   index,
-  functions,
   savedTrends,
 }: {
   trend: Trend;
   index: number;
-  functions: {
-    setFullTrendName: (name: string) => void;
-    setTrendDescription: (description: string) => void;
-    setTrendLink: (link: string) => void;
-  };
   savedTrends: string[] | null;
 }) {
   const { user } = useAuth0();
-
-  const { setFullTrendName, setTrendDescription, setTrendLink } = functions;
 
   const isTrendSaved = savedTrends?.includes(trend.id) || false;
   const [trendSaved, setTrendSaved] = useState<boolean>(isTrendSaved);
@@ -55,9 +47,7 @@ export default function TopTrend({
   };
 
   const handleTrendClick = (trend: Trend) => {
-    setFullTrendName(trend.title);
-    if (trend.moreInfo !== "") setTrendDescription(trend.moreInfo);
-    else setTrendLink(trend.link);
+    window.location.href = `/trend/${trend.id}`;
   };
 
   const getIcon = (categorie: string) => {

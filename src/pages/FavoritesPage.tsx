@@ -19,9 +19,10 @@ export default function FavoritesPage() {
                 },
                 withCredentials: true,
             });
+            
             console.log(response.data);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
         }
     }
 

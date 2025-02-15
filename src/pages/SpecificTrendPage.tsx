@@ -98,7 +98,7 @@ export default function SpecificTrendPage() {
         <div>
           <h2>{trendData.title}</h2>
           <p>{trendData.moreInfo}</p>
-          <p>{trendData.link}</p>
+          <a href={trendData.link} target="blank">{trendData.link}</a>
           <br />
           <button onClick={handleLike}>Like Post 👍</button>
           <p>{likes} likes</p>

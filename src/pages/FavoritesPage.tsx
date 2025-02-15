@@ -5,18 +5,21 @@ import { Link, Navigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ListTrend } from "../types";
+import { currentFavorites } from "../Constants";
 
 export default function FavoritesPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
-  const [listOfFavorites, setListOfFavorites] = useState<ListTrend[]>([]);
+  const [listOfFavorites, setListOfFavorites] = useState<ListTrend[]>(currentFavorites.value);
+  const [pageIsLoading, setPageIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchFavorites();
+    if (currentFavorites.value.length === 0) fetchFavorites();
   }, [user]);
 
   async function fetchFavorites() {
     if (user?.sub) {
+      setPageIsLoading(true);
       try {
         const response = await axios.get(
           "http://localhost:8080/api/users/getUsersTrends",
@@ -28,6 +31,8 @@ export default function FavoritesPage() {
           }
         );
 
+        setPageIsLoading(false);
+        currentFavorites.value = response.data;
         setListOfFavorites(response.data);
       } catch (err) {
         console.error(err);
@@ -37,6 +42,10 @@ export default function FavoritesPage() {
 
   if (!isAuthenticated && !isLoading) {
     return <Navigate to="/" />;
+  }
+
+  if(pageIsLoading) {
+    return <div>Loading...</div>
   }
 
   return (

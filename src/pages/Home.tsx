@@ -21,16 +21,24 @@ import { football } from "@lucide/lab";
 import { Trend } from "../types";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { testing } from "../Constants";
+import {
+  testing,
+  currentTopTrends,
+  currentHasSetUpAccount,
+} from "../Constants";
 import TopTrend from "../components/TopTrend";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect, user, logout } =
     useAuth0();
 
-  const [topTrends, setTopTrends] = useState<Trend[] | null>(null);
+  const [topTrends, setTopTrends] = useState<Trend[] | null>(
+    currentTopTrends.value
+  );
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
-  const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(null);
+  const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(
+    currentHasSetUpAccount.value
+  );
   const [savedTrends, setSavedTrends] = useState<string[] | null>(null);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
@@ -51,7 +59,10 @@ export default function Home() {
             },
           }
         );
-        setHasSetUpAccount(res.data);
+        if (property === "hasSetUpAccount") {
+          setHasSetUpAccount(res.data);
+          currentHasSetUpAccount.value = res.data;
+        }
       } catch (error) {
         console.error("Error fetching first login status:", error);
       }
@@ -63,7 +74,6 @@ export default function Home() {
     if (hotTrendsLoading) return;
 
     setHotTrendsLoading(true);
-    console.log("Updating top trends...");
 
     try {
       const trendsRes = await axios.post(
@@ -73,8 +83,6 @@ export default function Home() {
           withCredentials: true, // Send cookies
         }
       );
-
-      console.log(trendsRes.data);
 
       const savedTrendsRes = await axios.get(
         "http://localhost:8080/api/users/getSavedTrends",
@@ -88,18 +96,17 @@ export default function Home() {
       setSavedTrends(savedTrendsRes.data);
 
       setHotTrendsLoading(false);
+      currentTopTrends.value = trendsRes.data;
       setTopTrends(trendsRes.data);
     } catch (error) {
       console.error("Error updating top trends:", error);
-    } finally {
-      setHotTrendsLoading(false);
     }
   };
 
   useEffect(() => {
     if (isAuthenticated && !testing) {
       // Perform an immediate update on component mount
-      updateTopTrends();
+      if (currentTopTrends.value == null) updateTopTrends();
 
       // Set up the interval if it's not already set
       if (updateTrendsIntervalRef.current === null) {
@@ -118,7 +125,8 @@ export default function Home() {
   }, [isAuthenticated, hasSetUpAccount]);
 
   useEffect(() => {
-    fetchUserProperty("hasSetUpAccount");
+    if (currentHasSetUpAccount.value == null)
+      fetchUserProperty("hasSetUpAccount");
   }, [user]);
 
   useEffect(() => {

@@ -7,6 +7,15 @@ interface Trend {
   id: string;
 }
 
+interface ListTrend {
+  category: string;
+  id: string;
+  title: string;
+  moreInfo: string;
+  link: string;
+  score: number;
+}
+
 interface SpecificTrend {
   category: string;
   id: string;
@@ -23,4 +32,4 @@ interface CommentObject {
   nick: string;
 }
 
-export type { Trend, SpecificTrend, CommentObject };
+export type { Trend, SpecificTrend, CommentObject, ListTrend };

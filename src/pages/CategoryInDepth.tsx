@@ -24,10 +24,13 @@ export default function CategoryInDepth() {
       axios
         .post(
           "http://localhost:8080/api/reddit/topTrendsForCategory",
+          checkCategory(),
           {
-            category: checkCategory(),
-          },
-          { withCredentials: true }
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            withCredentials: true,
+          }
         )
         .then((res) => {
           console.log(res.data);
@@ -44,7 +47,7 @@ export default function CategoryInDepth() {
 
   if (!isAuthenticated && !isLoading) {
     return <Navigate to="/" />;
-}
+  }
 
   return (
     <div className="bodyCont">
@@ -56,13 +59,14 @@ export default function CategoryInDepth() {
             groups.push(
               <div className="box-container" key={`group-${index}`}>
                 {group.map((trend, i) => (
-                  <div className="category-box" key={`${trend.id}-${i}`}>
+                  <div
+                    className="category-box"
+                    onClick={() =>
+                      (window.location.pathname = `/trend/${trend.id}`)
+                    }
+                    key={`${trend.id}-${i}`}
+                  >
                     {trend.title} <br />
-                    <br />
-                    {trend.moreInfo !== "" && trend.moreInfo}
-                    {trend.moreInfo === "" && (
-                      <a href={trend.link}>{trend.link}</a>
-                    )}
                   </div>
                 ))}
               </div>

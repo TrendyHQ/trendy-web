@@ -371,5 +371,5 @@ export default function Home() {
     );
   }
 
-  return <div className="bodyCont"></div>;
+  return <div className="bodyCont">Loading...</div>;
 }

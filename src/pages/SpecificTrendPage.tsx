@@ -11,24 +11,31 @@ export default function SpecificTrendPage() {
   const location = useLocation();
   const trendId = location.pathname.split("/")[2];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [trendData, setTrendData] = useState<SpecificTrend>(
     {} as SpecificTrend
   );
+  const [pageIsLoading, setPageIsLoading] = useState<boolean>(true);
+  const [likes, setLikes] = useState<number>(0);
+  const [hasLiked, setHasLiked] = useState<boolean>(false);
 
   const getSpecificTrend = () => {
-    try {
-      axios
-        .get(`http://localhost:8080/api/reddit/trend`, {
-          params: {
-            postId: trendId,
-          },
-        })
-        .then((response) => {
-          setTrendData(response.data);
-        });
-    } catch (error) {
-      console.error(error);
-    }
+    setPageIsLoading(true);
+    axios
+      .get(`http://localhost:8080/api/data/trend`, {
+        params: {
+          postId: trendId,
+        },
+      })
+      .then((response) => {
+        setTrendData(response.data);
+        setLikes(response.data.otherInformation.likes);
+        setPageIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setPageIsLoading(false);
+      });
   };
 
   const addComment = (comment: string) => {
@@ -56,9 +63,32 @@ export default function SpecificTrendPage() {
     }
   };
 
+  const handleLike = () => {
+    if (user && !hasLiked) {
+      setHasLiked(true);
+      setLikes((prev) => prev + 1);
+      axios
+        .put(`http://localhost:8080/api/data/addLikeToPost`, trendId, {
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   useEffect(() => {
     getSpecificTrend();
   }, [trendId]);
+
+  if (pageIsLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bodyCont">
@@ -69,6 +99,9 @@ export default function SpecificTrendPage() {
           <h2>{trendData.title}</h2>
           <p>{trendData.moreInfo}</p>
           <p>{trendData.link}</p>
+          <br />
+          <button onClick={handleLike}>Like Post 👍</button>
+          <p>{likes} likes</p>
           <br />
           <label htmlFor="commentInput">New Comment:</label>
           <input
@@ -83,15 +116,18 @@ export default function SpecificTrendPage() {
           />
           <br />
           <h2>Comments:</h2>
-          {trendData.comments &&
-            trendData.comments.map((comment: CommentObject, index) => (
-              <div key={index}>
-                <p>{comment.nick}</p>
-                <p>
-                  {comment.datePublished}: {comment.value}
-                </p>
-              </div>
-            ))}
+          {trendData.otherInformation.comments &&
+            trendData.otherInformation.comments
+              .slice()
+              .reverse()
+              .map((comment: CommentObject, index) => (
+                <div key={index}>
+                  <p>{comment.nick}</p>
+                  <p>
+                    {comment.datePublished}: {comment.value}
+                  </p>
+                </div>
+              ))}
         </div>
       )}
       <Footer />

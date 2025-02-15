@@ -22,7 +22,10 @@ interface SpecificTrend {
   title: string;
   moreInfo: string;
   link: string;
-  comments: CommentObject[];
+  otherInformation: {
+    comments: CommentObject[];
+    likes: number;
+  };
 }
 
 interface CommentObject {

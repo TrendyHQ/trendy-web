@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS user_trends (
 CREATE TABLE IF NOT EXISTS trend_information (
     trend_id VARCHAR(255) PRIMARY KEY,
     trend_comments JSON,
+    trend_likes INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -71,15 +71,18 @@ export default function Home() {
 
   const updateTopTrends = async () => {
     // Prevent a new update if one is already in progress
-    if (hotTrendsLoading) return;
+    if (hotTrendsLoading || !user) return;
 
     setHotTrendsLoading(true);
 
     try {
       const trendsRes = await axios.post(
         "http://localhost:8080/api/reddit/topReddit",
-        {},
+        6,
         {
+          headers: {
+            "Content-Type": "text/plain",
+          },
           withCredentials: true, // Send cookies
         }
       );
@@ -88,7 +91,7 @@ export default function Home() {
         "http://localhost:8080/api/users/getSavedTrends",
         {
           params: {
-            userId: user?.sub,
+            userId: user.sub,
           },
         }
       );
@@ -330,7 +333,9 @@ export default function Home() {
                 </div>
               </div>
               <div className="right-body-cont">
-                <h1 className="section-title">Hot 🔥🔥🔥</h1>
+                <Link to="/hottrends" style={{ textDecoration: "none" }}>
+                  <h1 className="section-title">Hot 🔥🔥🔥</h1>
+                </Link>
                 <div className="top-trends-wrapper">
                   {topTrends &&
                     topTrends.map((trend: Trend, index: number) => (
@@ -339,6 +344,7 @@ export default function Home() {
                         trend={trend}
                         index={index}
                         savedTrends={savedTrends}
+                        total={topTrends.length}
                       />
                     ))}
                 </div>

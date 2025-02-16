@@ -26,10 +26,12 @@ export default function TopTrend({
   trend,
   index,
   savedTrends,
+  total,
 }: {
   trend: Trend;
   index: number;
   savedTrends: string[] | null;
+  total: number;
 }) {
   const { user } = useAuth0();
 
@@ -113,7 +115,7 @@ export default function TopTrend({
           {getRelevancy(trend.moreRelevantValue)}
         </div>
       </div>
-      {index < 5 && <div className="trend-divider"></div>}
+      {index < total - 1 && <div className="trend-divider"></div>}
     </div>
   );
 }

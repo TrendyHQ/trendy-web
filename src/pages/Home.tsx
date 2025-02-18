@@ -16,6 +16,7 @@ import {
   Plane,
   Shirt,
   Flag,
+  Star,
 } from "lucide-react";
 import { football } from "@lucide/lab";
 import { Trend } from "../types";
@@ -177,6 +178,25 @@ export default function Home() {
         console.error("Error updating user information:", error);
       }
     }
+  };
+
+  const getLoadingTrendElements = () => {
+    const elements = [];
+    for (let i = 0; i < 6; i++) {
+      elements.push(
+        <div key={"topTrend" + i}>
+          <div className="top-trend">
+            <Star size={30} color="grey" />
+            <div className="vertical-divider"></div>
+            <h2 style={{ animationDelay: `${0.1 * i}s` }} className="top-trend-name textLoading">
+              Loading...
+            </h2>
+          </div>
+          {i < 5 && <div className="trend-divider"></div>}
+        </div>
+      );
+    }
+    return elements;
   };
 
   if (hasSetUpAccount == false) {
@@ -347,6 +367,7 @@ export default function Home() {
                         total={topTrends.length}
                       />
                     ))}
+                  {topTrends === null && getLoadingTrendElements()}
                 </div>
               </div>
             </div>

@@ -536,6 +536,11 @@
   animation: loading 1.5s ease-in infinite;
 }
 
+.textLoading {
+  color: #424242;
+  animation: loading 1.5s ease-in infinite;
+}
+
 .categoryButton {
   background-color: #484848;
   border-radius: 4px;

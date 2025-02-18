@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { SpecificTrend } from "../types";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -10,6 +10,7 @@ export default function CategoryInDepth() {
   const { isAuthenticated, isLoading } = useAuth0();
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [trends, setTrends] = useState<SpecificTrend[]>([]);
 
@@ -61,9 +62,7 @@ export default function CategoryInDepth() {
                 {group.map((trend, i) => (
                   <div
                     className="category-box"
-                    onClick={() =>
-                      (window.location.pathname = `/trend/${trend.id}`)
-                    }
+                    onClick={() => navigate(`/trend/${trend.id}`)}
                     key={`${trend.id}-${i}`}
                   >
                     {trend.title} <br />

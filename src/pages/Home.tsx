@@ -298,62 +298,62 @@ export default function Home() {
                   <h1 className="section-title">Categories</h1>
                 </Link>
                 <div className="categories-wrapper">
-                  <Link to="/categories/fashion">
+                  <Link to="/category/fashion">
                     <button className="categoryButton fashion">
                       <Shirt size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/technology">
+                  <Link to="/category/technology">
                     <button className="categoryButton technology">
                       <Headset size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/foodandbeverages">
+                  <Link to="/category/foodandbeverages">
                     <button className="categoryButton food">
                       <CupSoda size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/entertainment">
+                  <Link to="/category/entertainment">
                     <button className="categoryButton entertainment">
                       <Clapperboard size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/socialmedia">
+                  <Link to="/category/socialmedia">
                     <button className="categoryButton social">
                       <MessageCircle size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/fitness">
+                  <Link to="/category/fitness">
                     <button className="categoryButton fitness">
                       <Dumbbell size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/wellness">
+                  <Link to="/category/wellness">
                     <button className="categoryButton wellness">
                       <HeartPulse size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/music">
+                  <Link to="/category/music">
                     <button className="categoryButton music">
                       <Music size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/politics">
+                  <Link to="/category/politics">
                     <button className="categoryButton politics">
                       <Flag size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/travel">
+                  <Link to="/category/travel">
                     <button className="categoryButton travel">
                       <Plane size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/science">
+                  <Link to="/category/science">
                     <button className="categoryButton science">
                       <FlaskConical size={42} />
                     </button>
                   </Link>
-                  <Link to="/categories/sports">
+                  <Link to="/category/sports">
                     <button className="categoryButton sports">
                       <Icon iconNode={football} size={42} />
                     </button>

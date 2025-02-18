@@ -14,7 +14,7 @@ export default function Router() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/categories" element={<Categories />} />
-        <Route path="/categories/*" element={<CategoryInDepth />} />
+        <Route path="/category/*" element={<CategoryInDepth />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/ask-ai" element={<AskAi />} />
         <Route path="/favorites" element={<FavoritesPage />} />

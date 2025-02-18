@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export default function CategoryBox({ categoryName }: { categoryName: string }) {
+  const navigate = useNavigate();
+
   const getDescription = () => {
     switch (categoryName) {
       case "fashion":
@@ -17,8 +21,8 @@ export default function CategoryBox({ categoryName }: { categoryName: string }) 
         return "Learn about the latest trends in wellness, self-care, and mental health. Explore new practices for maintaining physical and emotional well-being.";
       case "music":
         return "Keep up with the latest music trends, artists, and releases. Discover new genres, albums, and music events happening around the world.";
-      case "education":
-        return "Stay informed about the latest trends and innovations in education. Learn about new teaching methods, educational technology, and academic research.";
+      case "politics":
+        return "Stay informed about the latest trends and developments in politics. Get insights into policy changes, governmental affairs, and political debates.";
       case "travel":
         return "Discover the latest travel trends, destinations, and tips. Get inspired for your next trip and learn about travel hacks and cultural experiences.";
       case "science":
@@ -31,7 +35,7 @@ export default function CategoryBox({ categoryName }: { categoryName: string }) 
   };
 
   return (
-    <div className="category-box">
+    <div className="category-box" onClick={() => navigate(`/category/${categoryName}`)}>
       <h2>{categoryName}</h2>
       <p>{getDescription()}</p>
     </div>

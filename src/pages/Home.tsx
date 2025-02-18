@@ -184,11 +184,19 @@ export default function Home() {
     const elements = [];
     for (let i = 0; i < 6; i++) {
       elements.push(
-        <div key={"topTrend" + i}>
+        <div key={"topTrend" + i} style={{ cursor: "default" }}>
           <div className="top-trend">
-            <Star size={30} color="grey" />
+            <Star
+              size={30}
+              color="grey"
+              style={{ animationDelay: `${0.1 * i}s` }}
+              className="textLoading"
+            />
             <div className="vertical-divider"></div>
-            <h2 style={{ animationDelay: `${0.1 * i}s` }} className="top-trend-name textLoading">
+            <h2
+              style={{ animationDelay: `${0.1 * i}s` }}
+              className="top-trend-name textLoading"
+            >
               Loading...
             </h2>
           </div>

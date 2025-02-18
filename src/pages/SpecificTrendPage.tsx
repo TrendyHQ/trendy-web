@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { useEffect, useState } from "react";
@@ -7,11 +7,10 @@ import { CommentObject, SpecificTrend } from "../types";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function SpecificTrendPage() {
-  const { user } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
   const location = useLocation();
   const trendId = location.pathname.split("/")[2];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [trendData, setTrendData] = useState<SpecificTrend>(
     {} as SpecificTrend
   );
@@ -40,7 +39,8 @@ export default function SpecificTrendPage() {
 
   const addComment = (comment: string) => {
     if (user?.sub) {
-      const date = new Date().toDateString();
+      const date = new Date().toLocaleDateString();
+
       const commentObject: CommentObject = {
         userId: user.sub,
         value: comment,
@@ -86,6 +86,10 @@ export default function SpecificTrendPage() {
     getSpecificTrend();
   }, [trendId]);
 
+  if(!isAuthenticated && !isLoading) {
+    return <Navigate to="/" />;
+  }
+
   if (pageIsLoading) {
     return <div>Loading...</div>;
   }
@@ -106,7 +110,7 @@ export default function SpecificTrendPage() {
           <label htmlFor="commentInput">New Comment:</label>
           <input
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim() !== "") {
                 addComment((e.target as HTMLInputElement).value);
                 (e.target as HTMLInputElement).value = "";
               }

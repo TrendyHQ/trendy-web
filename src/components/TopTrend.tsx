@@ -21,6 +21,7 @@ import { Trend } from "../types";
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function TopTrend({
   trend,
@@ -34,6 +35,7 @@ export default function TopTrend({
   total: number;
 }) {
   const { user } = useAuth0();
+  const navigate = useNavigate();
 
   const isTrendSaved = savedTrends?.includes(trend.id) || false;
   const [trendSaved, setTrendSaved] = useState<boolean>(isTrendSaved);
@@ -47,9 +49,8 @@ export default function TopTrend({
       return <Minus size={30} color="#858585" />;
     }
   };
-
   const handleTrendClick = (trend: Trend) => {
-    window.location.href = `/trend/${trend.id}`;
+    navigate(`/trend/${trend.id}`);
   };
 
   const getIcon = (categorie: string) => {

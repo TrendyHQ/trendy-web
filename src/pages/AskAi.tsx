@@ -10,7 +10,7 @@ export default function AskAi() {
 
   const [response, setResponse] = useState<string>("");
   let message: string;
-  const [isFutureRequest, setIsFutureRequest] = useState<boolean | null>(null);
+  const [isFutureRequest, setIsFutureRequest] = useState<boolean | null>(false);
 
   function getUserLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -32,26 +32,6 @@ export default function AskAi() {
   }
 
   async function getResponse() {
-    const birthDate: string =
-      (
-        await axios.get("http://localhost:8080/api/users/getUserProperty", {
-          params: {
-            property: "birthDate",
-            userId: user?.sub,
-          },
-        })
-      ).data || "unknown";
-
-    const userGender: string =
-      (
-        await axios.get("http://localhost:8080/api/users/getUserProperty", {
-          params: {
-            property: "gender",
-            userId: user?.sub,
-          },
-        })
-      ).data || "unknown";
-
     if (message !== "" && isFutureRequest !== null) {
       try {
         const location = (await getUserLocation()) || "unknown";
@@ -61,9 +41,8 @@ export default function AskAi() {
           {
             message: message,
             userLocation: location,
-            userAge: birthDate,
-            userGender: userGender,
             isFutureRequest: isFutureRequest,
+            userId: user?.sub,
           },
           {
             withCredentials: true,
@@ -107,6 +86,7 @@ export default function AskAi() {
           <input
             type="radio"
             name="requestType"
+            defaultChecked={true}
             onChange={() => {
               setIsFutureRequest(false);
             }}

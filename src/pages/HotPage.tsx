@@ -6,9 +6,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { currentHotTrends } from "../Constants";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Navigate } from "react-router-dom";
 
 export default function HotPage() {
-  const { user } = useAuth0();
+  const { user, isLoading, isAuthenticated } = useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(
     currentHotTrends.value
@@ -21,7 +22,7 @@ export default function HotPage() {
   );
 
   async function updateTopTrends() {
-    if (user && currentHotTrends.value) {
+    if (user) {
       try {
         setHotTrendsLoading(true);
         const trendsRes = await axios.post(
@@ -55,7 +56,8 @@ export default function HotPage() {
     }
   }
   useEffect(() => {
-    if (currentHotTrends.value == null) updateTopTrends();
+    if (currentHotTrends.value === null || currentHotTrends.value.length === 0) updateTopTrends();
+    console.log(currentHotTrends.value);
 
     // Set up the interval if it's not already set
     if (updateTrendsIntervalRef.current === null) {
@@ -71,6 +73,10 @@ export default function HotPage() {
       }
     };
   }, [user]);
+
+  if (!isAuthenticated && !isLoading) {
+    return <Navigate to="/" />;
+  }
 
   if (hotTrendsLoading) {
     return <div>Loading...</div>;

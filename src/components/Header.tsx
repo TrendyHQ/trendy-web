@@ -15,19 +15,26 @@ export default function Header() {
   const profileImgRef = useRef<HTMLImageElement>(null);
 
   const [profileDown, setProfileDown] = useState<boolean>(false);
-  const [userNickname, setUserNickname] = useState<string>(user?.nickname || "");
+  const [userNickname, setUserNickname] = useState<string>(
+    user?.nickname || ""
+  );
+  const [feedbackWindowOpen, setFeedbackWindowOpen] = useState<boolean>(false);
 
   const iconSize: number = 26;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      // Don't close if the feedback window was clicked
+      if (event.target instanceof Element && event.target.closest('.feedbackWindow')) {
+      return;
+      }
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        profileImgRef.current &&
-        !profileImgRef.current.contains(event.target as Node)
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      profileImgRef.current &&
+      !profileImgRef.current.contains(event.target as Node)
       ) {
-        setProfileDown(false);
+      setProfileDown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -38,6 +45,10 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleFeedback = () => {
+    setFeedbackWindowOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -50,6 +61,10 @@ export default function Header() {
 
   return (
     <>
+      <div
+        className={`feedbackWindow ${feedbackWindowOpen ? "show" : ""}`}
+        onClick={() => setFeedbackWindowOpen(false)}
+      ></div>
       <header className={!isAuthenticated ? "transparent" : ""}>
         <Link to="/" className={isAuthenticated ? "logo" : "logo big"}>
           <h1>TRENDY</h1>
@@ -92,7 +107,7 @@ export default function Header() {
                   Settings
                 </button>
               </Link>
-              <button>
+              <button onClick={handleFeedback}>
                 <div className="greyCircle">
                   <MessageSquareWarning
                     size={iconSize}

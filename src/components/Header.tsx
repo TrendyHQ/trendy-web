@@ -1,7 +1,7 @@
 import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
-import { LogOut, MessageSquareWarning, Settings } from "lucide-react";
+import { CircleX, LogOut, MessageSquareWarning, Settings } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
@@ -25,16 +25,19 @@ export default function Header() {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       // Don't close if the feedback window was clicked
-      if (event.target instanceof Element && event.target.closest('.feedbackWindow')) {
-      return;
+      if (
+        event.target instanceof Element &&
+        event.target.closest(".feedbackWindow")
+      ) {
+        return;
       }
       if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node) &&
-      profileImgRef.current &&
-      !profileImgRef.current.contains(event.target as Node)
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        profileImgRef.current &&
+        !profileImgRef.current.contains(event.target as Node)
       ) {
-      setProfileDown(false);
+        setProfileDown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -64,7 +67,18 @@ export default function Header() {
       <div
         className={`feedbackWindow ${feedbackWindowOpen ? "show" : ""}`}
         onClick={() => setFeedbackWindowOpen(false)}
-      ></div>
+      >
+        <div className="feedbackBox">
+          <div className="feedback-header">
+            <h2>Give Feedback</h2>
+            <button className="feedback-close-button" onClick={() => setFeedbackWindowOpen(false)}>
+              <CircleX size={40} color="grey"/>
+            </button>
+          </div>
+          <button>Suggest Something</button>
+          <button>Report an error</button>
+        </div>
+      </div>
       <header className={!isAuthenticated ? "transparent" : ""}>
         <Link to="/" className={isAuthenticated ? "logo" : "logo big"}>
           <h1>TRENDY</h1>
@@ -103,7 +117,7 @@ export default function Header() {
                       size={iconSize}
                       color={isDarkTheme ? "#f0f0f0" : "#333333"}
                     />
-                  </div>{" "}
+                  </div>
                   Settings
                 </button>
               </Link>
@@ -113,7 +127,7 @@ export default function Header() {
                     size={iconSize}
                     color={isDarkTheme ? "#f0f0f0" : "#333333"}
                   />
-                </div>{" "}
+                </div>
                 Give Feedback
               </button>
               <button onClick={() => logout()}>
@@ -122,7 +136,7 @@ export default function Header() {
                     size={iconSize}
                     color={isDarkTheme ? "#f0f0f0" : "#333333"}
                   />
-                </div>{" "}
+                </div>
                 Logout
               </button>
             </div>

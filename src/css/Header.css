@@ -196,9 +196,9 @@ header a {
   border-radius: 50%;
 }
 
-.feedbackWindow{
+.feedbackWindow {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -209,8 +209,44 @@ header a {
   z-index: 1000;
 }
 
-.feedbackWindow.show{
+.feedbackWindow.show {
   display: flex;
+}
+
+.feedbackBox {
+  width: 50%;
+  height: 50%;
+  background-color: #242424;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 20px;
+  position: relative;
+}
+
+.feedbackBox h2 {
+  text-align: center;
+  font-family: var(--main-font);
+}
+
+.feedback-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.feedbackBox svg:hover {
+  fill: #434343;
 }
 
 @media (prefers-color-scheme: light) {

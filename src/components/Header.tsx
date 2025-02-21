@@ -1,7 +1,14 @@
 import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
-import { CircleX, LogOut, MessageSquareWarning, Settings } from "lucide-react";
+import {
+  CircleX,
+  LogOut,
+  MessageCircleMore,
+  MessageSquareWarning,
+  Settings,
+  TriangleAlert,
+} from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
@@ -68,15 +75,29 @@ export default function Header() {
         className={`feedbackWindow ${feedbackWindowOpen ? "show" : ""}`}
         onClick={() => setFeedbackWindowOpen(false)}
       >
-        <div className="feedbackBox">
-          <div className="feedback-header">
-            <h2>Give Feedback</h2>
-            <button className="feedback-close-button" onClick={() => setFeedbackWindowOpen(false)}>
-              <CircleX size={40} color="grey"/>
+        <div className="feedbackBox" onClick={(e) => e.stopPropagation()}>
+          <h2>Give Feedback</h2>
+          <button
+            className="feedback-close-button"
+            onClick={() => setFeedbackWindowOpen(false)}
+          >
+            <CircleX size={40} color="grey" />
+          </button>
+          <div className="feedback-header"></div>
+          <div className="feedback-buttons-wrapper">
+            <button className="feedback-button">
+              <div className="icon-wrapper">
+                <MessageCircleMore size={30} />
+              </div>
+              <p className="text">Suggest Something</p>
+            </button>
+            <button className="feedback-button">
+              <div className="icon-wrapper">
+                <TriangleAlert size={30} />
+              </div>
+              <p className="text">Report an error</p>
             </button>
           </div>
-          <button>Suggest Something</button>
-          <button>Report an error</button>
         </div>
       </div>
       <header className={!isAuthenticated ? "transparent" : ""}>

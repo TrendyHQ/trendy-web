@@ -2,6 +2,7 @@ import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import {
+  ArrowLeft,
   CircleX,
   LogOut,
   MessageCircleMore,
@@ -26,6 +27,8 @@ export default function Header() {
     user?.nickname || ""
   );
   const [feedbackWindowOpen, setFeedbackWindowOpen] = useState<boolean>(false);
+  const [currentFeedbackContent, setCurrentFeedbackContent] =
+    useState<string>("default");
 
   const iconSize: number = 26;
 
@@ -83,21 +86,57 @@ export default function Header() {
           >
             <CircleX size={40} color="grey" />
           </button>
+          {currentFeedbackContent !== "default" && (
+            <button
+              className="back-button"
+              onClick={() => setCurrentFeedbackContent("default")}
+            >
+              <ArrowLeft size={30} color="grey" />
+            </button>
+          )}
           <div className="feedback-header"></div>
-          <div className="feedback-buttons-wrapper">
-            <button className="feedback-button">
-              <div className="icon-wrapper">
-                <MessageCircleMore size={30} />
-              </div>
-              <p className="text">Suggest Something</p>
-            </button>
-            <button className="feedback-button">
-              <div className="icon-wrapper">
-                <TriangleAlert size={30} />
-              </div>
-              <p className="text">Report an error</p>
-            </button>
-          </div>
+          {currentFeedbackContent === "default" && (
+            <div className="feedback-buttons-wrapper">
+              <button
+                className="feedback-button"
+                onClick={() => setCurrentFeedbackContent("suggest")}
+              >
+                <div className="icon-wrapper">
+                  <MessageCircleMore size={30} />
+                </div>
+                <p className="text">Suggest Something</p>
+              </button>
+              <button
+                className="feedback-button"
+                onClick={() => setCurrentFeedbackContent("report")}
+              >
+                <div className="icon-wrapper">
+                  <TriangleAlert size={30} />
+                </div>
+                <p className="text">Report an error</p>
+              </button>
+            </div>
+          )}
+          {currentFeedbackContent === "suggest" && (
+            <div className="feedback-suggest">
+              <h3>Suggest Something</h3>
+              <textarea
+                className="feedback-textarea"
+                placeholder="What would you like to suggest?"
+              ></textarea>
+              <button className="submit-button">Submit</button>
+            </div>
+          )}
+          {currentFeedbackContent === "report" && (
+            <div className="feedback-report">
+              <h3>Report an error</h3>
+              <textarea
+                className="feedback-textarea"
+                placeholder="What error would you like to report?"
+              ></textarea>
+              <button className="submit-button">Submit</button>
+            </div>
+          )}
         </div>
       </div>
       <header className={!isAuthenticated ? "transparent" : ""}>

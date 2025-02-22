@@ -246,11 +246,38 @@ header a {
   right: 20px;
 }
 
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 5;
+}
+
+.back-button::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 85%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: 0.1s ease-in-out;
+  z-index: -1;
+}
+
+.back-button:hover::before {
+  background-color: #363636;
+}
+
 .feedback-header {
   width: 90%;
-  margin: 0 auto;
+  margin: 60px auto 0 auto;
   position: relative;
-  top: 60px;
 }
 .feedback-header::after {
   content: "";
@@ -268,7 +295,6 @@ header a {
 .feedback-buttons-wrapper {
   display: flex;
   flex-direction: column;
-  padding-top: 60px;
   height: 100%;
   gap: 5px;
 }
@@ -294,7 +320,7 @@ header a {
   background-color: #333333;
 }
 
-.feedback-button .icon-wrapper{
+.feedback-button .icon-wrapper {
   background-color: #484848;
   padding: 15px;
   aspect-ratio: 1;

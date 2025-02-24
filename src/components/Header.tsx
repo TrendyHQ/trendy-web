@@ -29,6 +29,7 @@ export default function Header() {
   const [feedbackWindowOpen, setFeedbackWindowOpen] = useState<boolean>(false);
   const [currentFeedbackContent, setCurrentFeedbackContent] =
     useState<string>("default");
+  const [isFading, setIsFading] = useState<boolean>(false);
 
   const iconSize: number = 26;
 
@@ -63,6 +64,14 @@ export default function Header() {
     setFeedbackWindowOpen(true);
   };
 
+  function handleFade(content: string) {
+    setIsFading(true);
+    setTimeout(() => {
+      setCurrentFeedbackContent(content);
+      setIsFading(false);
+    }, 100); // length of the fade animation in ms
+  }
+
   if (isLoading) {
     return (
       <header>
@@ -84,59 +93,66 @@ export default function Header() {
             className="feedback-close-button"
             onClick={() => setFeedbackWindowOpen(false)}
           >
-            <CircleX size={40} color="grey" />
+            <CircleX
+              size={40}
+              color="grey"
+              className="icon-close-button"
+              strokeWidth={1.5}
+            />
           </button>
           {currentFeedbackContent !== "default" && (
             <button
               className="back-button"
-              onClick={() => setCurrentFeedbackContent("default")}
+              onClick={() => handleFade("default")}
             >
               <ArrowLeft size={30} color="grey" />
             </button>
           )}
           <div className="feedback-header"></div>
-          {currentFeedbackContent === "default" && (
-            <div className="feedback-buttons-wrapper">
-              <button
-                className="feedback-button"
-                onClick={() => setCurrentFeedbackContent("suggest")}
-              >
-                <div className="icon-wrapper">
-                  <MessageCircleMore size={30} />
-                </div>
-                <p className="text">Suggest Something</p>
-              </button>
-              <button
-                className="feedback-button"
-                onClick={() => setCurrentFeedbackContent("report")}
-              >
-                <div className="icon-wrapper">
-                  <TriangleAlert size={30} />
-                </div>
-                <p className="text">Report an error</p>
-              </button>
-            </div>
-          )}
-          {currentFeedbackContent === "suggest" && (
-            <div className="feedback-suggest">
-              <h3>Suggest Something</h3>
-              <textarea
-                className="feedback-textarea"
-                placeholder="What would you like to suggest?"
-              ></textarea>
-              <button className="submit-button">Submit</button>
-            </div>
-          )}
-          {currentFeedbackContent === "report" && (
-            <div className="feedback-report">
-              <h3>Report an error</h3>
-              <textarea
-                className="feedback-textarea"
-                placeholder="What error would you like to report?"
-              ></textarea>
-              <button className="submit-button">Submit</button>
-            </div>
-          )}
+          <div className={`feedback-content  ${isFading ? "fade" : ""}`}>
+            {currentFeedbackContent === "default" && (
+              <div className="feedback-buttons-wrapper">
+                <button
+                  className="feedback-button"
+                  onClick={() => handleFade("suggest")}
+                >
+                  <div className="icon-wrapper">
+                    <MessageCircleMore size={30} strokeWidth={1.5} />
+                  </div>
+                  <p className="text">Suggest Something</p>
+                </button>
+                <button
+                  className="feedback-button"
+                  onClick={() => handleFade("report")}
+                >
+                  <div className="icon-wrapper">
+                    <TriangleAlert size={30} strokeWidth={1.5} />
+                  </div>
+                  <p className="text">Report an error</p>
+                </button>
+              </div>
+            )}
+            {currentFeedbackContent === "suggest" && (
+              <div className="feedback-suggest">
+                <h3>Suggest Something</h3>
+                <textarea
+                  className="feedback-textarea"
+                  placeholder="What would you like to suggest?"
+                ></textarea>
+                <button className="submit-button">Submit</button>
+              </div>
+            )}
+            {currentFeedbackContent === "report" && (
+              <div className="feedback-report">
+                <h3>Report an error</h3>
+                <textarea
+                  className="feedback-textarea"
+                  placeholder="What error would you like to report?"
+                ></textarea>
+                <button className="submit-button">Submit</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <header className={!isAuthenticated ? "transparent" : ""}>

@@ -1,5 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Josefin+Sans:100,200,300,regular,500,600,700,100italic,200italic,300italic,italic,500italic,600italic,700italic);
 @import url(https://fonts.googleapis.com/css?family=M+PLUS+2:100,200,300,regular,500,600,700,800,900);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,regular,500,600,700,800,300italic,italic,500italic,600italic,700italic,800italic);
 
 *,
 *::before,
@@ -23,6 +24,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --main-font: "M PLUS 2", Josefin Sans, sans-serif;
+  --secondary-font: "Open Sans", Arial, sans-serif;
 }
 
 body {

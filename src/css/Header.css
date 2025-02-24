@@ -214,22 +214,25 @@ header a {
 }
 
 .feedbackBox {
-  width: 50%;
-  height: 50%;
-  background-color: #242424;
+  width: fit-content;
+  min-width: 500px;
+  height: fit-content;
+  background: linear-gradient(0deg, #242424, #303030);
   border-radius: 8px;
-  padding: 20px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   gap: 20px;
   position: relative;
   z-index: 1001;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(255, 255, 255, 0.1);
 }
 
 .feedbackBox h2 {
   text-align: center;
-  font-family: var(--main-font);
+  font-family: var(--secondary-font);
+  font-size: 1.3rem;
   position: absolute;
   left: 50%;
   translate: -50%;
@@ -242,8 +245,8 @@ header a {
   border: none;
   cursor: pointer;
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 15px;
+  right: 15px;
 }
 
 .back-button {
@@ -275,8 +278,8 @@ header a {
 }
 
 .feedback-header {
-  width: 90%;
-  margin: 60px auto 0 auto;
+  width: 100%;
+  margin: 50px auto 0 auto;
   position: relative;
 }
 .feedback-header::after {
@@ -288,7 +291,7 @@ header a {
   border-radius: 2px;
 }
 
-.feedbackBox svg:hover {
+.feedbackBox .icon-close-button:hover {
   fill: #434343;
 }
 
@@ -297,6 +300,16 @@ header a {
   flex-direction: column;
   height: 100%;
   gap: 5px;
+  padding: 0 10px;
+}
+
+.feedback-content {
+  opacity: 1;
+  transition: 0.1s ease-out;
+}
+
+.feedback-content.fade {
+  opacity: 0;
 }
 
 .feedback-button {
@@ -306,22 +319,22 @@ header a {
   border: none;
   transition: 0.1s ease-in-out;
   color: #ffffff;
-  font-family: var(--main-font);
-  font-weight: bold;
+  font-family: var(--secondary-font);
+  font-weight: 400;
   border-radius: 6px;
   display: flex;
   justify-content: left;
   align-items: center;
   gap: 20px;
-  padding: 20px;
+  padding: 5px 10px;
 }
 
 .feedback-button:hover {
-  background-color: #333333;
+  background-color: #2b2b2b;
 }
 
 .feedback-button .icon-wrapper {
-  background-color: #484848;
+  background-color: #303030;
   padding: 15px;
   aspect-ratio: 1;
   height: auto;

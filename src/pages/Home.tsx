@@ -298,66 +298,72 @@ export default function Home() {
                   <h1 className="section-title">Categories</h1>
                 </Link>
                 <div className="categories-wrapper">
-                  <Link to="/category/fashion">
-                    <button className="categoryButton fashion">
-                      <Shirt size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/technology">
-                    <button className="categoryButton technology">
-                      <Headset size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/foodandbeverages">
-                    <button className="categoryButton food">
-                      <CupSoda size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/entertainment">
-                    <button className="categoryButton entertainment">
-                      <Clapperboard size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/socialmedia">
-                    <button className="categoryButton social">
-                      <MessageCircle size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/fitness">
-                    <button className="categoryButton fitness">
-                      <Dumbbell size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/wellness">
-                    <button className="categoryButton wellness">
-                      <HeartPulse size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/music">
-                    <button className="categoryButton music">
-                      <Music size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/politics">
-                    <button className="categoryButton politics">
-                      <Flag size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/travel">
-                    <button className="categoryButton travel">
-                      <Plane size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/science">
-                    <button className="categoryButton science">
-                      <FlaskConical size={42} />
-                    </button>
-                  </Link>
-                  <Link to="/category/sports">
-                    <button className="categoryButton sports">
-                      <Icon iconNode={football} size={42} />
-                    </button>
-                  </Link>
+                  <div className="button-wrapper">
+                    <Link to="/category/fashion">
+                      <button className="categoryButton fashion">
+                        <Shirt size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/technology">
+                      <button className="categoryButton technology">
+                        <Headset size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/foodandbeverages">
+                      <button className="categoryButton food">
+                        <CupSoda size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/entertainment">
+                      <button className="categoryButton entertainment">
+                        <Clapperboard size={42} />
+                      </button>
+                    </Link>
+                  </div>
+                  <div className="button-wrapper">
+                    <Link to="/category/socialmedia">
+                      <button className="categoryButton social">
+                        <MessageCircle size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/fitness">
+                      <button className="categoryButton fitness">
+                        <Dumbbell size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/wellness">
+                      <button className="categoryButton wellness">
+                        <HeartPulse size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/music">
+                      <button className="categoryButton music">
+                        <Music size={42} />
+                      </button>
+                    </Link>
+                  </div>
+                  <div className="button-wrapper">
+                    <Link to="/category/politics">
+                      <button className="categoryButton politics">
+                        <Flag size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/travel">
+                      <button className="categoryButton travel">
+                        <Plane size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/science">
+                      <button className="categoryButton science">
+                        <FlaskConical size={42} />
+                      </button>
+                    </Link>
+                    <Link to="/category/sports">
+                      <button className="categoryButton sports">
+                        <Icon iconNode={football} size={42} />
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className="right-body-cont">
@@ -376,6 +382,9 @@ export default function Home() {
                       />
                     ))}
                   {topTrends === null && getLoadingTrendElements()}
+                  <Link to="/hottrends" className="view-more">
+                    View More
+                  </Link>
                 </div>
               </div>
             </div>

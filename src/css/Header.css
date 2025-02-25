@@ -83,7 +83,7 @@ header a {
   height: fit-content;
   background-color: #333333;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
   visibility: hidden;
   opacity: 0;
   flex-direction: column;
@@ -330,7 +330,7 @@ header a {
 }
 
 .feedback-button:hover {
-  background-color: #2b2b2b;
+  background-color: #343434;
 }
 
 .feedback-button .icon-wrapper {

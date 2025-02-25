@@ -4,13 +4,12 @@ import { useRef, useState, useEffect } from "react";
 import {
   ArrowLeft,
   CircleX,
-  LogOut,
   MessageCircleMore,
-  MessageSquareWarning,
-  Settings,
   TriangleAlert,
 } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
+import DropDown from "./DropDown";
+import axios from "axios";
 
 export default function Header() {
   const location = useLocation();
@@ -19,9 +18,9 @@ export default function Header() {
   const isDarkTheme: boolean = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropDownRef = useRef<HTMLDivElement>(null);
   const profileImgRef = useRef<HTMLImageElement>(null);
-
+  //
   const [profileDown, setProfileDown] = useState<boolean>(false);
   const [userNickname, setUserNickname] = useState<string>(
     user?.nickname || ""
@@ -43,8 +42,8 @@ export default function Header() {
         return;
       }
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
+        dropDownRef.current &&
+        !dropDownRef.current.contains(event.target as Node) &&
         profileImgRef.current &&
         !profileImgRef.current.contains(event.target as Node)
       ) {
@@ -80,6 +79,30 @@ export default function Header() {
       </header>
     );
   }
+
+  const handleSubmitFeedback = async (isReport: boolean) => {
+    const feedbackTextarea = document.querySelector(
+      ".feedback-textarea.active"
+    ) as HTMLTextAreaElement;
+    const feedback = feedbackTextarea?.value;
+
+
+    if (!feedback || feedback.trim() === "" || !user) {
+      alert("Feedback cannot be empty");
+      return;
+    }
+
+    try {
+      await axios.put("http://localhost:8080/api/data/addFeedbackToDatabase", {
+        userId: user.sub,
+        feedback: feedback,
+        isReport: isReport,
+      });
+      alert("Feedback submitted successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -136,20 +159,34 @@ export default function Header() {
               <div className="feedback-suggest">
                 <h3>Suggest Something</h3>
                 <textarea
-                  className="feedback-textarea"
+                  className={`feedback-textarea ${
+                    currentFeedbackContent === "suggest" ? "active" : ""
+                  }`}
                   placeholder="What would you like to suggest?"
                 ></textarea>
-                <button className="submit-button">Submit</button>
+                <button
+                  className="submit-button"
+                  onClick={() => handleSubmitFeedback(false)}
+                >
+                  Submit
+                </button>
               </div>
             )}
             {currentFeedbackContent === "report" && (
               <div className="feedback-report">
                 <h3>Report an error</h3>
                 <textarea
-                  className="feedback-textarea"
+                  className={`feedback-textarea ${
+                    currentFeedbackContent === "report" ? "active" : ""
+                  }`}
                   placeholder="What error would you like to report?"
                 ></textarea>
-                <button className="submit-button">Submit</button>
+                <button
+                  className="submit-button"
+                  onClick={() => handleSubmitFeedback(true)}
+                >
+                  Submit
+                </button>
               </div>
             )}
           </div>
@@ -173,51 +210,11 @@ export default function Header() {
         )}
       </header>
       {isAuthenticated && (
-        <div
-          ref={dropdownRef}
-          className={`dropDown ${profileDown ? "show" : ""}`}
-          tabIndex={0}
-        >
-          <div className="upperQuadrant">
-            <div className="profileShowcase">
-              <img src={user?.picture} alt="Picture of User" className="pfp" />
-              <h3 className="userName">{userNickname}</h3>
-            </div>
-          </div>
-          <div className="lowerQuadrant">
-            <div className="buttons">
-              <Link to="/settings">
-                <button>
-                  <div className="greyCircle">
-                    <Settings
-                      size={iconSize}
-                      color={isDarkTheme ? "#f0f0f0" : "#333333"}
-                    />
-                  </div>
-                  Settings
-                </button>
-              </Link>
-              <button onClick={handleFeedback}>
-                <div className="greyCircle">
-                  <MessageSquareWarning
-                    size={iconSize}
-                    color={isDarkTheme ? "#f0f0f0" : "#333333"}
-                  />
-                </div>
-                Give Feedback
-              </button>
-              <button onClick={() => logout()}>
-                <div className="greyCircle">
-                  <LogOut
-                    size={iconSize}
-                    color={isDarkTheme ? "#f0f0f0" : "#333333"}
-                  />
-                </div>
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
+        <DropDown
+          functions={{ handleFeedback, logout }}
+          values={[iconSize, isDarkTheme, profileDown, userNickname]}
+          dropDownRef={dropDownRef}
+        />
       )}
     </>
   );

@@ -28,9 +28,10 @@ import {
   currentHasSetUpAccount,
 } from "../Constants";
 import TopTrend from "../components/TopTrend";
+import SetUpPage from "./SetUpPage";
 
 export default function Home() {
-  const { isAuthenticated, isLoading, loginWithRedirect, user, logout } =
+  const { isAuthenticated, isLoading, loginWithRedirect, user } =
     useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(
@@ -209,42 +210,10 @@ export default function Home() {
 
   if (hasSetUpAccount == false) {
     return (
-      <div className="userSetup">
-        <h1>Welcome to the User Setup!</h1>
-        <p>Please complete your profile to get started.</p>
-        <input
-          ref={nicknameInputRef}
-          type="text"
-          placeholder="Enter your nickname"
-        />
-        <br />
-        <h3>Gender:</h3>
-        <div>
-          <label htmlFor="genderMale">Male</label>
-          <input type="radio" name="genderInput" value="male" id="genderMale" />
-          <label htmlFor="genderFemale">Female</label>
-          <input
-            type="radio"
-            name="genderInput"
-            value="female"
-            id="genderFemale"
-          />
-          <label htmlFor="genderOther">Other</label>
-          <input
-            type="radio"
-            name="genderInput"
-            value="other"
-            id="genderOther"
-          />
-        </div>
-        <br />
-        <h3>Birth Date:</h3>
-        <input type="date" ref={birthDateInputRef} />
-        <br />
-        <button onClick={updateInformation}>Update Information</button>
-        <br />
-        <button onClick={() => logout()}>Log Out</button>
-      </div>
+      <SetUpPage
+        functions={{ updateInformation }}
+        refs={{ nicknameInputRef, birthDateInputRef }}
+      />
     );
   }
 
@@ -272,7 +241,7 @@ export default function Home() {
     return (
       <>
         <div className="bodyCont">
-          <Header />
+          <Header hasSetUpAccount={hasSetUpAccount} />
           <div className="content bottom">
             <div className="header-wrapper">
               <div className="header-cont">

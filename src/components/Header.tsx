@@ -90,6 +90,8 @@ export default function Header({
       alert("Feedback submitted successfully");
     } catch (error) {
       console.error(error);
+    } finally {
+      setFeedbackWindowOpen(false);
     }
   };
 

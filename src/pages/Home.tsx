@@ -258,7 +258,7 @@ export default function Home() {
                     <button id="try-it-button">Try It Now</button>
                   </Link>
                 </div>
-                {/* <div className="geometric-bg"></div> */}
+                <div className="geometric-bg"></div>
               </div>
             </div>
             <div className="body-wrapper">

@@ -104,7 +104,8 @@
 }
 
 .header-cont {
-  background-color: #333333;
+  background: linear-gradient(135deg, #323232 0%, #262626 25%, #1e1e1e 50%, #262626 75%, #323232 100%);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
   display: flex;
@@ -119,12 +120,6 @@
 .header-cont .text {
   position: relative;
   z-index: 2;
-}
-
-.geometric-bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #333333 0%, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%, #333333 100%);
 }
 
 #try-it-button {
@@ -183,9 +178,9 @@
   justify-content: space-between;
   width: 31%;
   height: 100%;
-  background-color: #333333;
+  background: linear-gradient(135deg, #3a3a3a 0%, #333333 25%, #2e2e2e 50%, #333333 75%, #3a3a3a 100%);
   border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(255, 255, 255, 0.15);
   padding-bottom: 20px;
 }
 
@@ -200,9 +195,9 @@
   align-items: left;
   width: 62%;
   height: 100%;
-  background-color: #333333;
+  background: linear-gradient(135deg, #3a3a3a 0%, #333333 25%, #2e2e2e 50%, #333333 75%, #3a3a3a 100%);
   border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(255, 255, 255, 0.15);
 }
 
 .left-body-cont.loading,
@@ -227,6 +222,9 @@
   cursor: pointer;
   transition: background-color 0.15s ease;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .categoryButton::before {

@@ -237,7 +237,7 @@ export default function Home() {
     );
   }
 
-  if (isAuthenticated && hasSetUpAccount) {
+  if (isAuthenticated && hasSetUpAccount && !isLoading) {
     return (
       <>
         <div className="bodyCont">
@@ -258,7 +258,6 @@ export default function Home() {
                     <button id="try-it-button">Try It Now</button>
                   </Link>
                 </div>
-                <div className="geometric-bg"></div>
               </div>
             </div>
             <div className="body-wrapper">
@@ -378,7 +377,6 @@ export default function Home() {
     return (
       <div className="bodyCont">
         <div className="bg-container">
-          {/* <img className="homeBackground" src={bg} alt="geometric shapes" /> */}
         </div>
         <Header />
         <div className="content">
@@ -392,5 +390,21 @@ export default function Home() {
     );
   }
 
-  return <div className="bodyCont">Loading...</div>;
+  return (
+    <div className="bodyCont">
+      <div className="content bottom">
+        <div className="header-wrapper">
+          <div className="header-cont loading"></div>
+        </div>
+        <div className="body-wrapper">
+          <div className="left-body-cont loading"></div>
+          <div className="right-body-cont loading"></div>
+        </div>
+        <div className="body-wrapper">
+          <div className="right-body-cont loading"></div>
+          <div className="left-body-cont loading"></div>
+        </div>
+      </div>
+    </div>
+  );
 }

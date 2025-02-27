@@ -118,7 +118,7 @@ export default function Header({
       />
       <header className={!isAuthenticated ? "transparent" : ""}>
         <Link to="/" className={isAuthenticated ? "logo" : "logo big"}>
-          <h1>TRENDY</h1>
+          <h1 className="text-3xl">TRENDY</h1>
         </Link>
         {isAuthenticated && (
           <img

@@ -19,7 +19,7 @@ import {
   Star,
 } from "lucide-react";
 import { football } from "@lucide/lab";
-import { Trend } from "../types";
+import { SavedTrendObject, Trend } from "../types";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -31,8 +31,7 @@ import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
 
 export default function Home() {
-  const { isAuthenticated, isLoading, loginWithRedirect, user } =
-    useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
 
   const [topTrends, setTopTrends] = useState<Trend[] | null>(
     currentTopTrends.value
@@ -41,7 +40,7 @@ export default function Home() {
   const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(
     currentHasSetUpAccount.value
   );
-  const [savedTrends, setSavedTrends] = useState<string[] | null>(null);
+  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(null);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -80,13 +79,7 @@ export default function Home() {
     try {
       const trendsRes = await axios.post(
         "http://localhost:8080/api/reddit/topReddit",
-        6,
-        {
-          headers: {
-            "Content-Type": "text/plain",
-          },
-          withCredentials: true, // Send cookies
-        }
+        { requestAmount: 6, userId: user.sub }
       );
 
       const savedTrendsRes = await axios.get(
@@ -376,8 +369,7 @@ export default function Home() {
   if (isAuthenticated === false) {
     return (
       <div className="bodyCont">
-        <div className="bg-container">
-        </div>
+        <div className="bg-container"></div>
         <Header />
         <div className="content">
           <div className="title">

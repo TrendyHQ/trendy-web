@@ -17,7 +17,7 @@ import {
   Icon,
   Star,
 } from "lucide-react";
-import { Trend } from "../types";
+import { SavedTrendObject, Trend } from "../types";
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
@@ -31,13 +31,13 @@ export default function TopTrend({
 }: {
   trend: Trend;
   index: number;
-  savedTrends: string[] | null;
+  savedTrends: SavedTrendObject[] | null;
   total: number;
 }) {
   const { user } = useAuth0();
   const navigate = useNavigate();
 
-  const isTrendSaved = savedTrends?.includes(trend.id) || false;
+  const isTrendSaved = savedTrends?.some(savedTrend => savedTrend.postId === trend.id) || false;
   const [trendSaved, setTrendSaved] = useState<boolean>(isTrendSaved);
 
   const getRelevancy = (moreRelevantValue: number) => {
@@ -65,7 +65,7 @@ export default function TopTrend({
         return <CupSoda size={size} />;
       case "entertainment":
         return <Clapperboard size={size} />;
-      case "social":
+      case "socialmedia":
         return <MessageCircle size={size} />;
       case "fitness":
         return <Dumbbell size={size} />;
@@ -91,6 +91,7 @@ export default function TopTrend({
       userId: user?.sub,
       trendId: trend.id,
       saveTrend: !trendSaved,
+      trendCategory: trend.category,
     });
   };
 

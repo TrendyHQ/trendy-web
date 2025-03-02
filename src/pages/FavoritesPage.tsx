@@ -33,6 +33,7 @@ export default function FavoritesPage() {
             withCredentials: true,
           }
         );
+        console.log(response.data);
 
         setPageIsLoading(false);
         currentFavorites.value = response.data;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import TopTrend from "../components/TopTrend";
 import axios from "axios";
-import { Trend } from "../types";
+import { SavedTrendObject, Trend } from "../types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { currentHotTrends } from "../Constants";
 import Header from "../components/Header";
@@ -14,49 +14,47 @@ export default function HotPage() {
   const [topTrends, setTopTrends] = useState<Trend[] | null>(
     currentHotTrends.value
   );
-  const [savedTrends, setSavedTrends] = useState<string[] | null>(null);
+  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(null);
   const [hotTrendsLoading, setHotTrendsLoading] = useState<boolean>(false);
 
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
 
-  async function updateTopTrends() {
-    if (user) {
-      try {
-        setHotTrendsLoading(true);
-        const trendsRes = await axios.post(
-          "http://localhost:8080/api/reddit/topReddit",
-          30,
-          {
-            headers: {
-              "Content-Type": "text/plain",
-            },
-            withCredentials: true, // Send cookies
-          }
-        );
+  const updateTopTrends = async () => {
+    // Prevent a new update if one is already in progress
+    if (hotTrendsLoading || !user) return;
 
-        const savedTrendsRes = await axios.get(
-          "http://localhost:8080/api/users/getSavedTrends",
-          {
-            params: {
-              userId: user.sub,
-            },
-          }
-        );
+    setHotTrendsLoading(true);
 
-        currentHotTrends.value = trendsRes.data;
+    try {
+      const trendsRes = await axios.post(
+        "http://localhost:8080/api/reddit/topReddit",
+        { requestAmount: 50, userId: user.sub }
+      );
 
-        setTopTrends(trendsRes.data);
-        setSavedTrends(savedTrendsRes.data);
-        setHotTrendsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
+      const savedTrendsRes = await axios.get(
+        "http://localhost:8080/api/users/getSavedTrends",
+        {
+          params: {
+            userId: user.sub,
+          },
+        }
+      );
+
+      setSavedTrends(savedTrendsRes.data);
+
+      setHotTrendsLoading(false);
+      currentHotTrends.value = trendsRes.data;
+      setTopTrends(trendsRes.data);
+    } catch (error) {
+      console.error("Error updating top trends:", error);
     }
-  }
+  };
+
   useEffect(() => {
-    if (currentHotTrends.value === null || currentHotTrends.value.length === 0) updateTopTrends();
+    if (currentHotTrends.value === null || currentHotTrends.value.length === 0)
+      updateTopTrends();
     console.log(currentHotTrends.value);
 
     // Set up the interval if it's not already set

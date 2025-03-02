@@ -35,4 +35,9 @@ interface CommentObject {
   nick: string;
 }
 
-export type { Trend, SpecificTrend, CommentObject, ListTrend };
+interface SavedTrendObject {
+  postId: string;
+  postCategory: string;
+}
+
+export type { Trend, SpecificTrend, CommentObject, ListTrend, SavedTrendObject };

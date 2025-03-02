@@ -19,22 +19,28 @@ export default function SpecificTrendPage() {
   const [hasLiked, setHasLiked] = useState<boolean>(false);
 
   const getSpecificTrend = () => {
-    setPageIsLoading(true);
-    axios
-      .get(`http://localhost:8080/api/data/trend`, {
-        params: {
-          postId: trendId,
-        },
-      })
-      .then((response) => {
-        setTrendData(response.data);
-        setLikes(response.data.otherInformation.likes);
-        setPageIsLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setPageIsLoading(false);
-      });
+    console.log("Attempting to get specific trend");
+    if (user && isAuthenticated && !isLoading) {
+      setPageIsLoading(true);
+      axios
+        .get(`http://localhost:8080/api/data/trend`, {
+          params: {
+            postId: trendId,
+            userId: user.sub,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          setTrendData(response.data);
+          setLikes(response.data.otherInformation.likes);
+          setHasLiked(response.data.otherInformation.userHasLiked);
+        })
+        .catch((error) => {
+          console.error(error);
+        }).finally(() => {
+          setPageIsLoading(false);
+        });
+    }
   };
 
   const addComment = (comment: string) => {
@@ -75,7 +81,7 @@ export default function SpecificTrendPage() {
     const debounceTimeout = setTimeout(async () => {
       try {
         await axios.put(`http://localhost:8080/api/data/setLikesOnPost`, {
-          isLike: newLikeState,
+          like: newLikeState,
           postId: trendId,
           userId: user.sub,
         });
@@ -93,7 +99,7 @@ export default function SpecificTrendPage() {
 
   useEffect(() => {
     getSpecificTrend();
-  }, [trendId]);
+  }, [trendId, isAuthenticated, isLoading]);
 
   if (!isAuthenticated && !isLoading) {
     return <Navigate to="/" />;

@@ -55,7 +55,8 @@ export default function SpecificTrendPage() {
             comment: commentObject,
           })
           .then(() => {
-            getSpecificTrend();
+            trendData.otherInformation.comments.push(commentObject);
+            setTrendData({ ...trendData });
           });
       } catch (error) {
         console.error(error);
@@ -64,29 +65,37 @@ export default function SpecificTrendPage() {
   };
 
   const handleLike = () => {
-    if (user && !hasLiked) {
-      setHasLiked(true);
-      setLikes((prev) => prev + 1);
-      axios
-        .put(`http://localhost:8080/api/data/addLikeToPost`, trendId, {
-          headers: {
-            "Content-Type": "text/plain",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.error(error);
+    if (!user) return;
+
+    const newLikeState: boolean = !hasLiked;
+    setHasLiked(newLikeState);
+    setLikes((prev) => prev + (newLikeState ? 1 : -1));
+
+    // Use a debounce mechanism to prevent rapid multiple requests
+    const debounceTimeout = setTimeout(async () => {
+      try {
+        await axios.put(`http://localhost:8080/api/data/setLikesOnPost`, {
+          isLike: newLikeState,
+          postId: trendId,
+          userId: user.sub,
         });
-    }
+      } catch (error) {
+        // Revert UI state if the request fails
+        console.error("Like request failed:", error);
+        setHasLiked(!newLikeState);
+        setLikes((prev) => prev + (newLikeState ? -1 : 1));
+      }
+    }, 300); // 300ms
+
+    // Clean up the timeout if component unmounts or function runs again
+    return () => clearTimeout(debounceTimeout);
   };
 
   useEffect(() => {
     getSpecificTrend();
   }, [trendId]);
 
-  if(!isAuthenticated && !isLoading) {
+  if (!isAuthenticated && !isLoading) {
     return <Navigate to="/" />;
   }
 
@@ -102,15 +111,33 @@ export default function SpecificTrendPage() {
         <div>
           <h2>{trendData.title}</h2>
           <p>{trendData.moreInfo}</p>
-          <a href={trendData.link} target="blank">{trendData.link}</a>
+          <a
+            href={trendData.link}
+            className="text-blue-200 underline hover:text-blue-100 duration-100 ease-in-out"
+          >
+            {trendData.link}
+          </a>
           <br />
-          <button onClick={handleLike}>Like Post 👍</button>
+          <button
+            onClick={handleLike}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              hasLiked
+                ? "bg-blue-300 text-blue-800 cursor-pointer"
+                : "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 cursor-pointer"
+            } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
+          >
+            {hasLiked ? "Liked 👍" : "Like Post 👍"}
+          </button>
+
           <p>{likes} likes</p>
           <br />
           <label htmlFor="commentInput">New Comment:</label>
           <input
             onKeyDown={(e) => {
-              if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim() !== "") {
+              if (
+                e.key === "Enter" &&
+                (e.target as HTMLInputElement).value.trim() !== ""
+              ) {
                 addComment((e.target as HTMLInputElement).value);
                 (e.target as HTMLInputElement).value = "";
               }

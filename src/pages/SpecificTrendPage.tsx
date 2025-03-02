@@ -19,7 +19,6 @@ export default function SpecificTrendPage() {
   const [hasLiked, setHasLiked] = useState<boolean>(false);
 
   const getSpecificTrend = () => {
-    console.log("Attempting to get specific trend");
     if (user && isAuthenticated && !isLoading) {
       setPageIsLoading(true);
       axios
@@ -30,14 +29,14 @@ export default function SpecificTrendPage() {
           },
         })
         .then((response) => {
-          console.log(response.data);
           setTrendData(response.data);
           setLikes(response.data.otherInformation.likes);
           setHasLiked(response.data.otherInformation.userHasLiked);
         })
         .catch((error) => {
           console.error(error);
-        }).finally(() => {
+        })
+        .finally(() => {
           setPageIsLoading(false);
         });
     }
@@ -137,7 +136,7 @@ export default function SpecificTrendPage() {
 
           <p>{likes} likes</p>
           <br />
-          <label htmlFor="commentInput">New Comment:</label>
+          <label htmlFor="commentInput">New Comment: </label>
           <input
             onKeyDown={(e) => {
               if (
@@ -150,10 +149,12 @@ export default function SpecificTrendPage() {
             }}
             type="text"
             id="commentInput"
+            className="border-1 rounded"
           />
           <br />
           <h2>Comments:</h2>
-          {trendData.otherInformation.comments &&
+          {trendData &&
+            trendData.otherInformation.comments &&
             trendData.otherInformation.comments
               .slice()
               .reverse()

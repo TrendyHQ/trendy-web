@@ -17,7 +17,7 @@ import {
   Icon,
   Star,
 } from "lucide-react";
-import { SavedTrendObject, Trend } from "../types";
+import { ListTrend, SavedTrendObject, Trend } from "../types";
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
@@ -29,7 +29,7 @@ export default function TopTrend({
   savedTrends,
   total,
 }: {
-  trend: Trend;
+  trend: Trend | ListTrend;
   index: number;
   savedTrends: SavedTrendObject[] | null;
   total: number;
@@ -37,7 +37,8 @@ export default function TopTrend({
   const { user } = useAuth0();
   const navigate = useNavigate();
 
-  const isTrendSaved = savedTrends?.some(savedTrend => savedTrend.postId === trend.id) || false;
+  const isTrendSaved =
+    savedTrends?.some((savedTrend) => savedTrend.postId === trend.id) || false;
   const [trendSaved, setTrendSaved] = useState<boolean>(isTrendSaved);
 
   const getRelevancy = (moreRelevantValue: number) => {
@@ -49,7 +50,7 @@ export default function TopTrend({
       return <Minus size={30} color="#858585" />;
     }
   };
-  const handleTrendClick = (trend: Trend) => {
+  const handleTrendClick = (trend: Trend | ListTrend) => {
     navigate(`/trend/${trend.id}`);
   };
 
@@ -101,6 +102,7 @@ export default function TopTrend({
         <Star
           size={30}
           color="#FFD700"
+          strokeWidth={1.5}
           fill={trendSaved ? "#FFD700" : "none"}
           onClick={handleTrendSave}
         />
@@ -113,9 +115,12 @@ export default function TopTrend({
             ? trend.title.substring(0, 50) + "..."
             : trend.title}
         </h2>
-        <div onClick={() => handleTrendClick(trend)}>
-          {getRelevancy(trend.moreRelevantValue)}
-        </div>
+        {(trend as Trend).moreRelevantValue !== undefined &&
+          (trend as Trend).moreRelevantValue !== null && (
+            <div onClick={() => handleTrendClick(trend)}>
+              {getRelevancy((trend as Trend).moreRelevantValue)}
+            </div>
+          )}
       </div>
       {index < total - 1 && <div className="trend-divider"></div>}
     </div>

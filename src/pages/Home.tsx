@@ -185,6 +185,7 @@ export default function Home() {
           <div className="top-trend">
             <Star
               size={30}
+              strokeWidth={1.5}
               color="grey"
               style={{ animationDelay: `${0.1 * i}s` }}
               className="textLoading"

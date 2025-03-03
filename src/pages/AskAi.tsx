@@ -72,6 +72,7 @@ export default function AskAi() {
       <Header />
       <input
         type="text"
+        className="w-1/2 ml-auto mr-auto border-1 rounded"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             message = e.currentTarget.value;

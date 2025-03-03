@@ -1,12 +1,13 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { ListTrend } from "../types";
+import { ListTrend, SavedTrendObject } from "../types";
 import { currentFavorites } from "../Constants";
 import "../css/FavoritesPage.css";
+import TopTrend from "../components/TopTrend";
 
 export default function FavoritesPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -15,6 +16,9 @@ export default function FavoritesPage() {
     currentFavorites.value
   );
   const [pageIsLoading, setPageIsLoading] = useState<boolean>(false);
+  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
+    null
+  );
 
   useEffect(() => {
     if (currentFavorites.value.length === 0) fetchFavorites();
@@ -33,7 +37,17 @@ export default function FavoritesPage() {
             withCredentials: true,
           }
         );
-        console.log(response.data);
+
+        const savedTrendsRes = await axios.get(
+          "http://localhost:8080/api/users/getSavedTrends",
+          {
+            params: {
+              userId: user.sub,
+            },
+          }
+        );
+
+        setSavedTrends(savedTrendsRes.data);
 
         setPageIsLoading(false);
         currentFavorites.value = response.data;
@@ -56,15 +70,25 @@ export default function FavoritesPage() {
     <div className="bodyCont">
       <Header />
       <h1 className="text-4xl text-center font-bold">Favorites Page</h1>
-      <div className="favorites-container">
-        {listOfFavorites.map((favorite, index) => (
-          <Link to={`/trend/${favorite.id}`} key={index}>
-            <div className="favorite-trend mt-10 mb-10 ml-5 mr-5 text-[#ff8c66] hover:text-[#ffbaa3] duration-100 ease-in-out">
-              {favorite.title}
-            </div>
-          </Link>
-        ))}
+      <div
+        className="right-body-cont"
+        style={{ width: "95%", margin: "20px auto", height: "fit-content" }}
+      >
+        <h1 className="section-title">Favorites ⭐⭐⭐</h1>
+        <div className="top-trends-wrapper">
+          {listOfFavorites &&
+            listOfFavorites.map((trend: ListTrend, index: number) => (
+              <TopTrend
+                key={index}
+                trend={trend}
+                index={index}
+                savedTrends={savedTrends}
+                total={listOfFavorites.length}
+              />
+            ))}
+        </div>
       </div>
+
       <Footer />
     </div>
   );

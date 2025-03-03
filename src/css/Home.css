@@ -204,7 +204,7 @@
 .right-body-cont.loading,
 .header-cont.loading,
 .loadingPfp.loading {
-  background-color: #424242;
+  background: #424242 !important;
   animation: loading 1.5s ease-in infinite;
 }
 

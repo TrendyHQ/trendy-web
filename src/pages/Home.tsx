@@ -44,7 +44,6 @@ export default function Home() {
   const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
     null
   );
-  const [refreshSpin, setRefreshSpin] = useState(false);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -332,22 +331,27 @@ export default function Home() {
                 </div>
               </div>
               <div className="right-body-cont relative">
-                <RefreshCcw
-                  className={`absolute right-5 top-4 cursor-pointer ${
-                    refreshSpin ? "animate-spin" : ""}`}
-                  style={{ animationDuration: "600ms", animationTimingFunction: "ease-in", animationDirection: "reverse"}}
-                  color="#bdbdbd"
-                  size={28}
-                  onClick={() => {
-                    updateTopTrends();
-                    setRefreshSpin(true);
-                    setTimeout(() => {
-                      setRefreshSpin(false);
-                    }, 600);
-                  }}
+                <button
+                  disabled={hotTrendsLoading}
+                  className={
+                    hotTrendsLoading ? "cursor-default" : "cursor-pointer"
+                  }
+                  onClick={() => updateTopTrends()}
                 >
-                  Click
-                </RefreshCcw>
+                  <RefreshCcw
+                    className={`absolute right-5 top-4 ${
+                      hotTrendsLoading ? "animate-spin" : ""
+                    }`}
+                    style={{
+                      animationDuration: "800ms",
+                      animationTimingFunction: "ease-in-out",
+                      animationDirection: "reverse",
+                      animationIterationCount: "infinite",
+                    }}
+                    color="#bdbdbd"
+                    size={28}
+                  ></RefreshCcw>
+                </button>
                 <Link
                   to="/hottrends"
                   className="w-fit"

@@ -17,6 +17,7 @@ import {
   Shirt,
   Flag,
   Star,
+  RefreshCcw,
 } from "lucide-react";
 import { football } from "@lucide/lab";
 import { SavedTrendObject, Trend } from "../types";
@@ -40,7 +41,10 @@ export default function Home() {
   const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(
     currentHasSetUpAccount.value
   );
-  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(null);
+  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
+    null
+  );
+  const [refreshSpin, setRefreshSpin] = useState(false);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -70,11 +74,11 @@ export default function Home() {
     }
   };
 
-  const updateTopTrends = async () => {
+  const updateTopTrends = async (load?: boolean) => {
     // Prevent a new update if one is already in progress
     if (hotTrendsLoading || !user) return;
 
-    setHotTrendsLoading(true);
+    if (load != false) setHotTrendsLoading(true);
 
     try {
       const trendsRes = await axios.post(
@@ -109,7 +113,7 @@ export default function Home() {
       // Set up the interval if it's not already set
       if (updateTrendsIntervalRef.current === null) {
         updateTrendsIntervalRef.current = setInterval(() => {
-          updateTopTrends();
+          updateTopTrends(false);
         }, 180000); // 180,000ms = 3 minutes
       }
 
@@ -327,12 +331,33 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="right-body-cont">
-                <Link to="/hottrends" style={{ textDecoration: "none" }}>
+              <div className="right-body-cont relative">
+                <RefreshCcw
+                  className={`absolute right-5 top-4 cursor-pointer ${
+                    refreshSpin ? "animate-spin" : ""}`}
+                  style={{ animationDuration: "600ms", animationTimingFunction: "ease-in", animationDirection: "reverse"}}
+                  color="#bdbdbd"
+                  size={28}
+                  onClick={() => {
+                    updateTopTrends();
+                    setRefreshSpin(true);
+                    setTimeout(() => {
+                      setRefreshSpin(false);
+                    }, 600);
+                  }}
+                >
+                  Click
+                </RefreshCcw>
+                <Link
+                  to="/hottrends"
+                  className="w-fit"
+                  style={{ textDecoration: "none" }}
+                >
                   <h1 className="section-title">Hot 🔥🔥🔥</h1>
                 </Link>
                 <div className="top-trends-wrapper">
                   {topTrends &&
+                    !hotTrendsLoading &&
                     topTrends.map((trend: Trend, index: number) => (
                       <TopTrend
                         key={index}
@@ -342,7 +367,7 @@ export default function Home() {
                         total={topTrends.length}
                       />
                     ))}
-                  {topTrends === null && getLoadingTrendElements()}
+                  {hotTrendsLoading && getLoadingTrendElements()}
                   <Link to="/hottrends" className="view-more">
                     View More
                   </Link>

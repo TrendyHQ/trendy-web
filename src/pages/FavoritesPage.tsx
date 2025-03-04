@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ListTrend, SavedTrendObject } from "../types";
-import { currentFavorites } from "../Constants";
+import { currentFavoritePostIds, currentFavorites } from "../Constants";
 import "../css/FavoritesPage.css";
 import TopTrend from "../components/TopTrend";
 
@@ -17,46 +17,48 @@ export default function FavoritesPage() {
   );
   const [pageIsLoading, setPageIsLoading] = useState<boolean>(false);
   const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
-    null
+    currentFavoritePostIds.value
   );
 
   useEffect(() => {
-    if (currentFavorites.value.length === 0) fetchFavorites();
-  }, [user]);
+    async function fetchFavorites() {
+      if (user?.sub) {
+        setPageIsLoading(true);
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/api/users/getUsersTrends`,
+            {
+              params: {
+                userId: user.sub,
+              },
+              withCredentials: true,
+            }
+          );
 
-  async function fetchFavorites() {
-    if (user?.sub) {
-      setPageIsLoading(true);
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/users/getUsersTrends",
-          {
-            params: {
-              userId: user.sub,
-            },
-            withCredentials: true,
-          }
-        );
+          const savedTrendsRes = await axios.get(
+            `http://localhost:8080/api/users/getSavedTrends`,
+            {
+              params: {
+                userId: user.sub,
+              },
+            }
+          );
 
-        const savedTrendsRes = await axios.get(
-          "http://localhost:8080/api/users/getSavedTrends",
-          {
-            params: {
-              userId: user.sub,
-            },
-          }
-        );
+          setSavedTrends(savedTrendsRes.data);
+          currentFavoritePostIds.value = savedTrendsRes.data;
 
-        setSavedTrends(savedTrendsRes.data);
-
-        setPageIsLoading(false);
-        currentFavorites.value = response.data;
-        setListOfFavorites(response.data);
-      } catch (err) {
-        console.error(err);
+          setPageIsLoading(false);
+          currentFavorites.value = response.data;
+          setListOfFavorites(response.data);
+        } catch (e) {
+          console.error(e);
+          setPageIsLoading(false);
+        }
       }
     }
-  }
+
+    if (currentFavorites.value.length === 0) fetchFavorites();
+  }, [user]);
 
   if (!isAuthenticated && !isLoading) {
     return <Navigate to="/" />;
@@ -69,9 +71,8 @@ export default function FavoritesPage() {
   return (
     <div className="bodyCont">
       <Header />
-      <h1 className="text-4xl text-center font-bold">Favorites Page</h1>
       <div
-        className="right-body-cont"
+        className="right-body-cont pb-5"
         style={{ width: "95%", margin: "20px auto", height: "fit-content" }}
       >
         <h1 className="section-title">Favorites ⭐⭐⭐</h1>

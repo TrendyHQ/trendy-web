@@ -3,7 +3,7 @@ import TopTrend from "../components/TopTrend";
 import axios from "axios";
 import { SavedTrendObject, Trend } from "../types";
 import { useAuth0 } from "@auth0/auth0-react";
-import { currentHotTrends } from "../Constants";
+import { currentFavoritePostIds, currentHotTrends } from "../Constants";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Navigate } from "react-router-dom";
@@ -14,7 +14,9 @@ export default function HotPage() {
   const [topTrends, setTopTrends] = useState<Trend[] | null>(
     currentHotTrends.value
   );
-  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(null);
+  const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
+    currentFavoritePostIds.value
+  );
   const [hotTrendsLoading, setHotTrendsLoading] = useState<boolean>(false);
 
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -43,6 +45,7 @@ export default function HotPage() {
       );
 
       setSavedTrends(savedTrendsRes.data);
+      currentFavoritePostIds.value = savedTrendsRes.data;
 
       setHotTrendsLoading(false);
       currentHotTrends.value = trendsRes.data;

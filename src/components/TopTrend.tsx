@@ -70,7 +70,7 @@ export default function TopTrend({
         return <MessageCircle size={size} />;
       case "fitness":
         return <Dumbbell size={size} />;
-      case "wellness":
+      case "health":
         return <HeartPulse size={size} />;
       case "music":
         return <Music size={size} />;
@@ -98,7 +98,7 @@ export default function TopTrend({
 
   return (
     <div key={"topTrend" + index}>
-      <div className="top-trend">
+      <div className="top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-xl">
         <Star
           size={30}
           color="#FFD700"
@@ -122,7 +122,7 @@ export default function TopTrend({
             </div>
           )}
       </div>
-      {index < total - 1 && <div className="trend-divider"></div>}
+      {index < total - 1 && <div className="trend-divider rounded mt-[2px] mb-[2px]"></div>}
     </div>
   );
 }

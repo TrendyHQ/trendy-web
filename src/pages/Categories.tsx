@@ -27,7 +27,7 @@ export default function Categories() {
           <CategoryBox categoryName="fitness" />
         </div>
         <div className="box-container">
-          <CategoryBox categoryName="wellness" />
+          <CategoryBox categoryName="health" />
           <CategoryBox categoryName="music" />
           <CategoryBox categoryName="politics" />
         </div>

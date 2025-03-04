@@ -27,6 +27,7 @@ import {
   testing,
   currentTopTrends,
   currentHasSetUpAccount,
+  currentFavoritePostIds
 } from "../Constants";
 import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
@@ -42,7 +43,7 @@ export default function Home() {
     currentHasSetUpAccount.value
   );
   const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
-    null
+    currentFavoritePostIds.value
   );
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
@@ -95,6 +96,7 @@ export default function Home() {
       );
 
       setSavedTrends(savedTrendsRes.data);
+      currentFavoritePostIds.value = savedTrendsRes.data;
 
       setHotTrendsLoading(false);
       currentTopTrends.value = trendsRes.data;
@@ -182,7 +184,7 @@ export default function Home() {
     for (let i = 0; i < 6; i++) {
       elements.push(
         <div key={"topTrend" + i} style={{ cursor: "default" }}>
-          <div className="top-trend">
+          <div className="top-trend pl-2 pr-2 pt-1 pb-1 rounded-xl">
             <Star
               size={30}
               strokeWidth={1.5}
@@ -198,7 +200,9 @@ export default function Home() {
               Loading...
             </h2>
           </div>
-          {i < 5 && <div className="trend-divider"></div>}
+          {i < 5 && (
+            <div className="trend-divider rounded mt-[2px] mb-[2px]"></div>
+          )}
         </div>
       );
     }
@@ -241,7 +245,7 @@ export default function Home() {
           <Header hasSetUpAccount={hasSetUpAccount} />
           <div className="content bottom">
             <div className="header-wrapper">
-              <div className="header-cont">
+                <div className="header-cont">
                 <div className="text">
                   <h1 className="section-title header">
                     Evaluate the trends of the world with a simple click, using
@@ -296,8 +300,8 @@ export default function Home() {
                         <Dumbbell size={42} />
                       </button>
                     </Link>
-                    <Link to="/category/wellness">
-                      <button className="categoryButton wellness">
+                    <Link to="/category/health">
+                      <button className="categoryButton health">
                         <HeartPulse size={42} />
                       </button>
                     </Link>
@@ -345,7 +349,8 @@ export default function Home() {
                     }`}
                     style={{
                       animationDuration: "800ms",
-                      animationTimingFunction: "ease-in-out",
+                      animationTimingFunction:
+                        "cubic-bezier(0.55, 0.09, 0.41, 0.95)",
                       animationDirection: "reverse",
                       animationIterationCount: "infinite",
                     }}
@@ -364,18 +369,22 @@ export default function Home() {
                   {topTrends &&
                     !hotTrendsLoading &&
                     topTrends.map((trend: Trend, index: number) => (
-                      <TopTrend
-                        key={index}
-                        trend={trend}
-                        index={index}
-                        savedTrends={savedTrends}
-                        total={topTrends.length}
-                      />
+                      <>
+                        <TopTrend
+                          key={index}
+                          trend={trend}
+                          index={index}
+                          savedTrends={savedTrends}
+                          total={topTrends.length}
+                        />
+                      </>
                     ))}
-                  {hotTrendsLoading && getLoadingTrendElements()}
-                  <Link to="/hottrends" className="view-more">
-                    View More
-                  </Link>
+                  {topTrends && !hotTrendsLoading && (
+                    <Link to="/hottrends" className="view-more">
+                      View More
+                    </Link>
+                  )}
+                {hotTrendsLoading && getLoadingTrendElements()}
                 </div>
               </div>
             </div>

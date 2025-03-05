@@ -42,12 +42,13 @@ export default function TopTrend({
   const [trendSaved, setTrendSaved] = useState<boolean>(isTrendSaved);
 
   const getRelevancy = (moreRelevantValue: number) => {
+    const className = "absolute right-[5px] top-[50%] translate-y-[-50%]";
     if (moreRelevantValue === 1) {
-      return <ArrowUp size={30} color="#0E8800" />;
+      return <ArrowUp size={30} color="#0E8800" className={className} />;
     } else if (moreRelevantValue === 0) {
-      return <ArrowDown size={30} color="#D80000" />;
+      return <ArrowDown size={30} color="#D80000" className={className} />;
     } else if (moreRelevantValue === -1) {
-      return <Minus size={30} color="#858585" />;
+      return <Minus size={30} color="#858585" className={className} />;
     }
   };
   const handleTrendClick = (trend: Trend | ListTrend) => {
@@ -98,7 +99,7 @@ export default function TopTrend({
 
   return (
     <div key={"topTrend" + index}>
-      <div className="top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-xl">
+      <div className="top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-xl relative">
         <Star
           size={30}
           color="#FFD700"

@@ -27,7 +27,7 @@ import {
   testing,
   currentTopTrends,
   currentHasSetUpAccount,
-  currentFavoritePostIds
+  currentFavoritePostIds,
 } from "../Constants";
 import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
@@ -108,14 +108,18 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated && !testing) {
-      // Perform an immediate update on component mount
-      if (currentTopTrends.value == null) updateTopTrends();
+      try {
+        // Perform an immediate update on component mount
+        if (currentTopTrends.value == null) updateTopTrends();
 
-      // Set up the interval if it's not already set
-      if (updateTrendsIntervalRef.current === null) {
-        updateTrendsIntervalRef.current = setInterval(() => {
-          updateTopTrends(false);
-        }, 180000); // 180,000ms = 3 minutes
+        // Set up the interval if it's not already set
+        if (updateTrendsIntervalRef.current === null) {
+          updateTrendsIntervalRef.current = setInterval(() => {
+            updateTopTrends(false);
+          }, 180000); // 180,000ms = 3 minutes
+        }
+      } catch (e) {
+        console.error(e);
       }
 
       // Clean up the interval on component unmount
@@ -128,8 +132,12 @@ export default function Home() {
   }, [isAuthenticated, hasSetUpAccount]);
 
   useEffect(() => {
-    if (currentHasSetUpAccount.value == null)
-      fetchUserProperty("hasSetUpAccount");
+    try {
+      if (currentHasSetUpAccount.value == null)
+        fetchUserProperty("hasSetUpAccount");
+    } catch (e) {
+      console.error(e);
+    }
   }, [user]);
 
   useEffect(() => {
@@ -245,7 +253,7 @@ export default function Home() {
           <Header hasSetUpAccount={hasSetUpAccount} />
           <div className="content bottom">
             <div className="header-wrapper">
-                <div className="header-cont">
+              <div className="header-cont">
                 <div className="text">
                   <h1 className="section-title header">
                     Evaluate the trends of the world with a simple click, using
@@ -384,7 +392,7 @@ export default function Home() {
                       View More
                     </Link>
                   )}
-                {hotTrendsLoading && getLoadingTrendElements()}
+                  {hotTrendsLoading && getLoadingTrendElements()}
                 </div>
               </div>
             </div>
@@ -405,7 +413,7 @@ export default function Home() {
     );
   }
 
-  if (isAuthenticated === false) {
+  if (isAuthenticated === false && !isLoading) {
     return (
       <div className="bodyCont">
         <div className="bg-container"></div>

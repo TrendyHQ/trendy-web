@@ -195,6 +195,7 @@
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(255, 255, 255, 0.15);
   padding-bottom: 20px;
+  overflow: hidden;
 }
 
 .left-body-cont a {
@@ -345,14 +346,14 @@
 .top-trend-name {
   font-family: "M PLUS 2", Josefin Sans, sans-serif;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 1.2rem;
   color: #bdbdbd;
   margin: 0;
 }
 
 .top-trend-icon {
-  width: 40px;
-  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
   background-color: #484848;
   display: flex;

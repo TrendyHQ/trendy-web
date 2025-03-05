@@ -39,6 +39,7 @@ export default function Home() {
     currentTopTrends.value
   );
   const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
+  const [configIsLoading, setConfigIsLoading] = useState<boolean>(true);
   const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(
     currentHasSetUpAccount.value
   );
@@ -54,6 +55,7 @@ export default function Home() {
 
   const fetchUserProperty = async (property: string) => {
     if (user) {
+      setConfigIsLoading(true);
       try {
         const res = await axios.get(
           "http://localhost:8080/api/users/getUserProperty",
@@ -70,6 +72,8 @@ export default function Home() {
         }
       } catch (error) {
         console.error("Error fetching first login status:", error);
+      } finally {
+        setConfigIsLoading(false);
       }
     }
   };
@@ -133,7 +137,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      if (currentHasSetUpAccount.value == null)
+      if (currentHasSetUpAccount.value == false)
         fetchUserProperty("hasSetUpAccount");
     } catch (e) {
       console.error(e);
@@ -217,7 +221,7 @@ export default function Home() {
     return elements;
   };
 
-  if (hasSetUpAccount == false) {
+  if (hasSetUpAccount == false && !configIsLoading) {
     return (
       <SetUpPage
         functions={{ updateInformation }}
@@ -377,15 +381,13 @@ export default function Home() {
                   {topTrends &&
                     !hotTrendsLoading &&
                     topTrends.map((trend: Trend, index: number) => (
-                      <>
-                        <TopTrend
-                          key={index}
-                          trend={trend}
-                          index={index}
-                          savedTrends={savedTrends}
-                          total={topTrends.length}
-                        />
-                      </>
+                      <TopTrend
+                        key={index}
+                        trend={trend}
+                        index={index}
+                        savedTrends={savedTrends}
+                        total={topTrends.length}
+                      />
                     ))}
                   {topTrends && !hotTrendsLoading && (
                     <Link to="/hottrends" className="view-more">

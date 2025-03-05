@@ -17,14 +17,17 @@ interface ListTrend {
 }
 
 interface SpecificTrend {
-  category: string;
-  id: string;
+  subredditName: string;
+  postId: string;
   title: string;
   moreInfo: string;
   link: string;
+  score: number;
   otherInformation: {
     comments: CommentObject[];
     likes: number;
+    userHasLiked: boolean;
+    userHasDisliked: boolean;
   };
 }
 

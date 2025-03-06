@@ -52,6 +52,7 @@ export default function Home() {
     null
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
+  const locationClass = "w-full bg-red-200 flex-1/8";
 
   const fetchUserProperty = async (property: string) => {
     if (user) {
@@ -400,7 +401,39 @@ export default function Home() {
             </div>
             <div className="body-wrapper">
               <div className="right-body-cont">
-                <h1 className="section-title">TBD</h1>
+                <h1 className="section-title">The World</h1>
+                <div className="flex h-full gap-[20px] p-[20px] pt-[0]">
+                  <div className="flex-1/3 bg-red-500 h-full flex flex-col gap-[5px]">
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                  </div>
+                  <div className="flex-1/3 bg-red-500 h-full flex flex-col gap-[5px]">
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                  </div>
+                  <div className="flex-1/3 bg-red-500 h-full flex flex-col gap-[5px]">
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                    <div className={locationClass}></div>
+                  </div>
+                </div>
               </div>
               <div className="left-body-cont">
                 <Link to="/favorites">

@@ -140,6 +140,7 @@ header a {
   justify-content: left;
   align-items: center;
   gap: 10px;
+  padding-left: 5px;
   transition: 0.1s ease-in-out;
 }
 

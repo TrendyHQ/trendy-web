@@ -31,6 +31,7 @@ import {
 } from "../Constants";
 import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
+import ErrorPage from "./ErrorPage";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -46,13 +47,14 @@ export default function Home() {
   const [savedTrends, setSavedTrends] = useState<SavedTrendObject[] | null>(
     currentFavoritePostIds.value
   );
+  const [isError, setIsError] = useState<boolean>(false);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
-  const locationClass = "w-full bg-red-200 flex-1/8";
+  const locationClass = "w-full bg-[#484848] flex-1/8 rounded";
 
   const fetchUserProperty = async (property: string) => {
     if (user) {
@@ -72,6 +74,7 @@ export default function Home() {
           currentHasSetUpAccount.value = res.data;
         }
       } catch (error) {
+        setIsError(true);
         console.error("Error fetching first login status:", error);
       } finally {
         setConfigIsLoading(false);
@@ -141,6 +144,7 @@ export default function Home() {
       if (currentHasSetUpAccount.value == false)
         fetchUserProperty("hasSetUpAccount");
     } catch (e) {
+      setIsError(true);
       console.error(e);
     }
   }, [user]);
@@ -222,7 +226,7 @@ export default function Home() {
     return elements;
   };
 
-  if (hasSetUpAccount == false && !configIsLoading) {
+  if (hasSetUpAccount == false && !configIsLoading && !isError) {
     return (
       <SetUpPage
         functions={{ updateInformation }}
@@ -251,7 +255,7 @@ export default function Home() {
     );
   }
 
-  if (isAuthenticated && hasSetUpAccount && !isLoading) {
+  if (isAuthenticated && hasSetUpAccount && !isLoading && !isError) {
     return (
       <>
         <div className="bodyCont">
@@ -403,7 +407,7 @@ export default function Home() {
               <div className="right-body-cont">
                 <h1 className="section-title">The World</h1>
                 <div className="flex h-full gap-[20px] p-[20px] pt-[0]">
-                  <div className="flex-1/3 bg-red-500 h-full flex flex-col gap-[5px]">
+                  <div className="flex-1/3 h-full flex flex-col gap-[5px]">
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
@@ -413,7 +417,7 @@ export default function Home() {
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
                   </div>
-                  <div className="flex-1/3 bg-red-500 h-full flex flex-col gap-[5px]">
+                  <div className="flex-1/3 h-full flex flex-col gap-[5px]">
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
@@ -423,7 +427,7 @@ export default function Home() {
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
                   </div>
-                  <div className="flex-1/3 bg-red-500 h-full flex flex-col gap-[5px]">
+                  <div className="flex-1/3 h-full flex flex-col gap-[5px]">
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
                     <div className={locationClass}></div>
@@ -446,6 +450,10 @@ export default function Home() {
         </div>
       </>
     );
+  }
+
+  if (!isLoading && isError) {
+    return <ErrorPage />; // Render the ErrorPage component
   }
 
   if (isAuthenticated === false && !isLoading) {

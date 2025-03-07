@@ -22,6 +22,7 @@ import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { currentFavoritePostIds } from "../Constants";
 
 export default function TopTrend({
   trend,
@@ -87,7 +88,8 @@ export default function TopTrend({
   };
 
   const handleTrendSave = async () => {
-    setTrendSaved(!trendSaved);
+    const newTrendState: boolean = !trendSaved;
+    setTrendSaved(newTrendState);
 
     await axios.patch("http://localhost:8080/api/users/saveTrend", {
       userId: user?.sub,
@@ -95,6 +97,20 @@ export default function TopTrend({
       saveTrend: !trendSaved,
       trendCategory: trend.category,
     });
+
+    if (newTrendState) {
+      currentFavoritePostIds.value = [
+        ...currentFavoritePostIds.value,
+        {
+          postId: trend.id,
+          postCategory: trend.category,
+        },
+      ];
+    } else {
+      currentFavoritePostIds.value = currentFavoritePostIds.value.filter(
+        (element) => element.postId !== trend.id
+      );
+    }
   };
 
   return (

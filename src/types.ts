@@ -5,6 +5,7 @@ interface Trend {
   moreInfo: string;
   link: string;
   id: string;
+  score: number;
 }
 
 interface ListTrend {

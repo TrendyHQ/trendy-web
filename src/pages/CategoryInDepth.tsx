@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { SpecificTrend } from "../types";
+import { Trend } from "../types";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -12,7 +12,7 @@ export default function CategoryInDepth() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [trends, setTrends] = useState<SpecificTrend[]>([]);
+  const [trends, setTrends] = useState<Trend[]>([]);
 
   const checkCategory = () => {
     const path = location.pathname;

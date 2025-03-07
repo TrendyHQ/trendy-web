@@ -216,6 +216,7 @@ export default function SpecificTrendPage() {
           <a
             href={trendData.link}
             target="_blank"
+            rel="noreferrer"
             className="text-blue-200 underline hover:text-blue-100 duration-100 ease-in-out"
           >
             {trendData.link}

@@ -18,7 +18,7 @@ export default function AskAi() {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             resolve(
-              `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`
+              `${position.coords.latitude},${position.coords.longitude}`
             );
           },
           (error) => {

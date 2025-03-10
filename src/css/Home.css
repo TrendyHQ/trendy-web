@@ -121,6 +121,8 @@
   height: 352px;
   position: relative;
   overflow: hidden;
+  box-shadow: 
+    20px 20px 60px rgba(71, 71, 71, 0.3);
 }
 
 .header-cont .text {

@@ -56,6 +56,25 @@ export default function Home() {
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
   const locationClass = "w-full bg-[#484848] flex-1/8 rounded";
 
+  function getUserLocation(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve(
+              `${position.coords.latitude},${position.coords.longitude}`
+            );
+          },
+          (error) => {
+            reject(`Error getting location: ${error.message}`);
+          }
+        );
+      } else {
+        reject("Geolocation is not supported by this browser.");
+      }
+    });
+  }
+
   const fetchUserProperty = async (property: string) => {
     if (user) {
       setConfigIsLoading(true);
@@ -89,6 +108,15 @@ export default function Home() {
     if (load != false) setHotTrendsLoading(true);
 
     try {
+      const googleTrendInfo = await axios.get("http://localhost:8080/api/google/info", {
+        params: {
+          query: "dogs",
+          location: await getUserLocation(),
+        }
+      });
+
+      console.log(googleTrendInfo.data);
+
       const trendsRes = await axios.post(
         "http://localhost:8080/api/reddit/topReddit",
         { requestAmount: 6, userId: user.sub }
@@ -405,7 +433,7 @@ export default function Home() {
             </div>
             <div className="body-wrapper">
               <div className="right-body-cont">
-                <h1 className="section-title">The World</h1>
+                <h1 className="section-title">Top Categories</h1>
                 <div className="flex h-full gap-[20px] p-[20px] pt-[0]">
                   <div className="flex-1/3 h-full flex flex-col gap-[5px]">
                     <div className={locationClass}></div>

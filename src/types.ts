@@ -44,4 +44,26 @@ interface SavedTrendObject {
   postCategory: string;
 }
 
-export type { Trend, SpecificTrend, CommentObject, ListTrend, SavedTrendObject };
+interface GoogleTrendsData {
+  interest_over_time: {
+    timeline_data: Array<object>;
+  };
+  score: number;
+  search_metadata: {
+    id: string;
+    status: string;
+    created_at: string;
+    processed_at: string;
+    json_endpoint: string;
+  };
+  search_parameters: {
+    q: string;
+    hl?: string;
+    tz?: string;
+    geo?: string;
+    date?: string;
+  };
+  title: string;
+}
+
+export type { Trend, SpecificTrend, CommentObject, ListTrend, SavedTrendObject, GoogleTrendsData };

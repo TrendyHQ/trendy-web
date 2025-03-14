@@ -20,7 +20,7 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import { football } from "@lucide/lab";
-import { SavedTrendObject, Trend } from "../types";
+import { GoogleTrendsData, SavedTrendObject, Trend } from "../types";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -48,22 +48,21 @@ export default function Home() {
     currentFavoritePostIds.value
   );
   const [isError, setIsError] = useState<boolean>(false);
+  const [topCategories, setTopCategories] = useState([]);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
-  const locationClass = "w-full bg-[#484848] flex-1/8 rounded";
+  const locationClass = "w-full bg-[#484848] flex-1/4 rounded";
 
   function getUserLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            resolve(
-              `${position.coords.latitude},${position.coords.longitude}`
-            );
+            resolve(`${position.coords.latitude},${position.coords.longitude}`);
           },
           (error) => {
             reject(`Error getting location: ${error.message}`);
@@ -108,14 +107,17 @@ export default function Home() {
     if (load != false) setHotTrendsLoading(true);
 
     try {
-      const googleTrendInfo = await axios.get("http://localhost:8080/api/google/info", {
-        params: {
-          query: "dogs",
-          location: await getUserLocation(),
+      const googleTrendInfo = await axios.get(
+        "http://localhost:8080/api/google/info",
+        {
+          params: {
+            location: await getUserLocation(),
+          },
         }
-      });
+      );
 
       console.log(googleTrendInfo.data);
+      setTopCategories(googleTrendInfo.data);
 
       const trendsRes = await axios.post(
         "http://localhost:8080/api/reddit/topReddit",
@@ -251,6 +253,64 @@ export default function Home() {
         </div>
       );
     }
+    return elements;
+  };
+
+  const getTopCategories = () => {
+    const elements = [];
+    function getElements(index: number) {
+      const categoryElements = [];
+
+      switch (index) {
+        case 0: {
+          topCategories.forEach((category: GoogleTrendsData, i) => {
+            if (i < 4 && typeof category !== "string") {
+              categoryElements.push(
+                <div className={locationClass}>{category.title}</div>
+              );
+            }
+          });
+          break;
+        }
+        case 1: {
+          topCategories.forEach((category: GoogleTrendsData, i) => {
+            if (i > 3 && i < 8 && typeof category !== "string") {
+              categoryElements.push(
+                <div className={locationClass}>{category.title}</div>
+              );
+            }
+          });
+          break;
+        }
+        case 2: {
+          topCategories.forEach((category: GoogleTrendsData, i) => {
+            if (i > 7 && i < 13 && typeof category !== "string") {
+              categoryElements.push(
+                <div className={locationClass}>{category.title}</div>
+              );
+            }
+          });
+          break;
+        }
+        default: {
+          categoryElements.push(<div>None</div>);
+        }
+      }
+
+      return categoryElements;
+    }
+
+    for (let i = 0; i < 3; i++) {
+      elements.push(
+        <div
+          key={"topCategory" + i}
+          className="flex-1/3 h-full flex flex-col gap-[5px]"
+        >
+          {getElements(i)}
+        </div>
+      );
+    }
+
     return elements;
   };
 
@@ -435,36 +495,7 @@ export default function Home() {
               <div className="right-body-cont">
                 <h1 className="section-title">Top Categories</h1>
                 <div className="flex h-full gap-[20px] p-[20px] pt-[0]">
-                  <div className="flex-1/3 h-full flex flex-col gap-[5px]">
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                  </div>
-                  <div className="flex-1/3 h-full flex flex-col gap-[5px]">
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                  </div>
-                  <div className="flex-1/3 h-full flex flex-col gap-[5px]">
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                    <div className={locationClass}></div>
-                  </div>
+                  {getTopCategories()}
                 </div>
               </div>
               <div className="left-body-cont">

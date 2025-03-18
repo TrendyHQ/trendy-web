@@ -48,7 +48,7 @@ export default function Home() {
     currentFavoritePostIds.value
   );
   const [isError, setIsError] = useState<boolean>(false);
-  const [topCategories, setTopCategories] = useState([]);
+  const [topCategories, setTopCategories] = useState<GoogleTrendsData[]>([]);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -107,7 +107,7 @@ export default function Home() {
     if (load != false) setHotTrendsLoading(true);
 
     try {
-      const googleTrendInfo = await axios.get(
+      const googleTrendInfo: { data: GoogleTrendsData[] } = await axios.get(
         "http://localhost:8080/api/google/info",
         {
           params: {
@@ -116,8 +116,11 @@ export default function Home() {
         }
       );
 
-      console.log(googleTrendInfo.data);
-      setTopCategories(googleTrendInfo.data);
+      const googleTrendData: GoogleTrendsData[] = googleTrendInfo.data;
+
+      console.log(googleTrendData);
+      googleTrendData.sort((a, b) => b.score - a.score);
+      setTopCategories(googleTrendData);
 
       const trendsRes = await axios.post(
         "http://localhost:8080/api/reddit/topReddit",
@@ -266,7 +269,9 @@ export default function Home() {
           topCategories.forEach((category: GoogleTrendsData, i) => {
             if (i < 4 && typeof category !== "string") {
               categoryElements.push(
-                <div className={locationClass}>{category.title}</div>
+                <div key={index + i} className={locationClass}>
+                  {category.title}
+                </div>
               );
             }
           });
@@ -276,7 +281,9 @@ export default function Home() {
           topCategories.forEach((category: GoogleTrendsData, i) => {
             if (i > 3 && i < 8 && typeof category !== "string") {
               categoryElements.push(
-                <div className={locationClass}>{category.title}</div>
+                <div key={index + i} className={locationClass}>
+                  {category.title}
+                </div>
               );
             }
           });
@@ -286,7 +293,9 @@ export default function Home() {
           topCategories.forEach((category: GoogleTrendsData, i) => {
             if (i > 7 && i < 13 && typeof category !== "string") {
               categoryElements.push(
-                <div className={locationClass}>{category.title}</div>
+                <div key={index + i} className={locationClass}>
+                  {category.title}
+                </div>
               );
             }
           });

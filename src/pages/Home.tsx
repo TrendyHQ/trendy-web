@@ -259,68 +259,67 @@ export default function Home() {
     return elements;
   };
 
-  const getTopCategories = () => {
-    const elements = [];
-    function getElements(index: number) {
-      const categoryElements = [];
+  /**
+   * Organizes the top categories into three balanced columns for display.
+   *
+   * This function divides the top categories into three columns based on predefined index ranges:
+   * - Column 1: indices 0-3
+   * - Column 2: indices 4-7
+   * - Column 3: indices 8-12
+   *
+   * For each column, it filters categories that:
+   * - Are not of type string
+   * - Fall within the column's index range
+   *
+   * Each category is displayed with:
+   * - Its rank number (based on index + 1)
+   * - Its title
+   * - A trending indicator (🔥) if applicable
+   *
+   * If a column has no valid categories, it displays "None".
+   *
+   * @returns {JSX.Element[]} An array of three column div elements containing the formatted categories
+   */
+  const getTopCategories = (): JSX.Element[] => {
+    // Define ranges for each column
+    const columnRanges = [
+      { min: 0, max: 3 }, // Column 1: indices 0-3
+      { min: 4, max: 7 }, // Column 2: indices 4-7
+      { min: 8, max: 12 }, // Column 3: indices 8-12
+    ];
 
-      switch (index) {
-        case 0: {
-          topCategories.forEach((category: GoogleTrendsData, i) => {
-            if (i < 4 && typeof category !== "string") {
-              categoryElements.push(
-                <div key={index + i} className={locationClass}>
-                  {category.title}
-                </div>
-              );
-            }
-          });
-          break;
-        }
-        case 1: {
-          topCategories.forEach((category: GoogleTrendsData, i) => {
-            if (i > 3 && i < 8 && typeof category !== "string") {
-              categoryElements.push(
-                <div key={index + i} className={locationClass}>
-                  {category.title}
-                </div>
-              );
-            }
-          });
-          break;
-        }
-        case 2: {
-          topCategories.forEach((category: GoogleTrendsData, i) => {
-            if (i > 7 && i < 13 && typeof category !== "string") {
-              categoryElements.push(
-                <div key={index + i} className={locationClass}>
-                  {category.title}
-                </div>
-              );
-            }
-          });
-          break;
-        }
-        default: {
-          categoryElements.push(<div>None</div>);
-        }
-      }
+    return columnRanges.map((range, columnIndex) => {
+      // Get valid categories for this column
+      const categoryElements = topCategories
+        .filter(
+          (category, index) =>
+            typeof category !== "string" &&
+            index >= range.min &&
+            index <= range.max
+        )
+        .map((category, index) => (
+          <div
+            key={`category-${columnIndex}-${index}`}
+            className={locationClass}
+          >
+            {topCategories.indexOf(category) + 1}. {category.title}
+            {category.isTrending ? "🔥" : ""}
+          </div>
+        ));
 
-      return categoryElements;
-    }
-
-    for (let i = 0; i < 3; i++) {
-      elements.push(
+      return (
         <div
-          key={"topCategory" + i}
+          key={`topCategory-${columnIndex}`}
           className="flex-1/3 h-full flex flex-col gap-[5px]"
         >
-          {getElements(i)}
+          {categoryElements.length > 0 ? (
+            categoryElements
+          ) : (
+            <div className={locationClass}>None</div>
+          )}
         </div>
       );
-    }
-
-    return elements;
+    });
   };
 
   if (hasSetUpAccount == false && !configIsLoading && !isError) {

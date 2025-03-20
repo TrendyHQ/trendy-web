@@ -64,6 +64,7 @@ interface GoogleTrendsData {
     date?: string;
   };
   title: string;
+  isTrending: boolean;
 }
 
 export type { Trend, SpecificTrend, CommentObject, ListTrend, SavedTrendObject, GoogleTrendsData };

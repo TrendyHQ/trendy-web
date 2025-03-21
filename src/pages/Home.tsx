@@ -28,6 +28,7 @@ import {
   currentTopTrends,
   currentHasSetUpAccount,
   currentFavoritePostIds,
+  storedTopTrends,
 } from "../Constants";
 import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
@@ -48,7 +49,9 @@ export default function Home() {
     currentFavoritePostIds.value
   );
   const [isError, setIsError] = useState<boolean>(false);
-  const [topCategories, setTopCategories] = useState<GoogleTrendsData[]>([]);
+  const [topCategories, setTopCategories] = useState<GoogleTrendsData[]>(
+    storedTopTrends.value
+  );
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -120,6 +123,7 @@ export default function Home() {
 
       console.log(googleTrendData);
       googleTrendData.sort((a, b) => b.score - a.score);
+      storedTopTrends.value = googleTrendData;
       setTopCategories(googleTrendData);
 
       const trendsRes = await axios.post(
@@ -281,6 +285,15 @@ export default function Home() {
    * @returns {JSX.Element[]} An array of three column div elements containing the formatted categories
    */
   const getTopCategories = (): JSX.Element[] => {
+    if (topCategories.length == 1)
+      return [
+        <div
+          className="flex-1/3 h-full flex flex-col gap-[5px]"
+          key={`topCategory-0`}
+        >
+          <div className={locationClass}>No available trends</div>
+        </div>,
+      ];
     // Define ranges for each column
     const columnRanges = [
       { min: 0, max: 3 }, // Column 1: indices 0-3

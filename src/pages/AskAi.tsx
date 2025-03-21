@@ -17,9 +17,7 @@ export default function AskAi() {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            resolve(
-              `${position.coords.latitude},${position.coords.longitude}`
-            );
+            resolve(`${position.coords.latitude},${position.coords.longitude}`);
           },
           (error) => {
             reject(`Error getting location: ${error.message}`);
@@ -49,7 +47,17 @@ export default function AskAi() {
           }
         );
 
-        setResponse(res.data);
+        const fullResponse = res.data;
+        setResponse(""); // Clear any existing response
+
+        const animateText = (text: string, i: number = 0) => {
+          if (i <= text.length) {
+            setResponse(text.substring(0, i));
+            setTimeout(() => animateText(text, i + 1), 5);
+          }
+        };
+
+        animateText(fullResponse);
       } catch (error) {
         console.error(error);
       }

@@ -58,7 +58,6 @@ export default function Home() {
     null
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
-  const locationClass = "w-full bg-[#484848] flex-1/4 rounded";
 
   function getUserLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -291,7 +290,9 @@ export default function Home() {
           className="flex-1/3 h-full flex flex-col gap-[5px]"
           key={`topCategory-0`}
         >
-          <div className={locationClass}>No available trends</div>
+          <div className="w-full bg-[#484848] flex-1/4 rounded">
+            No available trends
+          </div>
         </div>,
       ];
     // Define ranges for each column
@@ -310,13 +311,23 @@ export default function Home() {
             index >= range.min &&
             index <= range.max
         )
+        // Format and display each Google Trends category with ranking, title, and trending indicator
         .map((category, index) => (
           <div
             key={`category-${columnIndex}-${index}`}
-            className={locationClass}
+            className={`w-full bg-[#484848] flex-1/4 rounded px-3 py-2.5 hover:bg-[#555555] transition-colors duration-200 flex items-center justify-between mb-1.5`}
           >
-            {topCategories.indexOf(category) + 1}. {category.title}
-            {category.isTrending ? "🔥" : ""}
+            <div className="flex items-center gap-2.5 max-w-[85%]">
+              <span className="bg-[#333333] rounded-full h-6 w-6 flex items-center justify-center text-sm font-semibold">
+                {topCategories.indexOf(category) + 1}
+              </span>
+              <span className="truncate text-gray-100">{category.title}</span>
+            </div>
+            {category.isTrending && (
+              <span className="text-lg animate-pulse" aria-label="Trending">
+                🔥
+              </span>
+            )}
           </div>
         ));
 
@@ -328,7 +339,7 @@ export default function Home() {
           {categoryElements.length > 0 ? (
             categoryElements
           ) : (
-            <div className={locationClass}>None</div>
+            <div className="w-full bg-[#484848] flex-1/4 rounded">None</div>
           )}
         </div>
       );

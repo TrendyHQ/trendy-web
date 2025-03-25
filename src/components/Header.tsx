@@ -117,7 +117,15 @@ export default function Header({
         values={[feedbackWindowOpen, currentFeedbackContent, isFading]}
       />
       <header className={!isAuthenticated ? "transparent" : ""}>
-        <Link to="/" className={isAuthenticated ? "logo" : "logo big"}>
+        <Link
+          to="/"
+          className={isAuthenticated ? "logo" : "logo big"}
+          onClick={function () {
+            if (location.pathname === "/") {
+              window.location.reload();
+            }
+          }}
+        >
           <h1 className="text-3xl">TRENDY</h1>
         </Link>
         {isAuthenticated && (

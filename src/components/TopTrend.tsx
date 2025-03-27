@@ -115,7 +115,7 @@ export default function TopTrend({
 
   return (
     <div key={"topTrend" + index}>
-      <div className="top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-xl relative">
+      <div className="top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-s relative">
         <Star
           size={30}
           color="#FFD700"

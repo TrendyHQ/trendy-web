@@ -27,9 +27,6 @@ export default function CategoryInDepth() {
           "http://localhost:8080/api/reddit/topTrendsForCategory",
           checkCategory(),
           {
-            headers: {
-              "Content-Type": "text/plain",
-            },
             withCredentials: true,
           }
         )

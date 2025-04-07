@@ -16,8 +16,8 @@ import {
   Plane,
   Shirt,
   Flag,
-  Star,
   RefreshCcw,
+  Star,
 } from "lucide-react";
 import { football } from "@lucide/lab";
 import { GoogleTrendsData, SavedTrendObject, Trend } from "../types";
@@ -59,6 +59,27 @@ export default function Home() {
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
 
+    /**
+   * Retrieves the user's current geolocation coordinates.
+   * 
+   * This function uses the browser's Geolocation API to get the current position
+   * of the user's device. If successful, it returns the coordinates as a string
+   * in the format "latitude,longitude".
+   * 
+   * @returns A Promise that resolves to a string containing the user's coordinates
+   *          in the format "latitude,longitude"
+   * @throws {Error} If geolocation is not supported by the browser
+   * @throws {Error} If the user denies the geolocation request or if there's another error
+   *                 getting the location (with the error message included)
+   * 
+   * @example
+   * try {
+   *   const coordinates = await getUserLocation();
+   *   console.log(`User is at: ${coordinates}`);
+   * } catch (error) {
+   *   console.error(error);
+   * }
+   */
   function getUserLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
       if ("geolocation" in navigator) {
@@ -76,6 +97,17 @@ export default function Home() {
     });
   }
 
+  /**
+   * Fetches a specified property for the current user from the backend API.
+   * 
+   * @param property - The user property to fetch (e.g., "hasSetUpAccount")
+   * @returns Promise<void> - Does not return a value but updates state based on the response
+   * @throws Will set isError state to true and log the error if the API call fails
+   * @remarks 
+   * - Requires authenticated user (checks if user exists)
+   * - Sets configIsLoading state while fetching
+   * - For "hasSetUpAccount" property, updates both state and a ref value
+   */
   const fetchUserProperty = async (property: string) => {
     if (user) {
       setConfigIsLoading(true);
@@ -102,7 +134,22 @@ export default function Home() {
     }
   };
 
-  const updateTopTrends = async (load?: boolean) => {
+  /**
+   * Updates the top trending topics from Google Trends and Reddit.
+   * 
+   * This function fetches trending data from Google based on the user's location,
+   * sorts it by score, and stores it. It also fetches top Reddit posts related to 
+   * these trends and the user's saved trends.
+   * 
+   * @param {boolean} [load] - Optional flag to control loading state behavior.
+   *                          If false, loading state won't be set to true.
+   *                          Defaults to undefined (loading state will be set).
+   * @returns {Promise<void>} A promise that resolves when the trends are updated.
+   * 
+   * @throws Will log an error if API requests fail.
+   * @remarks Will exit early if already loading or if no user is authenticated.
+   */
+  const updateTopTrends = async (load?: boolean): Promise<void> => {
     // Prevent a new update if one is already in progress
     if (hotTrendsLoading || !user) return;
 
@@ -189,7 +236,24 @@ export default function Home() {
     console.log(user);
   }, [isAuthenticated]);
 
-  const updateInformation = async () => {
+  /**
+   * Updates user information in the database.
+   * 
+   * This function gathers user input for nickname, gender, and birth date,
+   * then sends a PATCH request to update the user's information on the server.
+   * If the update is successful, it sets the `hasSetUpAccount` state to true.
+   * 
+   * @async
+   * @function updateInformation
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * //Call this function when the user submits their profile information
+   * await updateInformation();
+   * 
+   * @throws {Error} Logs any errors that occur during the update process
+   */
+  const updateInformation = async (): Promise<void> => {
     const nickname: string | null = nicknameInputRef.current?.value || null;
     const gender: string | null =
       (
@@ -232,7 +296,17 @@ export default function Home() {
     }
   };
 
-  const getLoadingTrendElements = () => {
+  /**
+   * Generates loading placeholder elements for trends display
+   * 
+   * Creates a series of placeholder elements with loading animations
+   * for the top trends section. Each element contains a star icon
+   * and "Loading..." text with staggered animation delays.
+   * 
+   * @returns {JSX.Element[]} An array of 6 loading placeholder elements
+   * with dividers between them (except after the last element)
+   */
+  const getLoadingTrendElements = (): JSX.Element[] => {
     const elements = [];
     for (let i = 0; i < 6; i++) {
       elements.push(

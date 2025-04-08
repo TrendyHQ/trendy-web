@@ -29,11 +29,13 @@ export default function TopTrend({
   index,
   savedTrends,
   total,
+  isFromHomeFavorites
 }: {
   trend: Trend | ListTrend;
   index: number;
   savedTrends: SavedTrendObject[] | null;
   total: number;
+  isFromHomeFavorites?: boolean
 }) {
   const { user } = useAuth0();
   const navigate = useNavigate();
@@ -122,12 +124,13 @@ export default function TopTrend({
           strokeWidth={1.5}
           fill={trendSaved ? "#FFD700" : "none"}
           onClick={handleTrendSave}
+          style={{minWidth: '30px', minHeight: '30px'}}
         />
         <div className="vertical-divider"></div>
         <div className="top-trend-icon" onClick={() => handleTrendClick(trend)}>
           {getIcon(trend.category)}
         </div>
-        <h2 className="top-trend-name" onClick={() => handleTrendClick(trend)}>
+        <h2 className="top-trend-name" style={isFromHomeFavorites ? { fontSize: '1.25rem' } : {}} onClick={() => handleTrendClick(trend)}>
           {trend.title.length > 50
             ? trend.title.substring(0, 50) + "..."
             : trend.title}

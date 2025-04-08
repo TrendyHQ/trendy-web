@@ -20,7 +20,7 @@ import {
   Star,
 } from "lucide-react";
 import { football } from "@lucide/lab";
-import { GoogleTrendsData, SavedTrendObject, Trend } from "../types";
+import { GoogleTrendsData, ListTrend, SavedTrendObject, Trend } from "../types";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -29,6 +29,7 @@ import {
   currentHasSetUpAccount,
   currentFavoritePostIds,
   storedTopTrends,
+  currentFavorites,
 } from "../Constants";
 import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
@@ -52,6 +53,9 @@ export default function Home() {
   const [topCategories, setTopCategories] = useState<GoogleTrendsData[]>(
     storedTopTrends.value
   );
+  const [listOfFavorites, setListOfFavorites] = useState<ListTrend[]>(
+    currentFavorites.value
+  );
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -59,19 +63,19 @@ export default function Home() {
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
 
-    /**
+  /**
    * Retrieves the user's current geolocation coordinates.
-   * 
+   *
    * This function uses the browser's Geolocation API to get the current position
    * of the user's device. If successful, it returns the coordinates as a string
    * in the format "latitude,longitude".
-   * 
+   *
    * @returns A Promise that resolves to a string containing the user's coordinates
    *          in the format "latitude,longitude"
    * @throws {Error} If geolocation is not supported by the browser
    * @throws {Error} If the user denies the geolocation request or if there's another error
    *                 getting the location (with the error message included)
-   * 
+   *
    * @example
    * try {
    *   const coordinates = await getUserLocation();
@@ -99,11 +103,11 @@ export default function Home() {
 
   /**
    * Fetches a specified property for the current user from the backend API.
-   * 
+   *
    * @param property - The user property to fetch (e.g., "hasSetUpAccount")
    * @returns Promise<void> - Does not return a value but updates state based on the response
    * @throws Will set isError state to true and log the error if the API call fails
-   * @remarks 
+   * @remarks
    * - Requires authenticated user (checks if user exists)
    * - Sets configIsLoading state while fetching
    * - For "hasSetUpAccount" property, updates both state and a ref value
@@ -136,16 +140,16 @@ export default function Home() {
 
   /**
    * Updates the top trending topics from Google Trends and Reddit.
-   * 
+   *
    * This function fetches trending data from Google based on the user's location,
-   * sorts it by score, and stores it. It also fetches top Reddit posts related to 
+   * sorts it by score, and stores it. It also fetches top Reddit posts related to
    * these trends and the user's saved trends.
-   * 
+   *
    * @param {boolean} [load] - Optional flag to control loading state behavior.
    *                          If false, loading state won't be set to true.
    *                          Defaults to undefined (loading state will be set).
    * @returns {Promise<void>} A promise that resolves when the trends are updated.
-   * 
+   *
    * @throws Will log an error if API requests fail.
    * @remarks Will exit early if already loading or if no user is authenticated.
    */
@@ -202,6 +206,11 @@ export default function Home() {
       try {
         // Perform an immediate update on component mount
         if (currentTopTrends.value == null) updateTopTrends();
+        if (
+          currentFavorites.value.length == 0 ||
+          currentFavorites.value == null
+        )
+          fetchFavorites();
 
         // Set up the interval if it's not already set
         if (updateTrendsIntervalRef.current === null) {
@@ -222,6 +231,63 @@ export default function Home() {
     }
   }, [isAuthenticated, hasSetUpAccount]);
 
+  /**
+   * Fetches the user's favorite trends and saved trends from the server.
+   *
+   * This function makes two API calls:
+   * 1. Gets all trends created by the user (getUsersTrends)
+   * 2. Gets all trends saved by the user (getSavedTrends)
+   *
+   * The fetched data is then:
+   * - Sorted alphabetically by title
+   * - Stored in the component's state
+   * - Stored in shared reference values
+   *
+   * @async
+   * @function fetchFavorites
+   * @requires user - The authenticated user object with a sub property (user ID)
+   * @throws {Error} If API requests fail
+   */
+  async function fetchFavorites() {
+    if (user?.sub) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/users/getUsersTrends`,
+          {
+            params: {
+              userId: user.sub,
+            },
+            withCredentials: true,
+          }
+        );
+
+        const savedTrendsRes = await axios.get(
+          `http://localhost:8080/api/users/getSavedTrends`,
+          {
+            params: {
+              userId: user.sub,
+            },
+          }
+        );
+
+        setSavedTrends(savedTrendsRes.data);
+        currentFavoritePostIds.value = savedTrendsRes.data;
+
+        currentFavorites.value = response.data.sort(
+          (a: { title: string }, b: { title: string }) =>
+            a.title.localeCompare(b.title)
+        );
+        setListOfFavorites(
+          response.data.sort((a: { title: string }, b: { title: string }) =>
+            a.title.localeCompare(b.title)
+          )
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
   useEffect(() => {
     try {
       if (currentHasSetUpAccount.value == false)
@@ -238,19 +304,19 @@ export default function Home() {
 
   /**
    * Updates user information in the database.
-   * 
+   *
    * This function gathers user input for nickname, gender, and birth date,
    * then sends a PATCH request to update the user's information on the server.
    * If the update is successful, it sets the `hasSetUpAccount` state to true.
-   * 
+   *
    * @async
    * @function updateInformation
    * @returns {Promise<void>}
-   * 
+   *
    * @example
    * //Call this function when the user submits their profile information
    * await updateInformation();
-   * 
+   *
    * @throws {Error} Logs any errors that occur during the update process
    */
   const updateInformation = async (): Promise<void> => {
@@ -298,11 +364,11 @@ export default function Home() {
 
   /**
    * Generates loading placeholder elements for trends display
-   * 
+   *
    * Creates a series of placeholder elements with loading animations
    * for the top trends section. Each element contains a star icon
    * and "Loading..." text with staggered animation delays.
-   * 
+   *
    * @returns {JSX.Element[]} An array of 6 loading placeholder elements
    * with dividers between them (except after the last element)
    */
@@ -441,8 +507,8 @@ export default function Home() {
             <div className="right-body-cont loading"></div>
           </div>
           <div className="body-wrapper">
-            <div className="right-body-cont loading"></div>
-            <div className="left-body-cont loading"></div>
+            <div className="right-body-cont2 loading"></div>
+            <div className="left-body-cont2 loading"></div>
           </div>
         </div>
       </div>
@@ -598,16 +664,37 @@ export default function Home() {
               </div>
             </div>
             <div className="body-wrapper">
-              <div className="right-body-cont">
+              <div className="right-body-cont2">
                 <h1 className="section-title">Top Categories</h1>
                 <div className="flex h-full gap-[20px] p-[20px] pt-[0]">
                   {getTopCategories()}
                 </div>
               </div>
-              <div className="left-body-cont">
+              <div className="left-body-cont2">
                 <Link to="/favorites">
                   <h1 className="section-title">Favorites</h1>
                 </Link>
+
+                <div className="top-trends-wrapper">
+                  {listOfFavorites &&
+                    listOfFavorites
+                      .slice(0, 3)
+                      .map((trend: ListTrend, index: number) => (
+                        <TopTrend
+                          key={index}
+                          trend={trend}
+                          index={index}
+                          savedTrends={savedTrends}
+                          total={Math.min(listOfFavorites.length, 3)}
+                          isFromHomeFavorites={true}
+                        />
+                      ))}
+                  {listOfFavorites && listOfFavorites.length > 0 && (
+                    <Link to="/favorites" className="view-more">
+                      View More
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -648,8 +735,8 @@ export default function Home() {
           <div className="right-body-cont loading"></div>
         </div>
         <div className="body-wrapper">
-          <div className="right-body-cont loading"></div>
-          <div className="left-body-cont loading"></div>
+          <div className="right-body-cont2 loading"></div>
+          <div className="left-body-cont2 loading"></div>
         </div>
       </div>
     </div>

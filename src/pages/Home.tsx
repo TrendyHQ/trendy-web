@@ -678,14 +678,14 @@ export default function Home() {
                 <div className="top-trends-wrapper">
                   {listOfFavorites &&
                     listOfFavorites
-                      .slice(0, 3)
+                      .slice(0, 4)
                       .map((trend: ListTrend, index: number) => (
                         <TopTrend
                           key={index}
                           trend={trend}
                           index={index}
                           savedTrends={savedTrends}
-                          total={Math.min(listOfFavorites.length, 3)}
+                          total={Math.min(listOfFavorites.length, 4)}
                           isFromHomeFavorites={true}
                         />
                       ))}

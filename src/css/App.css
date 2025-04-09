@@ -16,8 +16,6 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #f0f0f0;
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -32,6 +30,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100dvh;
+  color: #f0f0f0 !important;
+  background-color: #242424 !important;
 }
 
 .bodyCont {
@@ -45,11 +45,4 @@ body {
 
 .bodyCont.darkened{
   filter: brightness(0.7);
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #333333;
-    background-color: #fffff5;
-  }
 }

@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import DropDown from "./DropDown";
 import axios from "axios";
 import FeedbackWindow from "./FeedbackWindow";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 export default function Header({
   hasSetUpAccount,
@@ -128,6 +129,35 @@ export default function Header({
         >
           <h1 className="text-3xl">TRENDY</h1>
         </Link>
+        {isAuthenticated && (
+          <Navbar
+            collapseOnSelect
+            expand="md"
+            className="w-[80%] bg-transparent"
+          >
+            <Container>
+              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+              <Navbar.Collapse id="responsive-navbar-nav">
+                <Nav className="me-auto">
+                  <Nav.Link as={Link} to="/favorites">
+                    Favorites
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/hottrends">
+                    Hot
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/categories">
+                    Categories
+                  </Nav.Link>
+                  <NavDropdown title="More" id="collapsible-nav-dropdown">
+                    <NavDropdown.Item as={Link} to="/ask-ai">
+                      Ask AI
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+        )}
         {isAuthenticated && (
           <img
             ref={profileImgRef}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Navigate } from "react-router-dom";
+import { Alert, Button, Form } from "react-bootstrap";
 
 export default function AskAi() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -78,16 +79,22 @@ export default function AskAi() {
   return (
     <div className="bodyCont">
       <Header />
-      <input
-        type="text"
-        className="w-1/2 ml-auto mr-auto border-1 rounded"
+      <Form.Control
+        aria-label="Input to enter queries for AI"
+        data-bs-theme="dark"
         onKeyDown={(e) => {
+          // Check if the key pressed is Enter
+          // and call the getResponse function
+          // if it is.
           if (e.key === "Enter") {
             message = e.currentTarget.value;
             getResponse();
             e.currentTarget.value = "";
           }
         }}
+        className="w-75 mx-auto mt-5"
+        type="text"
+        placeholder="Enter your query here..."
       />
       <br />
       <div>
@@ -114,9 +121,15 @@ export default function AskAi() {
         </label>
         <br />
       </div>
-      <p dangerouslySetInnerHTML={{ __html: markdownToHtml(response) }} />
+      <Alert
+        variant="dark"
+        data-bs-theme="dark"
+        className="w-11/12 mx-auto"
+      >
+        <p dangerouslySetInnerHTML={{ __html: markdownToHtml(response) }} />
+      </Alert>
       <br />
-      <button onClick={() => setResponse("")}>Clear Response</button>
+      <Button variant="danger" className="w-25 mx-auto" onClick={() => setResponse("")}>Clear Response</Button>
       <Footer />
     </div>
   );

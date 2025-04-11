@@ -5,7 +5,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import DropDown from "./DropDown";
 import axios from "axios";
 import FeedbackWindow from "./FeedbackWindow";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import {
+  Container,
+  Nav,
+  Navbar,
+  NavDropdown,
+  Offcanvas,
+} from "react-bootstrap";
 
 export default function Header({
   hasSetUpAccount,
@@ -20,7 +26,7 @@ export default function Header({
   ).matches;
   const dropDownRef = useRef<HTMLDivElement>(null);
   const profileImgRef = useRef<HTMLImageElement>(null);
-  //
+
   const [profileDown, setProfileDown] = useState<boolean>(false);
   const [userNickname, setUserNickname] = useState<string>(
     user?.nickname || ""
@@ -29,8 +35,25 @@ export default function Header({
   const [currentFeedbackContent, setCurrentFeedbackContent] =
     useState<string>("default");
   const [isFading, setIsFading] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const iconSize: number = 26;
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowWidth(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -134,21 +157,119 @@ export default function Header({
             collapseOnSelect
             expand="md"
             className="w-[80%] bg-transparent"
+            variant={isDarkTheme ? "dark" : "light"}
           >
             <Container>
-              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-              <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="me-auto">
-                  <Nav.Link as={Link} to="/favorites">
+              <Navbar.Toggle
+                aria-controls="responsive-navbar-nav"
+                onClick={handleShow}
+                className="d-md-none ms-auto"
+              />
+              {windowWidth < 768 && (
+                <Offcanvas
+                  show={show}
+                  onHide={handleClose}
+                  placement="end"
+                  responsive="md"
+                  data-bs-theme={isDarkTheme ? "dark" : "light"}
+                >
+                  <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Menu</Offcanvas.Title>
+                  </Offcanvas.Header>
+                  <Offcanvas.Body>
+                    <Nav className="flex-column">
+                      <Nav.Link
+                        as={Link}
+                        to="/"
+                        className="offcanvas-link"
+                        active={location.pathname === "/"}
+                        onClick={handleClose}
+                      >
+                        Home
+                      </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        to="/favorites"
+                        className="offcanvas-link"
+                        active={location.pathname === "/favorites"}
+                        onClick={handleClose}
+                      >
+                        Favorites
+                      </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        to="/hottrends"
+                        className="offcanvas-link"
+                        active={location.pathname === "/hottrends"}
+                        onClick={handleClose}
+                      >
+                        Hot
+                      </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        to="/categories"
+                        className="offcanvas-link"
+                        active={location.pathname === "/categories"}
+                        onClick={handleClose}
+                      >
+                        Categories
+                      </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        to="/ask-ai"
+                        className="offcanvas-link"
+                        active={location.pathname === "/ask-ai"}
+                        onClick={handleClose}
+                      >
+                        Ask AI
+                      </Nav.Link>
+                    </Nav>
+                  </Offcanvas.Body>
+                </Offcanvas>
+              )}
+              <Navbar.Collapse
+                id="responsive-navbar-nav"
+                className="d-none d-md-block"
+              >
+                <Nav className="ms-auto" variant="underline">
+                  <Nav.Link
+                    as={Link}
+                    to="/"
+                    className="text-white"
+                    active={location.pathname === "/"}
+                  >
+                    Home
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/favorites"
+                    className="text-white"
+                    active={location.pathname === "/favorites"}
+                  >
                     Favorites
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/hottrends">
+                  <Nav.Link
+                    as={Link}
+                    to="/hottrends"
+                    className="text-white"
+                    active={location.pathname === "/hottrends"}
+                  >
                     Hot
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/categories">
+                  <Nav.Link
+                    as={Link}
+                    to="/categories"
+                    className="text-white"
+                    active={location.pathname === "/categories"}
+                  >
                     Categories
                   </Nav.Link>
-                  <NavDropdown title="More" id="collapsible-nav-dropdown">
+                  <NavDropdown
+                    title="More"
+                    id="collapsible-nav-dropdown"
+                    menuVariant="dark"
+                    active={location.pathname === "/ask-ai"}
+                  >
                     <NavDropdown.Item as={Link} to="/ask-ai">
                       Ask AI
                     </NavDropdown.Item>
@@ -158,7 +279,7 @@ export default function Header({
             </Container>
           </Navbar>
         )}
-        {isAuthenticated && (
+        {isAuthenticated && windowWidth > 768 && (
           <img
             ref={profileImgRef}
             src={user?.picture}

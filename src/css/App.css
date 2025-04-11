@@ -10,8 +10,6 @@
 }
 
 :root {
-  font-family: "M PLUS 2", Josefin Sans, sans-serif Inter, system-ui, Avenir,
-    Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -41,6 +39,8 @@ body {
   height: fit-content;
   position: relative;
   min-height: 100dvh;
+  font-family: "M PLUS 2", Josefin Sans, sans-serif Inter, system-ui, Avenir,
+  Helvetica, Arial, sans-serif;
 }
 
 .bodyCont.darkened{

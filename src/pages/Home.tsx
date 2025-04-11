@@ -460,7 +460,7 @@ export default function Home() {
         .map((category, index) => (
           <Card
             key={index}
-            className="relative overflow-hidden bg-zinc-900 text-white border-0 pt-[12px]"
+            className="relative overflow-hidden bg-zinc-700 text-white border-0 pt-[12px]"
           >
             <Badge
               className="absolute right-1 top-1 bg-gray-800 text-[10px] px-1 py-0 h-4 text-white border-0"

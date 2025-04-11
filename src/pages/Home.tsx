@@ -18,7 +18,10 @@ import {
   Flag,
   RefreshCcw,
   Star,
+  TrendingUp,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { football } from "@lucide/lab";
 import { GoogleTrendsData, ListTrend, SavedTrendObject, Trend } from "../types";
 import axios from "axios";
@@ -171,9 +174,11 @@ export default function Home() {
 
       const googleTrendData: GoogleTrendsData[] = googleTrendInfo.data;
 
-      console.log(googleTrendData);
       googleTrendData.sort((a, b) => b.score - a.score);
       storedTopTrends.value = googleTrendData;
+      console.log(
+        "==================\n" + googleTrendData + "\n=================="
+      );
       setTopCategories(googleTrendData);
 
       const trendsRes = await axios.post(
@@ -453,22 +458,32 @@ export default function Home() {
         )
         // Format and display each Google Trends category with ranking, title, and trending indicator
         .map((category, index) => (
-          <div
-            key={`category-${columnIndex}-${index}`}
-            className={`w-full bg-[#484848] flex-1/4 rounded px-3 py-2.5 hover:bg-[#555555] transition-colors duration-200 flex items-center justify-between mb-1.5`}
+          <Card
+            key={index}
+            className="relative overflow-hidden bg-zinc-900 text-white border-0 pt-[12px]"
           >
-            <div className="flex items-center gap-2.5 max-w-[85%]">
-              <span className="bg-[#333333] rounded-full h-6 w-6 flex items-center justify-center text-sm font-semibold">
-                {topCategories.indexOf(category) + 1}
-              </span>
-              <span className="truncate text-gray-100">{category.title}</span>
-            </div>
-            {category.isTrending && (
-              <span className="text-lg animate-pulse" aria-label="Trending">
-                🔥
-              </span>
-            )}
-          </div>
+            <Badge
+              className="absolute right-1 top-1 bg-gray-800 text-[10px] px-1 py-0 h-4 text-white border-0"
+              variant="outline"
+            >
+              {topCategories.indexOf(category) + 1}
+            </Badge>
+            <CardContent>
+              <p className="text-sm font-medium line-clamp-2 pl-2">
+                {category.title}
+              </p>
+            </CardContent>
+            <CardFooter className="flex items-center justify-between border-t border-gray-800 p-1">
+              {category.isTrending ? (
+                <div className="flex items-center text-emerald-400 pt-1 pb-1">
+                  <TrendingUp className="mr-0.5 h-2.5 w-2.5" />
+                  <span className="text-[10px]">Trending</span>
+                </div>
+              ) : (
+                <span className="text-[10px] text-gray-400 pt-1 pb-1">Not trending</span>
+              )}
+            </CardFooter>
+          </Card>
         ));
 
       return (
@@ -666,7 +681,7 @@ export default function Home() {
             <div className="body-wrapper">
               <div className="right-body-cont2">
                 <h1 className="section-title">Top Categories</h1>
-                <div className="flex h-full gap-[20px] p-[20px] pt-[0]">
+                <div className="grid grid-cols-3 gap-2 p-[20px]">
                   {getTopCategories()}
                 </div>
               </div>

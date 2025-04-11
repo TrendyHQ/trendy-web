@@ -37,6 +37,7 @@ import {
 import TopTrend from "../components/TopTrend";
 import SetUpPage from "./SetUpPage";
 import ErrorPage from "./ErrorPage";
+import { Placeholder } from "react-bootstrap";
 
 export default function Home() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -429,7 +430,49 @@ export default function Home() {
    * @returns {JSX.Element[]} An array of three column div elements containing the formatted categories
    */
   const getTopCategories = (): JSX.Element[] => {
-    if (topCategories.length == 1)
+    // If there are no categories, create placeholder columns
+    if (topCategories.length === 0) {
+      const placeholderColumns = [1, 2, 3].map((columnIndex) => (
+        <div
+          key={`topCategory-placeholder-${columnIndex}`}
+          className="flex-1/3 h-full flex flex-col gap-[5px]"
+        >
+          {[1, 2, 3, 4].map((cardIndex) => (
+            <Card
+              key={`placeholder-card-${columnIndex}-${cardIndex}`}
+              className="relative overflow-hidden bg-neutral-700 text-white border-0 pt-[12px] no-underline transition-colors duration-200"
+            >
+              <Badge
+                className="absolute right-1 top-1 bg-neutral-800 text-[10px] w-fit h-4 text-white border-0"
+                variant="outline"
+                style={{ borderRadius: "50%", aspectRatio: 1, padding: "12px" }}
+              >
+                {(columnIndex - 1) * 4 + cardIndex}
+              </Badge>
+              <CardContent>
+                <p className="text-sm font-medium line-clamp-2 pl-2 no-underline">
+                  <Placeholder as="div" animation="glow">
+                    <Placeholder xs={8} className="rounded-full" bg="secondary" />
+                  </Placeholder>
+                </p>
+              </CardContent>
+              <CardFooter className="flex items-center justify-between border-t border-[#262626] p-1">
+                <div className="flex items-center text-gray-400 pt-1 pb-1">
+                  <TrendingUp className="mr-0.5 h-2.5 w-2.5" />
+                  <span className="text-[10px] no-underline">
+                    Discover trends
+                  </span>
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      ));
+
+      return placeholderColumns;
+    }
+
+    if (topCategories.length === 1)
       return [
         <div
           className="flex-1/3 h-full flex flex-col gap-[5px]"

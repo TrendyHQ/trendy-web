@@ -25,13 +25,12 @@ export default function CategoryInDepth() {
       axios
         .post(
           "http://localhost:8080/api/reddit/topTrendsForCategory",
-          checkCategory(),
+          { categoryName: checkCategory() }, // Corrected to wrap checkCategory() in an object
           {
             withCredentials: true,
           }
         )
         .then((res) => {
-          console.log(res.data);
           setTrends(res.data);
         });
     } catch (error) {

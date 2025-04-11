@@ -15,11 +15,13 @@ import {
 
 export default function Header({
   hasSetUpAccount,
+  headerIsLoading,
 }: {
-  hasSetUpAccount?: boolean;
+  hasSetUpAccount?: boolean | null;
+  headerIsLoading?: boolean;
 }) {
   const location = useLocation();
-  const { isAuthenticated, loginWithRedirect, logout, user, isLoading } =
+  const { isAuthenticated, loginWithRedirect, logout, user } =
     useAuth0();
   const isDarkTheme: boolean = window.matchMedia(
     "(prefers-color-scheme: dark)"
@@ -125,12 +127,15 @@ export default function Header({
     }
   }, [hasSetUpAccount, isAuthenticated]);
 
-  if (isLoading) {
+  if (headerIsLoading) {
     return (
-      <header>
-        <h1 className="logo">TRENDY</h1>
-        <div className="loadingPfp loading"></div>
-      </header>
+      <header
+        className="loading"
+        style={{
+          background: "#424242",
+          animation: "loading 1.5s ease-in infinite",
+        }}
+      ></header>
     );
   }
 

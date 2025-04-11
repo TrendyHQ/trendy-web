@@ -447,6 +447,50 @@ export default function Home() {
       { min: 8, max: 12 }, // Column 3: indices 8-12
     ];
 
+    /**
+     * Maps a Google Trends category to an appropriate routing category.
+     *
+     * This function normalizes category titles from Google Trends to match
+     * the predefined categories used in the application's routing system.
+     * It handles various formats and variations of category names by:
+     * 1. Converting to lowercase
+     * 2. Checking against known category mappings
+     * 3. Falling back to a normalized version of the original if no match is found
+     *
+     * @param {string} category - The Google Trends category title to convert
+     * @returns {string} A normalized category name suitable for routing
+     */
+    function checkCategory(category: string): string {
+      const lowerCategory = category.toLowerCase();
+
+      // Map of Google Trends categories to our application categories
+      const categoryMap: Record<string, string> = {
+        fashion: "fashion",
+        technology: "technology",
+        food: "foodandbeverages",
+        "food & drink": "foodandbeverages",
+        entertainment: "entertainment",
+        media: "socialmedia",
+        fitness: "fitness",
+        health: "health",
+        music: "music",
+        politics: "politics",
+        travel: "travel",
+        science: "science",
+        sports: "sports",
+      };
+
+      // Check if the category or a subset of words in it matches our map
+      for (const [key, value] of Object.entries(categoryMap)) {
+        if (lowerCategory.includes(key)) {
+          return value;
+        }
+      }
+
+      // Default fallback - normalize the original category
+      return category.replace(/ /g, "").toLowerCase();
+    }
+
     return columnRanges.map((range, columnIndex) => {
       // Get valid categories for this column
       const categoryElements = topCategories
@@ -458,33 +502,38 @@ export default function Home() {
         )
         // Format and display each Google Trends category with ranking, title, and trending indicator
         .map((category, index) => (
-          <Card
+          <Link
+            to={`/category/${checkCategory(category.title)}`}
+            style={{ textDecoration: "none" }}
             key={index}
-            className="relative overflow-hidden bg-neutral-700 text-white border-0 pt-[12px]"
           >
-            <Badge
-              className="absolute right-1 top-1 bg-neutral-800 text-[10px] w-fit h-4 text-white border-0"
-              variant="outline"
-              style={{borderRadius: "50%", aspectRatio: 1, padding: "12px"}}
-            >
-              {topCategories.indexOf(category) + 1}
-            </Badge>
-            <CardContent>
-              <p className="text-sm font-medium line-clamp-2 pl-2">
-                {category.title}
-              </p>
-            </CardContent>
-            <CardFooter className="flex items-center justify-between border-t border-gray-800 p-1">
-              {category.isTrending ? (
-                <div className="flex items-center text-emerald-400 pt-1 pb-1">
-                  <TrendingUp className="mr-0.5 h-2.5 w-2.5" />
-                  <span className="text-[10px]">Trending</span>
-                </div>
-              ) : (
-                <span className="text-[10px] text-gray-400 pt-1 pb-1">Not trending</span>
-              )}
-            </CardFooter>
-          </Card>
+            <Card className="relative overflow-hidden bg-neutral-700 text-white border-0 pt-[12px] no-underline transition-colors duration-200 hover:bg-neutral-600">
+              <Badge
+                className="absolute right-1 top-1 bg-neutral-800 text-[10px] w-fit h-4 text-white border-0"
+                variant="outline"
+                style={{ borderRadius: "50%", aspectRatio: 1, padding: "12px" }}
+              >
+                {topCategories.indexOf(category) + 1}
+              </Badge>
+              <CardContent>
+                <p className="text-sm font-medium line-clamp-2 pl-2 no-underline">
+                  {category.title}
+                </p>
+              </CardContent>
+              <CardFooter className="flex items-center justify-between border-t border-[#262626] p-1">
+                {category.isTrending ? (
+                  <div className="flex items-center text-[#ff5733] pt-1 pb-1">
+                    <TrendingUp className="mr-0.5 h-2.5 w-2.5" />
+                    <span className="text-[10px] no-underline">Trending</span>
+                  </div>
+                ) : (
+                  <span className="text-[10px] text-gray-400 pt-1 pb-1 no-underline">
+                    Not trending
+                  </span>
+                )}
+              </CardFooter>
+            </Card>
+          </Link>
         ));
 
       return (
@@ -514,6 +563,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="bodyCont">
+        <Header hasSetUpAccount={hasSetUpAccount} headerIsLoading />
         <div className="content bottom">
           <div className="header-wrapper">
             <div className="header-cont loading"></div>
@@ -686,7 +736,7 @@ export default function Home() {
                   {getTopCategories()}
                 </div>
               </div>
-              <div className="left-body-cont2">
+              <div className="left-body-cont2" style={{ paddingBottom: 0 }}>
                 <Link to="/favorites">
                   <h1 className="section-title">Favorites</h1>
                 </Link>
@@ -741,6 +791,7 @@ export default function Home() {
 
   return (
     <div className="bodyCont">
+      <Header hasSetUpAccount={hasSetUpAccount} headerIsLoading />
       <div className="content bottom">
         <div className="header-wrapper">
           <div className="header-cont loading"></div>

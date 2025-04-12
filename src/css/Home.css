@@ -249,9 +249,8 @@
 }
 
 .categoryButton {
-  background-color: #484848;
-  border-radius: 4px;
-  border: none;
+  border: 1.5px solid #484848;
+  border-radius: 8px;
   width: 72px;
   aspect-ratio: 1;
   cursor: pointer;
@@ -341,7 +340,7 @@
 }
 
 .categoryButton:hover {
-  background-color: #686868;
+  background-color: #484848;
 }
 
 .categoryButton svg {

@@ -1,7 +1,7 @@
 import {
   CircleX,
   ArrowLeft,
-  MessageCircleMore,
+  Share2,
   TriangleAlert,
 } from "lucide-react";
 
@@ -51,7 +51,7 @@ export default function FeedbackWindow({
                 onClick={() => handleFade("suggest")}
               >
                 <div className="icon-wrapper">
-                  <MessageCircleMore size={30} strokeWidth={1.5} />
+                  <Share2 size={30} strokeWidth={1.5} />
                 </div>
                 <p className="text">Suggest Something</p>
               </button>

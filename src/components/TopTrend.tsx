@@ -7,7 +7,7 @@ import {
   Headset,
   CupSoda,
   Clapperboard,
-  MessageCircle,
+  Share2,
   Dumbbell,
   HeartPulse,
   Music,
@@ -71,7 +71,7 @@ export default function TopTrend({
       case "entertainment":
         return <Clapperboard size={size} />;
       case "socialmedia":
-        return <MessageCircle size={size} />;
+        return <Share2 size={size} />;
       case "fitness":
         return <Dumbbell size={size} />;
       case "health":

@@ -11,7 +11,7 @@ import {
   Headset,
   HeartPulse,
   Icon,
-  MessageCircle,
+  Share2,
   Music,
   Plane,
   Shirt,
@@ -45,7 +45,9 @@ export default function Home() {
   const [topTrends, setTopTrends] = useState<Trend[] | null>(
     currentTopTrends.value
   );
-  const [hotTrendsLoading, setHotTrendsLoading] = useState(false);
+  const [hotTrendsLoading, setHotTrendsLoading] = useState<boolean>(false);
+  const [favoriteTrendsLoading, setFavoriteTrendsLoading] =
+    useState<boolean>(false);
   const [configIsLoading, setConfigIsLoading] = useState<boolean>(true);
   const [hasSetUpAccount, setHasSetUpAccount] = useState<boolean | null>(
     currentHasSetUpAccount.value
@@ -256,6 +258,8 @@ export default function Home() {
    */
   async function fetchFavorites() {
     if (user?.sub) {
+      setFavoriteTrendsLoading(true);
+
       try {
         const response = await axios.get(
           `http://localhost:8080/api/users/getUsersTrends`,
@@ -290,6 +294,8 @@ export default function Home() {
         );
       } catch (e) {
         console.error(e);
+      } finally {
+        setFavoriteTrendsLoading(false);
       }
     }
   }
@@ -452,7 +458,11 @@ export default function Home() {
               <CardContent>
                 <p className="text-sm font-medium line-clamp-2 pl-2 no-underline">
                   <Placeholder as="div" animation="glow">
-                    <Placeholder xs={8} className="rounded-full" bg="secondary" />
+                    <Placeholder
+                      xs={8}
+                      className="rounded-full"
+                      bg="secondary"
+                    />
                   </Placeholder>
                 </p>
               </CardContent>
@@ -678,7 +688,7 @@ export default function Home() {
                   <div className="button-wrapper">
                     <Link to="/category/socialmedia">
                       <button className="categoryButton social">
-                        <MessageCircle size={42} />
+                        <Share2 size={42} />
                       </button>
                     </Link>
                     <Link to="/category/fitness">
@@ -785,6 +795,7 @@ export default function Home() {
                 </Link>
                 <div className="top-trends-wrapper">
                   {listOfFavorites &&
+                    !favoriteTrendsLoading &&
                     listOfFavorites
                       .slice(0, 5)
                       .map((trend: ListTrend, index: number) => (
@@ -802,6 +813,7 @@ export default function Home() {
                       View More
                     </Link>
                   )}
+                  {favoriteTrendsLoading && getLoadingTrendElements()}
                 </div>
               </div>
             </div>

@@ -14,7 +14,7 @@
     "@lucide/lab": "^0.1.2",
     "@preact/signals-react": "^3.0.0",
     "@radix-ui/react-slot": "^1.2.0",
-    "@tailwindcss/vite": "^4.0.9",
+    "@tailwindcss/vite": "^4.1.4",
     "auth0": "^4.16.0",
     "axios": "^1.8.2",
     "bootstrap": "^5.3.5",

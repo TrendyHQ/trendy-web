@@ -5,6 +5,7 @@ import "../css/Settings.css";
 import { useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LoadingPage from "./LoadingPage";
 
 export default function Settings() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -107,9 +108,7 @@ export default function Settings() {
 
   if (isLoading || apiIsLoading) {
     return (
-      <div className="loading-container">
-        <p>Loading...</p>
-      </div>
+      <LoadingPage />
     );
   }
 

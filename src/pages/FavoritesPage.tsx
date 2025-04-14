@@ -8,6 +8,7 @@ import { ListTrend, SavedTrendObject } from "../types";
 import { currentFavoritePostIds, currentFavorites } from "../Constants";
 import "../css/FavoritesPage.css";
 import TopTrend from "../components/TopTrend";
+import LoadingPage from "./LoadingPage";
 
 export default function FavoritesPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -89,7 +90,7 @@ export default function FavoritesPage() {
   }
 
   if (pageIsLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (

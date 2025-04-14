@@ -7,6 +7,7 @@ import { CommentObject, SpecificTrend } from "../types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Star } from "lucide-react";
 import { currentFavoritePostIds } from "../Constants";
+import LoadingPage from "./LoadingPage";
 
 export default function SpecificTrendPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -194,7 +195,7 @@ export default function SpecificTrendPage() {
   }
 
   if (pageIsLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (

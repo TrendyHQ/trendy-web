@@ -7,6 +7,7 @@ import { currentFavoritePostIds, currentHotTrends } from "../Constants";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Navigate } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
 export default function HotPage() {
   const { user, isLoading, isAuthenticated } = useAuth0();
@@ -80,7 +81,7 @@ export default function HotPage() {
   }
 
   if (hotTrendsLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (

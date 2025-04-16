@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export default function DropDown({functions, values, dropDownRef} : {
     functions: {handleFeedback: () => void, logout: () => void},
     values: [number, boolean, boolean, string],
-    dropDownRef: React.RefObject<HTMLDivElement>
+    dropDownRef: React.RefObject<HTMLDivElement> | null
 }) {
     const {handleFeedback, logout} = functions;
     const [iconSize, isDarkTheme, profileDown, userNickname] = values;

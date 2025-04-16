@@ -1,6 +1,6 @@
 import "../css/Header.css";
 import { Link, useLocation } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, RefObject } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import DropDown from "./DropDown";
 import axios from "axios";
@@ -21,8 +21,7 @@ export default function Header({
   headerIsLoading?: boolean;
 }) {
   const location = useLocation();
-  const { isAuthenticated, loginWithRedirect, logout, user } =
-    useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const isDarkTheme: boolean = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -301,7 +300,7 @@ export default function Header({
         <DropDown
           functions={{ handleFeedback, logout }}
           values={[iconSize, isDarkTheme, profileDown, userNickname]}
-          dropDownRef={dropDownRef}
+          dropDownRef={dropDownRef as RefObject<HTMLDivElement>}
         />
       )}
     </>

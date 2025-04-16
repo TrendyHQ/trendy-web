@@ -25,7 +25,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { football } from "@lucide/lab";
 import { GoogleTrendsData, ListTrend, SavedTrendObject, Trend } from "../types";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { JSX, RefObject, useEffect, useRef, useState } from "react";
 import {
   testing,
   currentTopTrends,
@@ -456,15 +456,15 @@ export default function Home() {
                 {(columnIndex - 1) * 4 + cardIndex}
               </Badge>
               <CardContent>
-                <p className="text-sm font-medium line-clamp-2 pl-2 no-underline">
-                  <Placeholder as="div" animation="glow">
+                <div className="text-sm font-medium line-clamp-2 pl-2 no-underline mb-[1rem]">
+                  <Placeholder as="span" animation="glow">
                     <Placeholder
                       xs={8}
                       className="rounded-full"
                       bg="secondary"
                     />
                   </Placeholder>
-                </p>
+                </div>
               </CardContent>
               <CardFooter className="flex items-center justify-between border-t border-[#262626] p-1">
                 <div className="flex items-center text-gray-400 pt-1 pb-1">
@@ -569,9 +569,9 @@ export default function Home() {
                 {topCategories.indexOf(category) + 1}
               </Badge>
               <CardContent>
-                <p className="text-sm font-medium line-clamp-2 pl-2 no-underline">
+                <div className="text-sm font-medium line-clamp-2 pl-2 no-underline mb-[1rem]">
                   {category.title}
-                </p>
+                </div>
               </CardContent>
               <CardFooter className="flex items-center justify-between border-t border-[#262626] p-1">
                 {category.isTrending ? (
@@ -608,7 +608,10 @@ export default function Home() {
     return (
       <SetUpPage
         functions={{ updateInformation }}
-        refs={{ nicknameInputRef, birthDateInputRef }}
+        refs={{
+          nicknameInputRef: nicknameInputRef as RefObject<HTMLInputElement>,
+          birthDateInputRef: birthDateInputRef as RefObject<HTMLInputElement>,
+        }}
       />
     );
   }

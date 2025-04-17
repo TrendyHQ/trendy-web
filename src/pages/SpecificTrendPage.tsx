@@ -5,9 +5,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { CommentObject, SpecificTrend } from "../types";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Star } from "lucide-react";
+import { ExternalLink, Send, Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import { currentFavoritePostIds } from "../Constants";
 import LoadingPage from "./LoadingPage";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// Import CSS - make sure this comes after Tailwind's import in the build
+import "../css/SpecificTrendPage.css";
 
 export default function SpecificTrendPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -24,6 +32,7 @@ export default function SpecificTrendPage() {
   const [trendSaved, setTrendSaved] = useState<boolean>(
     currentFavoritePostIds.value.some((trend) => trend.postId === trendId)
   );
+  const [comment, setComment] = useState("")
 
   const getSpecificTrend = () => {
     if (user && isAuthenticated && !isLoading) {
@@ -51,7 +60,7 @@ export default function SpecificTrendPage() {
     }
   };
 
-  const addComment = (comment: string) => {
+  const addComment = () => {
     if (user?.sub) {
       const date = new Date().toLocaleDateString();
 
@@ -60,6 +69,7 @@ export default function SpecificTrendPage() {
         value: comment,
         datePublished: date,
         nick: user.nickname || "Anonymous",
+        avatar: user.picture || "/placeholder.svg",
       };
 
       try {
@@ -199,90 +209,144 @@ export default function SpecificTrendPage() {
   }
 
   return (
-    <div className="bodyCont relative">
+    <div className="min-h-screen bg-zinc-900 text-zinc-100 flex flex-col">
       <Header />
-      <Star
-        size={30}
-        color="#FFD700"
-        strokeWidth={1.5}
-        fill={trendSaved ? "#FFD700" : "none"}
-        onClick={handleTrendSave}
-        className="absolute right-5 top-20 cursor-pointer"
-      />
-      <h1>Specific Trend Page</h1>
-      {trendData && (
-        <div>
-          <h2>{trendData.title}</h2>
-          <p>{trendData.moreInfo}</p>
-          <a
-            href={trendData.link}
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-200 underline hover:text-blue-100 duration-100 ease-in-out"
+
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
+        <div className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`absolute right-0 top-0 transition-all duration-300 ${
+              trendSaved ? "text-[#ff5733]" : "text-zinc-400 hover:text-[#ff5733]"
+            }`}
+            onClick={handleTrendSave}
           >
-            {trendData.link}
-          </a>
-          <br />
-          <div className="flex space-x-2">
-            <button
-              onClick={handleLike}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                hasLiked
-                  ? "bg-blue-300 text-blue-800 cursor-pointer"
-                  : "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 cursor-pointer"
-              } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
-            >
-              {hasLiked ? "Liked 👍" : "Like Post 👍"}
-            </button>
+            <Star 
+              size={24} 
+              fill={trendSaved ? "#ff5733" : "none"} 
+              className={`trend-save-icon ${trendSaved ? "saved" : ""}`} 
+            />
+            <span className="sr-only">Save trend</span>
+          </Button>
 
-            <button
-              onClick={handleDislike}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                hasDisliked
-                  ? "bg-red-300 text-red-800 cursor-pointer"
-                  : "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 cursor-pointer"
-              } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50`}
-            >
-              {hasDisliked ? "Disliked 👎" : "Dislike Post 👎"}
-            </button>
-          </div>
-
-          <p>{likes} likes</p>
-          <br />
-          <label htmlFor="commentInput">New Comment: </label>
-          <input
-            onKeyDown={(e) => {
-              if (
-                e.key === "Enter" &&
-                (e.target as HTMLInputElement).value.trim() !== ""
-              ) {
-                addComment((e.target as HTMLInputElement).value);
-                (e.target as HTMLInputElement).value = "";
-              }
-            }}
-            type="text"
-            id="commentInput"
-            className="border-1 rounded"
-          />
-          <br />
-          <h2>Comments:</h2>
-          <div className="pl-[40px]">
-            {trendData &&
-              trendData.otherInformation.comments &&
-              trendData.otherInformation.comments
-                .slice()
-                .reverse()
-                .map((comment: CommentObject, index) => (
-                  <div key={index}>
-                    <p>{comment.nick}</p>
-                    <p>
-                      {comment.datePublished}: {comment.value}
-                    </p>
-                  </div>
-                ))}
-          </div>
+          <h1 className="text-3xl font-bold mb-6 text-[#ff5733]">Trend Details</h1>
         </div>
-      )}
+
+        {trendData && (
+          <Card className="bg-zinc-800 border-zinc-700 overflow-hidden shadow-lg">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-1">{trendData.title}</h2>
+                  <Badge variant="outline" className="bg-[#ff5733]/10 text-[#ff5733] border-[#ff5733]/20">
+                    Trending
+                  </Badge>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="pt-4">
+              <p className="text-zinc-300 mb-4 leading-relaxed">{trendData.moreInfo}</p>
+
+              <a
+                href={trendData.link}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-[#ff5733] hover:text-[#ff5733]/80 transition-colors group mb-6"
+              >
+                <ExternalLink size={16} />
+                <span className="underline underline-offset-4">{trendData.link}</span>
+              </a>
+
+              <div className="flex items-center gap-3 mb-2">
+                <Button
+                  onClick={handleLike}
+                  variant={hasLiked ? "default" : "outline"}
+                  className={`transition-all ${
+                    hasLiked
+                      ? "bg-[#ff5733] hover:bg-[#ff5733]/90 text-white"
+                      : "border-zinc-700 hover:border-[#ff5733] hover:text-[#ff5733]"
+                  }`}
+                >
+                  <ThumbsUp size={18} className="mr-2" />
+                  {hasLiked ? "Liked" : "Like"}
+                </Button>
+
+                <Button
+                  onClick={handleDislike}
+                  variant={hasDisliked ? "default" : "outline"}
+                  className={`transition-all ${
+                    hasDisliked
+                      ? "bg-zinc-600 hover:bg-zinc-600/90 text-white"
+                      : "border-zinc-700 hover:border-zinc-600 hover:text-zinc-300"
+                  }`}
+                >
+                  <ThumbsDown size={18} className="mr-2" />
+                  {hasDisliked ? "Disliked" : "Dislike"}
+                </Button>
+
+                <span className="text-zinc-400 text-sm">
+                  {likes} {likes === 1 ? "like" : "likes"}
+                </span>
+              </div>
+            </CardContent>
+
+            <Separator className="bg-zinc-700" />
+
+            <CardContent className="pt-6">
+              <h3 className="text-xl font-semibold mb-4">Comments</h3>
+
+              <div className="flex items-center gap-3 mb-6">
+                <Input
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && comment.trim() !== "") {
+                      addComment()
+                    }
+                  }}
+                  placeholder="Add a comment..."
+                  className="bg-zinc-900 border-zinc-700 focus-visible:ring-[#ff5733] text-zinc-100"
+                />
+                <Button
+                  onClick={addComment}
+                  disabled={!comment.trim()}
+                  size="icon"
+                  className="bg-[#ff5733] hover:bg-[#ff5733]/90 text-white"
+                >
+                  <Send size={18} />
+                  <span className="sr-only">Send comment</span>
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {trendData.otherInformation.comments
+                  .slice()
+                  .reverse()
+                  .map((comment, index) => (
+                    <div key={index} className="flex gap-3 animate-in fade-in">
+                      <Avatar>
+                        <AvatarImage src={comment.avatar || "../assets/placeHolderAvatar.svg"} alt={comment.nick} />
+                        <AvatarFallback className="bg-[#ff5733]/20 text-[#ff5733]">
+                          {comment.nick.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-zinc-200">{comment.nick}</span>
+                          <span className="text-xs text-zinc-500">{comment.datePublished}</span>
+                        </div>
+                        <p className="text-zinc-300 mt-1">{comment.value}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </main>
+
       <Footer />
     </div>
   );

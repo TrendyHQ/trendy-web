@@ -1,0 +1,35 @@
+/* Custom styles for Specific Trend Page */
+
+@layer components {
+  .trend-score-indicator {
+    height: 0.375rem; /* h-1.5 */
+    border-radius: 0.25rem; /* rounded */
+    transition-property: all; /* transition-all */
+    transition-duration: 300ms; /* duration-300 */
+  }
+
+  .trend-save-icon {
+    transition-property: all;
+    transition-duration: 300ms;
+  }
+
+  .trend-save-icon.saved {
+    color: #ff5733;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/* Animation for saving trend */
+@keyframes pulse-save {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.save-pulse {
+  animation: pulse-save 0.5s ease-in-out;
+}

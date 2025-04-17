@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+    <!-- Define clipping path matching the background circle -->
+    <defs>
+        <clipPath id="circleClip">
+            <circle cx="100" cy="100" r="95"/>
+        </clipPath>
+    </defs>
+
+    <!-- Background circle -->
+    <circle cx="100" cy="100" r="94" fill="#e6e6e6" stroke="#d8d8d8" stroke-width="2"/>
+
+    <!-- Person silhouette clipped to the circle -->
+    <g clip-path="url(#circleClip)" fill="#a0a0a0">
+        <!-- Head -->
+        <circle cx="100" cy="70" r="35"/>
+        
+        <!-- Body/shoulders - improved to fill bottom of circle -->
+        <path d="M100 110 C 65 110 35 140 35 195 L 165 195 C 165 140 135 110 100 110 Z"/>
+    </g>
+</svg>

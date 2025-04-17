@@ -37,6 +37,7 @@ interface CommentObject {
   value: string;
   datePublished: string;
   nick: string;
+  avatar: string;
 }
 
 interface SavedTrendObject {

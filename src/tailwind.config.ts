@@ -1,5 +1,5 @@
-import type { Config } from "tailwindcss"
-import animatePlugin from "tailwindcss-animate"
+import type { Config } from "tailwindcss";
+import animatePlugin from "tailwindcss-animate";
 
 const config = {
   darkMode: "class",
@@ -73,12 +73,16 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse": "pulse 2s infinite",
+        pulse: "pulse 2s infinite",
         "pulse-save": "pulse-save 0.5s ease-in-out",
+      },
+      fontFamily: {
+        jockey: ["Jockey One", "sans-serif"],
+        josefin: ["Josefin Sans", "sans-serif"],
       },
     },
   },
   plugins: [animatePlugin],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

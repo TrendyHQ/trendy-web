@@ -5,13 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import DropDown from "./DropDown";
 import axios from "axios";
 import FeedbackWindow from "./FeedbackWindow";
-import {
-  Container,
-  Nav,
-  Navbar,
-  NavDropdown,
-  Offcanvas,
-} from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 export default function Header({
   hasSetUpAccount,
@@ -27,6 +21,7 @@ export default function Header({
   ).matches;
   const dropDownRef = useRef<HTMLDivElement>(null);
   const profileImgRef = useRef<HTMLImageElement>(null);
+  const collapsedRef = useRef<HTMLDivElement>(null);
 
   const [profileDown, setProfileDown] = useState<boolean>(false);
   const [userNickname, setUserNickname] = useState<string>(
@@ -36,17 +31,19 @@ export default function Header({
   const [currentFeedbackContent, setCurrentFeedbackContent] =
     useState<string>("default");
   const [isFading, setIsFading] = useState<boolean>(false);
-  const [show, setShow] = useState(false);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   const iconSize: number = 26;
 
   useEffect(() => {
     function handleResize() {
       setWindowWidth(window.innerWidth);
+      if (window.innerWidth >= 768) {
+        setIsCollapsed(true);
+      } else {
+        setIsCollapsed(false);
+      }
     }
 
     window.addEventListener("resize", handleResize);
@@ -144,159 +141,126 @@ export default function Header({
         functions={{ handleFade, setFeedbackWindowOpen, handleSubmitFeedback }}
         values={[feedbackWindowOpen, currentFeedbackContent, isFading]}
       />
-      <header className={!isAuthenticated ? "transparent" : ""}>
-        <Link
-          to="/"
-          className={isAuthenticated ? "logo" : "logo big"}
-          onClick={function () {
-            if (location.pathname === "/") {
-              window.location.reload();
-            }
-          }}
+      {isAuthenticated && (
+        <Navbar
+          collapseOnSelect
+          expand="md"
+          className="bg-[#ff5733] !z-[500]"
+          variant={isDarkTheme ? "dark" : "light"}
         >
-          <h1 className="text-3xl">TRENDY</h1>
-        </Link>
-        {isAuthenticated && (
-          <Navbar
-            collapseOnSelect
-            expand="md"
-            className="w-[80%] bg-transparent"
-            variant={isDarkTheme ? "dark" : "light"}
-          >
-            <Container>
-              <Navbar.Toggle
-                aria-controls="responsive-navbar-nav"
-                onClick={handleShow}
-                className="d-md-none ms-auto"
-              />
-              {windowWidth < 768 && (
-                <Offcanvas
-                  show={show}
-                  onHide={handleClose}
-                  placement="end"
-                  responsive="md"
-                  data-bs-theme={isDarkTheme ? "dark" : "light"}
-                >
-                  <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Menu</Offcanvas.Title>
-                  </Offcanvas.Header>
-                  <Offcanvas.Body>
-                    <Nav className="flex-column">
-                      <Nav.Link
-                        as={Link}
-                        to="/"
-                        className="offcanvas-link"
-                        active={location.pathname === "/"}
-                        onClick={handleClose}
-                      >
-                        Home
-                      </Nav.Link>
-                      <Nav.Link
-                        as={Link}
-                        to="/favorites"
-                        className="offcanvas-link"
-                        active={location.pathname === "/favorites"}
-                        onClick={handleClose}
-                      >
-                        Favorites
-                      </Nav.Link>
-                      <Nav.Link
-                        as={Link}
-                        to="/hottrends"
-                        className="offcanvas-link"
-                        active={location.pathname === "/hottrends"}
-                        onClick={handleClose}
-                      >
-                        Hot
-                      </Nav.Link>
-                      <Nav.Link
-                        as={Link}
-                        to="/categories"
-                        className="offcanvas-link"
-                        active={location.pathname === "/categories"}
-                        onClick={handleClose}
-                      >
-                        Categories
-                      </Nav.Link>
-                      <Nav.Link
-                        as={Link}
-                        to="/ask-ai"
-                        className="offcanvas-link"
-                        active={location.pathname === "/ask-ai"}
-                        onClick={handleClose}
-                      >
-                        Ask AI
-                      </Nav.Link>
-                    </Nav>
-                  </Offcanvas.Body>
-                </Offcanvas>
-              )}
-              <Navbar.Collapse
-                id="responsive-navbar-nav"
-                className="d-none d-md-block"
-                style={{ visibility: "inherit" }}
+          <Container fluid>
+            <Navbar.Brand
+              as={Link}
+              to="/"
+              onClick={function () {
+                if (location.pathname === "/") {
+                  window.location.reload();
+                }
+              }}
+              className="font-jockey !text-[2rem] text-white"
+              style={{ fontFamily: "'Jockey One', sans-serif" }}
+            >
+              TRENDY
+            </Navbar.Brand>
+            <Navbar.Toggle
+              aria-controls="responsive-navbar-nav"
+              onClick={() => {
+                if (isCollapsed) {
+                  setIsCollapsed(false);
+                } else {
+                  setTimeout(() => {
+                    if (!collapsedRef.current?.classList.contains("show")) {
+                      setIsCollapsed(true);
+                    }
+                  }, 1000);
+                }
+              }}
+            />
+            <Navbar.Collapse
+              id="responsive-navbar-nav"
+              className="justify-content-center"
+              style={{ visibility: "inherit" }}
+              ref={collapsedRef}
+            >
+              <Nav
+                className={`flex ${isCollapsed ? "!gap-[40px]" : ""}`}
+                variant={isCollapsed ? "underline" : "default"}
+                navbarScroll
+                style={{ maxHeight: "200px" }}
               >
-                <Nav className="ms-auto" variant="underline">
-                  <Nav.Link
+                <Nav.Link
+                  as={Link}
+                  to="/"
+                  className={`text-white ${
+                    isCollapsed ? "" : "hoverBackground"
+                  }`}
+                  active={location.pathname === "/"}
+                >
+                  Home
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/favorites"
+                  className={`text-white ${
+                    isCollapsed ? "" : "hoverBackground"
+                  }`}
+                  active={location.pathname === "/favorites"}
+                >
+                  Favorites
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/hottrends"
+                  className={`text-white ${
+                    isCollapsed ? "" : "hoverBackground"
+                  }`}
+                  active={location.pathname === "/hottrends"}
+                >
+                  Hot
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  to="/categories"
+                  className={`text-white ${
+                    isCollapsed ? "" : "hoverBackground"
+                  }`}
+                  active={location.pathname === "/categories"}
+                >
+                  Categories
+                </Nav.Link>
+                <NavDropdown
+                  title="More"
+                  id="collapsible-nav-dropdown"
+                  className={`text-white dropDownClass ${
+                    isCollapsed ? "" : "hoverBackground"
+                  }`}
+                  active={location.pathname === "/ask-ai"}
+                >
+                    <NavDropdown.Item
                     as={Link}
-                    to="/"
-                    className="text-white"
-                    active={location.pathname === "/"}
-                  >
-                    Home
-                  </Nav.Link>
-                  <Nav.Link
-                    as={Link}
-                    to="/favorites"
-                    className="text-white"
-                    active={location.pathname === "/favorites"}
-                  >
-                    Favorites
-                  </Nav.Link>
-                  <Nav.Link
-                    as={Link}
-                    to="/hottrends"
-                    className="text-white"
-                    active={location.pathname === "/hottrends"}
-                  >
-                    Hot
-                  </Nav.Link>
-                  <Nav.Link
-                    as={Link}
-                    to="/categories"
-                    className="text-white"
-                    active={location.pathname === "/categories"}
-                  >
-                    Categories
-                  </Nav.Link>
-                  <NavDropdown
-                    title="More"
-                    id="collapsible-nav-dropdown"
-                    menuVariant="dark"
-                    active={location.pathname === "/ask-ai"}
-                  >
-                    <NavDropdown.Item as={Link} to="/ask-ai">
-                      Ask AI
+                    to="/ask-ai"
+                    className="text-white !bg-[#f63a2b]"
+                    >
+                    Ask AI
                     </NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
-        )}
-        {isAuthenticated && windowWidth > 768 && (
-          <img
-            ref={profileImgRef}
-            src={user?.picture}
-            className="userImg ml-[20px]"
-            onClick={() => setProfileDown((prev) => !prev)}
-            alt="User profile"
-          />
-        )}
-        {!isAuthenticated && location.pathname !== "/signUp" && (
-          <button onClick={() => loginWithRedirect()}>Sign Up</button>
-        )}
-      </header>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
+            {isAuthenticated && windowWidth >= 768 && (
+              <img
+                ref={profileImgRef}
+                src={user?.picture}
+                className="userImg ml-[20px]"
+                onClick={() => setProfileDown((prev) => !prev)}
+                alt="User profile"
+              />
+            )}
+          </Container>
+        </Navbar>
+      )}
+      {!isAuthenticated && location.pathname !== "/signUp" && (
+        <button onClick={() => loginWithRedirect()}>Sign Up</button>
+      )}
       {isAuthenticated && (
         <DropDown
           functions={{ handleFeedback, logout }}

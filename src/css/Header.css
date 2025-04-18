@@ -2,52 +2,6 @@
 @import url(https://fonts.googleapis.com/css?family=Josefin+Sans:100,200,300,regular,500,600,700,100italic,200italic,300italic,italic,500italic,600italic,700italic);
 @import url(https://fonts.googleapis.com/css?family=M+PLUS+2:100,200,300,regular,500,600,700,800,900);
 
-header {
-  width: 100%;
-  height: 60px;
-  background-color: #ff5733;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #f0f0f0;
-  position: sticky;
-  top: 0;
-  padding: 0 40px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
-  z-index: 500;
-}
-
-header.transparent {
-  background-color: transparent;
-  color: #f0f0f0;
-  box-shadow: none;
-}
-
-header button {
-  background-color: #ff5733;
-  border: none;
-  color: #f0f0f0;
-  font-size: 1.1rem;
-  font-family: Josefin Sans, sans-serif;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.1s ease-in-out;
-  padding: 8px 12px;
-  border-radius: 4px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
-}
-
-header button:hover {
-  background-color: #ff8c66;
-}
-
-header a {
-  text-decoration: none;
-}
-
 .logo {
   cursor: pointer;
   color: #f0f0f0;
@@ -60,7 +14,7 @@ header a {
 }
 
 .userImg {
-  height: 75%;
+  height: 45px;
   aspect-ratio: 1;
   border-radius: 50%;
   background-color: #333333;
@@ -347,6 +301,20 @@ header a {
 
 .feedback-button .text {
   font-size: 1.1rem;
+}
+
+.hoverBackground {
+  padding: var(--bs-nav-link-padding-y) 10px !important;
+  border-radius: 6px;
+}
+
+.hoverBackground:hover {
+  padding: var(--bs-nav-link-padding-y) 10px;
+  background-color: hsl(11, 100%, 55%);
+}
+
+.dropDownClass .dropdown-menu {
+  background-color: #ff4a3c !important;
 }
 
 @media (prefers-color-scheme: light) {

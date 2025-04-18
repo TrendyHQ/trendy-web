@@ -234,6 +234,7 @@ export default function Header({
               <Navbar.Collapse
                 id="responsive-navbar-nav"
                 className="d-none d-md-block"
+                style={{ visibility: "inherit" }}
               >
                 <Nav className="ms-auto" variant="underline">
                   <Nav.Link
@@ -287,7 +288,7 @@ export default function Header({
           <img
             ref={profileImgRef}
             src={user?.picture}
-            className="userImg"
+            className="userImg ml-[20px]"
             onClick={() => setProfileDown((prev) => !prev)}
             alt="User profile"
           />

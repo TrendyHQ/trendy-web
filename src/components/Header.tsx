@@ -209,7 +209,7 @@ export default function Header({
                     isCollapsed ? "paddedLink" : ""
                   } before:absolute before:bottom-0 before:left-0 before:h-[3px] before:w-full before:origin-left before:scale-x-0 before:bg-white before:transition-transform hover:bg-white/10 hover:before:scale-x-100                    ${
                     morePaths.includes(location.pathname)
-                      ? "!font-[600] !text-[1.3rem] before:scale-x-100"
+                      ? "!font-[600] !text-[1.2rem] before:scale-x-100"
                       : "hover:!text-[1.15rem]"
                   }`}
                   style={{
@@ -276,7 +276,7 @@ function NavLink({
         before:transition-transform hover:bg-white/10 hover:before:scale-x-100
         ${
           active
-            ? "before:scale-x-100 !font-[600] !text-[1.3rem]"
+            ? "before:scale-x-100 !font-[600] !text-[1.2rem]"
             : "hover:!text-[1.15rem]"
         }`}
       active={active}

@@ -62,12 +62,25 @@ export default function Home() {
   const [listOfFavorites, setListOfFavorites] = useState<ListTrend[]>(
     currentFavorites.value
   );
+  const [hasLoggedInBefore, setHasLoggedInBefore] = useState<boolean>(
+    localStorage.getItem("hasLoggedInBefore") === "true"
+  );
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const updateTrendsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
   const birthDateInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated && !hasLoggedInBefore && !isLoading) {
+      localStorage.setItem("hasLoggedInBefore", "true");
+      setHasLoggedInBefore(true);
+    } else if(!isAuthenticated && !isLoading) {
+      localStorage.setItem("hasLoggedInBefore", "false");
+      setHasLoggedInBefore(false);
+    }
+  }, [isAuthenticated, isLoading]);
 
   /**
    * Retrieves the user's current geolocation coordinates.
@@ -309,10 +322,6 @@ export default function Home() {
       console.error(e);
     }
   }, [user]);
-
-  useEffect(() => {
-    console.log(user);
-  }, [isAuthenticated]);
 
   /**
    * Updates user information in the database.
@@ -616,7 +625,7 @@ export default function Home() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading && hasLoggedInBefore) {
     return (
       <div className="bodyCont">
         <Header hasSetUpAccount={hasSetUpAccount} headerIsLoading />
@@ -831,7 +840,7 @@ export default function Home() {
     return <ErrorPage />; // Render the ErrorPage component
   }
 
-  if (isAuthenticated === false && !isLoading) {
+  if ((isAuthenticated === false && !isLoading) || !hasLoggedInBefore) {
     return (
       <div className="bodyCont">
         <div className="bg-container"></div>
@@ -847,22 +856,24 @@ export default function Home() {
     );
   }
 
-  return (
-    <div className="bodyCont">
-      <Header hasSetUpAccount={hasSetUpAccount} headerIsLoading />
-      <div className="content bottom">
-        <div className="header-wrapper">
-          <div className="header-cont loading"></div>
-        </div>
-        <div className="body-wrapper">
-          <div className="left-body-cont loading"></div>
-          <div className="right-body-cont loading"></div>
-        </div>
-        <div className="body-wrapper">
-          <div className="right-body-cont2 loading"></div>
-          <div className="left-body-cont2 loading"></div>
+  if (hasLoggedInBefore) {
+    return (
+      <div className="bodyCont">
+        <Header hasSetUpAccount={hasSetUpAccount} headerIsLoading />
+        <div className="content bottom">
+          <div className="header-wrapper">
+            <div className="header-cont loading"></div>
+          </div>
+          <div className="body-wrapper">
+            <div className="left-body-cont loading"></div>
+            <div className="right-body-cont loading"></div>
+          </div>
+          <div className="body-wrapper">
+            <div className="right-body-cont2 loading"></div>
+            <div className="left-body-cont2 loading"></div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

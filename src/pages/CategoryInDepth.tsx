@@ -90,9 +90,9 @@ export default function CategoryInDepth() {
                       onClick={() => navigate(`/trend/${trend.id}`)}
                       key={`${trend.id}-${i}`}
                     >
-                      <div className="trend-header">
+                      <div className="trend-header flex-col">
                         <h3 className="trend-title">{trend.title}</h3>
-                        <div className="trend-score">
+                        <div className="trend-score w-100">
                           <div className="upvote-count">
                             <i className="fa fa-arrow-up"></i>
                             <span className="score-value">{trend.score.toLocaleString()}</span>

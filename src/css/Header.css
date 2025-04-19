@@ -314,7 +314,36 @@
 }
 
 .dropDownClass .dropdown-menu {
-  background-color: #ff4a3c !important;
+  background-color: #d13125 !important;
+}
+
+.paddedHeaderLink {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: 45px !important;
+}
+
+.headerLink {
+  color: #f0f0f0;
+  text-decoration: none;
+  font-family: "M PLUS 2", Josefin Sans, sans-serif;
+  font-size: 1.1rem !important;
+}
+
+.headerLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.paddedLink a {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  height: 100% !important;
+  display: flex;
+  align-items: center !important;
+  border: 0 !important;
 }
 
 @media (prefers-color-scheme: light) {

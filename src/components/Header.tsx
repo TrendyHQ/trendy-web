@@ -130,6 +130,7 @@ export default function Header({
         style={{
           background: "#424242",
           animation: "loading 1.5s ease-in infinite",
+          minHeight: "76px",
         }}
       ></header>
     );
@@ -145,10 +146,10 @@ export default function Header({
         <Navbar
           collapseOnSelect
           expand="md"
-          className="bg-[#ff5733] !z-[500]"
+          className="bg-[#ff5733] !z-[500] p-0 !h-[76px]"
           variant={isDarkTheme ? "dark" : "light"}
         >
-          <Container fluid>
+          <Container fluid className="!h-[100%]">
             <Navbar.Brand
               as={Link}
               to="/"
@@ -157,7 +158,7 @@ export default function Header({
                   window.location.reload();
                 }
               }}
-              className="font-jockey !text-[2rem] text-white"
+              className="font-jockey !text-[2.5rem] text-white m-0 p-0"
               style={{ fontFamily: "'Jockey One', sans-serif" }}
             >
               TRENDY
@@ -178,71 +179,58 @@ export default function Header({
             />
             <Navbar.Collapse
               id="responsive-navbar-nav"
-              className="justify-content-center"
+              className="justify-content-center !h-[100%]"
               style={{ visibility: "inherit" }}
               ref={collapsedRef}
             >
               <Nav
-                className={`flex ${isCollapsed ? "!gap-[40px]" : ""}`}
+                className="!gap-[6px] !h-[100%]"
                 variant={isCollapsed ? "underline" : "default"}
                 navbarScroll
                 style={{ maxHeight: "200px" }}
               >
-                <Nav.Link
-                  as={Link}
-                  to="/"
-                  className={`text-white ${
-                    isCollapsed ? "" : "hoverBackground"
-                  }`}
-                  active={location.pathname === "/"}
-                >
+                <NavLink href="/" isCollapsed={isCollapsed}>
                   Home
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/favorites"
-                  className={`text-white ${
-                    isCollapsed ? "" : "hoverBackground"
-                  }`}
-                  active={location.pathname === "/favorites"}
-                >
+                </NavLink>
+                <NavLink href="/favorites" isCollapsed={isCollapsed}>
                   Favorites
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/hottrends"
-                  className={`text-white ${
-                    isCollapsed ? "" : "hoverBackground"
-                  }`}
-                  active={location.pathname === "/hottrends"}
-                >
+                </NavLink>
+                <NavLink href="/hottrends" isCollapsed={isCollapsed}>
                   Hot
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/categories"
-                  className={`text-white ${
-                    isCollapsed ? "" : "hoverBackground"
-                  }`}
-                  active={location.pathname === "/categories"}
-                >
+                </NavLink>
+                <NavLink href="/categories" isCollapsed={isCollapsed}>
                   Categories
-                </Nav.Link>
+                </NavLink>
                 <NavDropdown
                   title="More"
                   id="collapsible-nav-dropdown"
-                  className={`text-white dropDownClass ${
-                    isCollapsed ? "" : "hoverBackground"
-                  }`}
+                  className={`text-white headerLink !border-0 dropDownClass flex align-items-center ${
+                    isCollapsed ? "paddedLink" : ""
+                  } before:absolute before:bottom-0 before:left-0 before:h-[3px] before:w-full before:origin-left before:scale-x-0 before:bg-white before:transition-transform hover:bg-white/10 hover:before:scale-x-100 ${
+                    location.pathname === "/ask-ai" ? "before:scale-x-100" : ""
+                  }
+                    ${
+                      location.pathname !== "/ask-ai"
+                        ? "hover:!text-[1.15rem]"
+                        : ""
+                    } 
+                    ${
+                      location.pathname === "/ask-ai"
+                        ? "!font-[500] !text-[1.3rem]"
+                        : ""
+                    }`}
+                  style={{
+                    transition: "all 0.15s ease-in-out",
+                  }}
                   active={location.pathname === "/ask-ai"}
                 >
-                    <NavDropdown.Item
+                  <NavDropdown.Item
                     as={Link}
                     to="/ask-ai"
                     className="text-white !bg-[#f63a2b]"
-                    >
+                  >
                     Ask AI
-                    </NavDropdown.Item>
+                  </NavDropdown.Item>
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse>
@@ -269,5 +257,38 @@ export default function Header({
         />
       )}
     </>
+  );
+}
+
+function NavLink({
+  href,
+  isCollapsed,
+  children,
+}: {
+  href: string;
+  isCollapsed: boolean;
+  children: React.ReactNode;
+}) {
+  const location = useLocation();
+  const active = location.pathname === href;
+
+  return (
+    <Nav.Link
+      as={Link}
+      to={href}
+      className={`text-white headerLink relative !border-0 
+        ${isCollapsed ? "paddedHeaderLink" : "hoverBackground"}
+        before:absolute before:bottom-0 before:left-0 before:h-[3px] before:w-full 
+        before:origin-left before:scale-x-0 before:bg-white 
+        before:transition-transform hover:bg-white/10 hover:before:scale-x-100
+        ${!active ? "hover:!text-[1.15rem]" : ""} 
+        ${active ? "before:scale-x-100 !font-[500] !text-[1.3rem]" : ""}`}
+      active={active}
+      style={{
+        transition: "all 0.15s ease-in-out",
+      }}
+    >
+      {children}
+    </Nav.Link>
   );
 }

@@ -34,6 +34,7 @@ export default function Header({
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
+  const morePaths: string[] = ["/ask-ai"];
   const iconSize: number = 26;
 
   useEffect(() => {
@@ -206,23 +207,15 @@ export default function Header({
                   id="collapsible-nav-dropdown"
                   className={`text-white headerLink !border-0 dropDownClass flex align-items-center ${
                     isCollapsed ? "paddedLink" : ""
-                  } before:absolute before:bottom-0 before:left-0 before:h-[3px] before:w-full before:origin-left before:scale-x-0 before:bg-white before:transition-transform hover:bg-white/10 hover:before:scale-x-100 ${
-                    location.pathname === "/ask-ai" ? "before:scale-x-100" : ""
-                  }
-                    ${
-                      location.pathname !== "/ask-ai"
-                        ? "hover:!text-[1.15rem]"
-                        : ""
-                    } 
-                    ${
-                      location.pathname === "/ask-ai"
-                        ? "!font-[500] !text-[1.3rem]"
-                        : ""
-                    }`}
+                  } before:absolute before:bottom-0 before:left-0 before:h-[3px] before:w-full before:origin-left before:scale-x-0 before:bg-white before:transition-transform hover:bg-white/10 hover:before:scale-x-100                    ${
+                    morePaths.includes(location.pathname)
+                      ? "!font-[600] !text-[1.3rem] before:scale-x-100"
+                      : "hover:!text-[1.15rem]"
+                  }`}
                   style={{
                     transition: "all 0.15s ease-in-out",
                   }}
-                  active={location.pathname === "/ask-ai"}
+                  active={morePaths.includes(location.pathname)}
                 >
                   <NavDropdown.Item
                     as={Link}
@@ -281,8 +274,11 @@ function NavLink({
         before:absolute before:bottom-0 before:left-0 before:h-[3px] before:w-full 
         before:origin-left before:scale-x-0 before:bg-white 
         before:transition-transform hover:bg-white/10 hover:before:scale-x-100
-        ${!active ? "hover:!text-[1.15rem]" : ""} 
-        ${active ? "before:scale-x-100 !font-[500] !text-[1.3rem]" : ""}`}
+        ${
+          active
+            ? "before:scale-x-100 !font-[600] !text-[1.3rem]"
+            : "hover:!text-[1.15rem]"
+        }`}
       active={active}
       style={{
         transition: "all 0.15s ease-in-out",

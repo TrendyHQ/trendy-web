@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import animatePlugin from "tailwindcss-animate";
 
 const config = {
+  important: true,
   darkMode: "class",
   content: [
     "./pages/**/*.{ts,tsx}",

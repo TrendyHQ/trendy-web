@@ -6,7 +6,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ListTrend, SavedTrendObject } from "../types";
 import { currentFavoritePostIds, currentFavorites } from "../Constants";
-import "../css/FavoritesPage.css";
 import TopTrend from "../components/TopTrend";
 import LoadingPage from "./LoadingPage";
 

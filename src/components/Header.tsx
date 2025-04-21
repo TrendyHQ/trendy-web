@@ -6,6 +6,7 @@ import DropDown from "./DropDown";
 import axios from "axios";
 import FeedbackWindow from "./FeedbackWindow";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import SignInButton from "./ui/signInButton";
 
 export default function Header({
   hasSetUpAccount,
@@ -15,7 +16,7 @@ export default function Header({
   headerIsLoading?: boolean;
 }) {
   const location = useLocation();
-  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+  const { isAuthenticated, logout, user } = useAuth0();
   const isDarkTheme: boolean = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -270,8 +271,58 @@ export default function Header({
           </Container>
         </Navbar>
       )}
-      {!isAuthenticated && location.pathname !== "/signUp" && (
-        <button onClick={() => loginWithRedirect()}>Sign Up</button>
+      {!isAuthenticated && (
+        <Navbar
+          collapseOnSelect
+          expand="md"
+          className={`bg-[#ff5733] !z-[500] p-0 !h-[76px] shadow-md ${
+            isHeaderSticky ? "sticky-header" : ""
+          }`}
+          variant={isDarkTheme ? "dark" : "light"}
+          style={{
+            position: isHeaderSticky ? "fixed" : "relative",
+            top: 0,
+            left: 0,
+            right: 0,
+            width: "100%",
+            animation: isHeaderSticky ? "dropDown 0.3s ease-in-out" : "none",
+          }}
+        >
+          <Container fluid className="!h-[100%]">
+            <Navbar.Brand
+              as={Link}
+              to="/"
+              className="font-jockey !text-[2.5rem] text-white m-0 p-0"
+              style={{ fontFamily: "'Jockey One', sans-serif" }}
+            >
+              TRENDY
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse
+              id="responsive-navbar-nav"
+              className="justify-content-center !h-[100%]"
+              style={{ visibility: "inherit" }}
+            >
+              <Nav
+                className="!gap-[6px] !h-[100%]"
+                variant={windowWidth >= 768 ? "underline" : "default"}
+                navbarScroll
+                style={{ maxHeight: "200px" }}
+              >
+                <NavLink href="/about" isCollapsed={windowWidth >= 768}>
+                  About
+                </NavLink>
+                <NavLink href="/how-it-works" isCollapsed={windowWidth >= 768}>
+                  How It Works
+                </NavLink>
+                <NavLink href="/features" isCollapsed={windowWidth >= 768}>
+                  Features
+                </NavLink>
+              </Nav>
+            </Navbar.Collapse>
+            <SignInButton />
+          </Container>
+        </Navbar>
       )}
       {isAuthenticated && (
         <DropDown

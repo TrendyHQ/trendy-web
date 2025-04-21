@@ -52,11 +52,6 @@ export default function AskAi() {
           setDisplayedResponse(words.slice(0, i).join(" "));
           i++;
 
-          // Scroll to bottom of response container
-          if (responseRef.current) {
-            responseRef.current.scrollTop = responseRef.current.scrollHeight;
-          }
-
           if (i > words.length) {
             clearInterval(interval);
           }

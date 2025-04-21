@@ -346,6 +346,47 @@
   border: 0 !important;
 }
 
+@keyframes dropDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.fading-out {
+  animation: fade-out 0.2s ease-in-out forwards !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.header-transition {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.sticky-header {
+  z-index: 1000;
+}
+
+.sticky-header-placeholder {
+  height: 76px;
+}
+
 @media (prefers-color-scheme: light) {
   .dropDown {
     background-color: #fffff5;

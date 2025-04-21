@@ -33,6 +33,10 @@ export default function Header({
   const [isFading, setIsFading] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setScrollPosition] = useState<number>(0);
+  const [isHeaderSticky, setIsHeaderSticky] = useState<boolean>(false);
+  const scrollThreshold = 100;
 
   const morePaths: string[] = ["/ask-ai"];
   const iconSize: number = 26;
@@ -55,8 +59,26 @@ export default function Header({
   }, []);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const position = window.pageYOffset;
+      setScrollPosition(position);
+
+      if (position > scrollThreshold && !isHeaderSticky) {
+        setIsHeaderSticky(true);
+      } else if (position == 0 && isHeaderSticky) {
+        setIsHeaderSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHeaderSticky, scrollThreshold]);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      // Don't close if the feedback window was clicked
       if (
         event.target instanceof Element &&
         event.target.closest(".feedbackWindow")
@@ -90,7 +112,7 @@ export default function Header({
     setTimeout(() => {
       setCurrentFeedbackContent(content);
       setIsFading(false);
-    }, 100); // length of the fade animation in ms
+    }, 100);
   }
 
   const handleSubmitFeedback = async (isReport: boolean) => {
@@ -111,8 +133,6 @@ export default function Header({
         isReport: isReport,
       });
       alert("Feedback submitted successfully");
-    } catch (error) {
-      console.error(error);
     } finally {
       setFeedbackWindowOpen(false);
     }
@@ -139,6 +159,7 @@ export default function Header({
 
   return (
     <>
+      {isHeaderSticky && <div className="sticky-header-placeholder"></div>}
       <FeedbackWindow
         functions={{ handleFade, setFeedbackWindowOpen, handleSubmitFeedback }}
         values={[feedbackWindowOpen, currentFeedbackContent, isFading]}
@@ -147,8 +168,18 @@ export default function Header({
         <Navbar
           collapseOnSelect
           expand="md"
-          className="bg-[#ff5733] !z-[500] p-0 !h-[76px]"
+          className={`bg-[#ff5733] !z-[500] p-0 !h-[76px] shadow-md ${
+            isHeaderSticky ? "sticky-header" : ""
+          }`}
           variant={isDarkTheme ? "dark" : "light"}
+          style={{
+            position: isHeaderSticky ? "fixed" : "relative",
+            top: 0,
+            left: 0,
+            right: 0,
+            width: "100%",
+            animation: isHeaderSticky ? "dropDown 0.3s ease-in-out" : "none",
+          }}
         >
           <Container fluid className="!h-[100%]">
             <Navbar.Brand

@@ -15,6 +15,7 @@ interface ListTrend {
   moreInfo: string;
   link: string;
   score: number;
+  dateSaved?: string;
 }
 
 interface SpecificTrend {
@@ -43,6 +44,7 @@ interface CommentObject {
 interface SavedTrendObject {
   postId: string;
   postCategory: string;
+  dateSaved: string;
 }
 
 interface GoogleTrendsData {

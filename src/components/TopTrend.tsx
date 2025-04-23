@@ -29,13 +29,15 @@ export default function TopTrend({
   index,
   savedTrends,
   total,
-  isFromHomeFavorites
+  isFromHomeFavorites,
+  className,
 }: {
   trend: Trend | ListTrend;
   index: number;
   savedTrends: SavedTrendObject[] | null;
   total: number;
   isFromHomeFavorites?: boolean
+  className?: string;
 }) {
   const { user } = useAuth0();
   const navigate = useNavigate();
@@ -116,8 +118,8 @@ export default function TopTrend({
   };
 
   return (
-    <div key={"topTrend" + index}>
-      <div className="top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-s relative">
+    <div key={"topTrend" + index} className={className}>
+      <div className={"top-trend hover:bg-[#00000030] pl-2 pr-2 pt-1 pb-1 rounded-s relative " + className}>
         <Star
           size={30}
           color="#FFD700"

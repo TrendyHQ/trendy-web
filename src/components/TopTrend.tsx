@@ -108,6 +108,7 @@ export default function TopTrend({
         {
           postId: trend.id,
           postCategory: trend.category,
+          dateSaved: new Date().toISOString(),
         },
       ];
     } else {

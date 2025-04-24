@@ -6,7 +6,7 @@ export default function ErrorPage() {
   return (
     <div className="bodyCont">
       <Header />
-      <div className="flex flex-col gap-[20px] items-center justify-center h-full">
+      <div className="flex !min-h-[calc(100vh-76px)] flex-col gap-[20px] items-center justify-center">
         <Bug size={150} color="red" strokeWidth={1.5} />
         <h2 className="text-2xl font-bold text-red-600 mt-4">Oops! Something went wrong.</h2>
         <p className="text-gray-300 text-center max-w-md">

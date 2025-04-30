@@ -178,6 +178,7 @@ export default function SpecificTrendPage() {
           {
             postId: trendData.postId,
             postCategory: trendData.subredditName,
+            dateSaved: new Date().toISOString(),
           },
         ];
       } else {

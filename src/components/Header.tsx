@@ -16,7 +16,7 @@ export default function Header({
   headerIsLoading?: boolean;
 }) {
   const location = useLocation();
-  const { isAuthenticated, logout, user } = useAuth0();
+  const { isAuthenticated, logout, user, isLoading } = useAuth0();
   const isDarkTheme: boolean = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -271,7 +271,7 @@ export default function Header({
           </Container>
         </Navbar>
       )}
-      {!isAuthenticated && (
+      {!isAuthenticated && !isLoading && (
         <Navbar
           collapseOnSelect
           expand="md"
@@ -324,7 +324,7 @@ export default function Header({
           </Container>
         </Navbar>
       )}
-      {isAuthenticated && (
+      {isAuthenticated && !isLoading && (
         <DropDown
           functions={{ handleFeedback, logout }}
           values={[iconSize, isDarkTheme, profileDown, userNickname]}

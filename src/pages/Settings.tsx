@@ -6,10 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LoadingPage from "./LoadingPage";
+import { Loader } from "lucide-react";
 
 export default function Settings() {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [apiIsLoading, setApiIsLoading] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [nicknameCharacters, setNicknameCharacters] = useState<string>("");
   const [activeSection, setActiveSection] = useState<string>("profile");
   const [formData, setFormData] = useState({
@@ -38,6 +40,35 @@ export default function Settings() {
       if (user.nickname) {
         setNicknameCharacters(`${user.nickname.length}/15 characters`);
       }
+
+      // Fetch user metadata from the API
+      setApiIsLoading(true);
+      axios.get("http://localhost:8080/api/users/getUserProperty", {
+        params: {
+          userId: user.sub,
+          property: ["birthDate", "gender", "emailNotifications", "pushNotifications", "profileVisibility", "theme"].join(',')
+        }
+      })
+      .then(response => {
+        const metadata = response.data;
+        if (metadata) {
+          setFormData(prev => ({
+            ...prev,
+            birthDate: metadata.birthDate || "",
+            gender: metadata.gender || "",
+            emailNotifications: metadata.emailNotifications !== undefined ? metadata.emailNotifications : true,
+            pushNotifications: metadata.pushNotifications !== undefined ? metadata.pushNotifications : false,
+            profileVisibility: metadata.profileVisibility || "public",
+            theme: metadata.theme || "light"
+          }));
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching user metadata:", error);
+      })
+      .finally(() => {
+        setApiIsLoading(false);
+      });
     }
   }, [user]);
 
@@ -50,7 +81,7 @@ export default function Settings() {
 
     if (image.size > maxFileSize) {
       alert(
-        "File size exceeds 10MB. Current file is " + image.size + " bytes."
+        "File size exceeds 10MB. Current file is " + (image.size / (1024 * 1024)) + " MB."
       );
       return;
     }
@@ -89,7 +120,7 @@ export default function Settings() {
   };
 
   const updateUserInformation = async () => {
-    setApiIsLoading(true);
+    setIsSaving(true);
 
     const nickname: string | null = nicknameInputRef.current?.value || null;
     const birthDate: string | null = birthDateInputRef.current?.value || null;
@@ -112,7 +143,7 @@ export default function Settings() {
       },
     });
 
-    if ((nickname || gender) && user) {
+    if (user) {
       try {
         await axios.patch(
           "http://localhost:8080/api/users/updateUserInformation",
@@ -127,10 +158,9 @@ export default function Settings() {
           }
         );
 
-        setApiIsLoading(false);
-        alert("User information updated successfully");
+        setIsSaving(false);
       } catch (error) {
-        setApiIsLoading(false);
+        setIsSaving(false);
         console.error("Error updating user information:", error);
       }
     }
@@ -407,8 +437,12 @@ export default function Settings() {
           )}
 
           <div className="settings-actions">
-            <button className="save-settings-btn" onClick={updateUserInformation}>
-              Save Changes
+            <button 
+              className={`save-settings-btn ${isSaving ? "!bg-[#be4126]" : ""}`} 
+              onClick={updateUserInformation}
+              disabled={isSaving}
+            >
+                {isSaving ? <Loader className="animate-spin" /> : 'Save Changes'}
             </button>
             <button className="cancel-btn" onClick={() => window.location.reload()}>
               Cancel

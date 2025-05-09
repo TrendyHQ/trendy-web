@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import screenshot from "../../assets/trendyHome.png";
+import trendImg from "../../assets/trend.png";
 
 const LandingContent: React.FC = () => {
   const { loginWithRedirect } = useAuth0();
@@ -64,11 +65,11 @@ const LandingContent: React.FC = () => {
             </div>
             <div className="!flex !items-center !justify-center">
               <div className="!relative !h-[400px] !w-full !max-w-[500px] !overflow-hidden !rounded-2xl !bg-gradient-to-br !from-[#333333] !to-[#1a1a1a] !shadow-[0_0_50px_rgba(255,87,51,0.3)]">
-                <div className="!absolute !inset-0.5 !rounded-2xl !bg-gradient-to-br !from-[#ff5733] !via-purple-500 !to-blue-500 !opacity-30"></div>
+                <div className="!absolute !inset-0.5 !rounded-2xl !bg-gradient-to-br !from-[#ff5733] !via-purple-500 !to-blue-500 !opacity-30 !overflow-hidden"></div>
                 <img
-                  src="/placeholder.svg?height=800&width=800"
+                  src={trendImg}
                   alt="Trendy App Dashboard"
-                  className="object-cover p-1"
+                  className="object-cover p-1 relative z-10 object-contain w-full h-full !rounded-2xl"
                 />
               </div>
             </div>
@@ -234,7 +235,10 @@ const LandingContent: React.FC = () => {
                   </span>
                 </li>
               </ul>
-              <Button className="!w-fit !bg-gradient-to-r !from-[#ff5733] !to-[#ff9f33] !text-white !transition-all hover:!shadow-[0_0_20px_rgba(255,87,51,0.5)]">
+              <Button
+                className="!w-fit !bg-gradient-to-r !from-[#ff5733] !to-[#ff9f33] !text-white !transition-all hover:!shadow-[0_0_20px_rgba(255,87,51,0.5)]"
+                onClick={() => loginWithRedirect()}
+              >
                 Explore Features
                 <ArrowRight className="!ml-2 !h-4 !w-4" />
               </Button>

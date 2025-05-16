@@ -167,7 +167,7 @@ function MainComponent({ topTrends = [] }: { topTrends: Trend[] }) {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row gap-4 justify-between">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform !border-0 -translate-y-1/2 text-gray-500 h-4 w-4" />
           <Input
             placeholder="Search trends..."
             className="pl-10 bg-[#252525] border-[#333333] text-gray-200 focus:border-[#ff5733] focus:ring-[#ff5733]/20"
@@ -214,7 +214,7 @@ function MainComponent({ topTrends = [] }: { topTrends: Trend[] }) {
       </div>
 
       {filteredTrends.length === 0 ? (
-        <div className="text-center py-20 bg-[#1e1e1e] rounded-xl border border-[#333333]">
+        <div className="text-center py-20 bg-[#1e1e1e] rounded-xl 18.2.0border-[#333333]">
           <p className="text-gray-400 text-lg">
             No trends found matching your criteria
           </p>
@@ -284,54 +284,60 @@ const TrendCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="h-full"
+      whileHover={{ y: -5 }}
     >
-      <Link to={trend.link} className="block group">
-        <div className="bg-[#1e1e1e] rounded-xl p-6 border border-[#333333] hover:border-[#ff5733]/50 transition-all duration-300 h-full flex flex-col relative overflow-hidden hover:shadow-[0_0_15px_rgba(255,87,51,0.15)]">
+      <Link to={trend.link} className="block group h-full">
+        <div className="bg-gradient-to-b from-[#1e1e1e] to-[#181818] border border-[#333333] rounded-xl p-6 hover:border-[#ff5733]/50 transition-all duration-300 h-full flex flex-col relative overflow-hidden hover:shadow-[0_5px_30px_rgba(255,87,51,0.25)] backdrop-blur-sm before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0zaC00djFoNHYtMXptNiAwaC00djFoNHYtMXptLTYtM2gtNHYxaDR2LTF6bTYgMGgtNHYxaDR2LTF6bS02LTNoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xeiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+')] before:opacity-40 before:z-0">
+          
+          {/* Top trend badge */}
           {index < 3 && (
-            <div className="absolute top-2 left-0">
-              <div className="bg-gradient-to-r from-[#ff5733] to-[#ff8c33] text-white font-medium py-1 px-3 text-xs rounded-r-md shadow-md flex items-center gap-1">
-                <Fire className="h-3 w-3" /> TOP TREND
+            <div className="absolute -top-2 -right-2 z-10">
+              <div className="bg-gradient-to-r from-[#ff5733] to-[#ff8c33] text-white font-semibold py-1.5 px-3 text-xs rounded-md shadow-lg flex items-center gap-1.5 rotate-12 transform origin-top-right">
+                <Fire className="h-3.5 w-3.5 animate-pulse" /> HOT TREND
               </div>
             </div>
           )}
 
-          <div className="flex justify-between items-start mb-4">
-            <Badge className={`${getHeatLevel()} border-none`}>
+          <div className="flex justify-between items-start mb-5 relative z-10">
+            <Badge className={`${getHeatLevel()} border-none font-medium uppercase tracking-wide text-xs py-1 px-3`}>
               {trend.category}
             </Badge>
-            <div className="flex items-center gap-1 text-sm font-medium text-gray-400">
+            <div className="flex items-center gap-1.5 text-sm font-semibold bg-black/20 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/5 shadow-inner">
               <Fire
                 className={`h-4 w-4 ${
                   scorePercentage > 60 ? "text-[#ff5733]" : "text-[#ff8c33]"
-                }`}
+                } ${scorePercentage > 80 ? 'animate-pulse' : ''}`}
               />
-              <span className="text-gray-300">{formatNumber(trend.score)}</span>
+              <span className="text-gray-200 font-mono">{formatNumber(trend.score)}</span>
             </div>
           </div>
 
-          <h3 className="text-xl font-bold mb-2 text-gray-100 group-hover:text-[#ff5733] transition-colors line-clamp-2">
+          <h3 className="text-xl font-bold mb-3 text-gray-100 group-hover:text-[#ff5733] transition-colors line-clamp-2">
             {trend.title}
           </h3>
 
-          <p className="text-gray-400 text-sm line-clamp-3 mb-4 flex-grow">
+          <p className="text-gray-400 text-sm leading-relaxed line-clamp-3 mb-4 flex-grow">
             {trend.moreInfo}
           </p>
 
-          <div className="mt-2 mb-4 w-full bg-[#333333] rounded-full h-1.5 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-[#ff5733] to-[#ff8c33]"
-              style={{ width: `${scorePercentage}%` }}
-            />
-          </div>
+          <div className="mt-auto space-y-4">
+            <div className="w-full bg-[#252525] rounded-full h-2 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-[#ff5733] to-[#ff8c33]"
+                style={{ width: `${scorePercentage}%` }}
+              />
+            </div>
 
-          <div className="flex justify-between items-center pt-3 border-t border-[#333333]">
-            <span className="text-sm text-gray-400 flex items-center gap-1">
-              <BarChart3 className="h-3.5 w-3.5" />{" "}
-              {formatNumber(trend.moreRelevantValue)}
-            </span>
-            <span className="text-[#ff5733] flex items-center gap-1 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-              View details <ArrowUpRight className="h-4 w-4" />
-            </span>
+            <div className="flex justify-between items-center pt-3 border-t border-[#333333]">
+              <span className="text-sm text-gray-400 flex items-center gap-1.5">
+                <BarChart3 className="h-3.5 w-3.5" />{" "}
+                <span className="font-medium text-gray-300">{formatNumber(trend.moreRelevantValue)}</span>
+              </span>
+              <span className="text-[#ff5733] flex items-center gap-1.5 text-sm font-medium group-hover:translate-x-0 -translate-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                View details <ArrowUpRight className="h-4 w-4" />
+              </span>
+            </div>
           </div>
         </div>
       </Link>

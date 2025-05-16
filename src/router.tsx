@@ -7,8 +7,21 @@ import AskAi from "./pages/AskAi";
 import FavoritesPage from "./pages/FavoritesPage";
 import SpecificTrendPage from "./pages/SpecificTrendPage";
 import HotPage from "./pages/HotPage";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Router() {
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  if (!isAuthenticated && !isLoading) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>

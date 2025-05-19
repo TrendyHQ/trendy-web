@@ -8,12 +8,7 @@ import Footer from "../components/Footer";
 import { Navigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import { Link } from "react-router-dom";
-import {
-  ArrowUpRight,
-  Search,
-  FlameIcon as Fire,
-  BarChart3,
-} from "lucide-react";
+import { ArrowUpRight, Search, FlameIcon as Fire, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -95,7 +90,7 @@ export default function HotPage() {
     <main className="min-h-screen bg-[#121212] text-gray-100">
       <Header />
       <div className="container mx-auto max-w-7xl px-4 py-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#ff5733] to-[#ff8c33]">
+        <h1 className="!text-4xl md:!text-5xl !font-bold !mb-2 !text-center !bg-clip-text !text-transparent !bg-gradient-to-r !from-[#ff5733] !to-[#ff8c33] !h-fit">
           Trending Topics
         </h1>
         <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
@@ -153,24 +148,26 @@ function MainComponent({ topTrends = [] }: { topTrends: Trend[] }) {
     []
   );
 
-  const filteredTrends = topTrends.filter((trend) => {
-    const matchesCategory =
-      activeTab === "all" ||
-      trend.category.toLowerCase() === activeTab.toLowerCase();
-    const matchesSearch =
-      trend.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      trend.moreInfo.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredTrends = topTrends
+    .filter((trend) => {
+      const matchesCategory =
+        activeTab === "all" ||
+        trend.category.toLowerCase() === activeTab.toLowerCase();
+      const matchesSearch =
+        trend.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        trend.moreInfo.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => b.score - a.score); // Sort by score in descending order
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row gap-4 justify-between">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 transform !border-0 -translate-y-1/2 text-gray-500 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform !!border-0 -translate-y-1/2 text-gray-500 h-4 w-4" />
           <Input
             placeholder="Search trends..."
-            className="pl-10 bg-[#252525] border-[#333333] text-gray-200 focus:border-[#ff5733] focus:ring-[#ff5733]/20"
+            className="!pl-10 bg-[#252525] !border-[#333333] text-gray-200 focus:!border-[#ff5733] focus:ring-[#ff5733]/20"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -181,12 +178,12 @@ function MainComponent({ topTrends = [] }: { topTrends: Trend[] }) {
           className="w-full md:w-auto"
           onValueChange={setActiveTab}
         >
-          <TabsList className="bg-[#252525] p-1 rounded-lg">
+          <TabsList className="bg-[#252525] !p-1 !rounded-lg">
             {categories.map((category) => (
               <TabsTrigger
                 key={category.toLowerCase()}
                 value={category.toLowerCase()}
-                className="data-[state=active]:bg-[#1e1e1e] data-[state=active]:text-[#ff5733] data-[state=active]:shadow-sm"
+                className="data-[state=active]:bg-[#1e1e1e] data-[state=active]:text-[#ff5733] data-[state=active]:shadow-sm !rounded-md hover:!bg-[#222222] hover:text-[hsl(11,70%,50%)] !border-none !text-sm !font-medium !px-4 !py-2"
               >
                 {category}
               </TabsTrigger>
@@ -214,13 +211,13 @@ function MainComponent({ topTrends = [] }: { topTrends: Trend[] }) {
       </div>
 
       {filteredTrends.length === 0 ? (
-        <div className="text-center py-20 bg-[#1e1e1e] rounded-xl 18.2.0border-[#333333]">
+        <div className="text-center py-20 bg-[#1e1e1e] rounded-xl 18.2.0!border-[#333333]">
           <p className="text-gray-400 text-lg">
             No trends found matching your criteria
           </p>
           <Button
             variant="outline"
-            className="mt-4 border-[#ff5733] text-[#ff5733] hover:bg-[#ff5733]/10"
+            className="mt-4 !border-[#ff5733] text-[#ff5733] hover:bg-[#ff5733]/10"
             onClick={() => {
               setSearchQuery("");
               setActiveTab("all");
@@ -287,33 +284,34 @@ const TrendCard = ({
       className="h-full"
       whileHover={{ y: -5 }}
     >
-      <Link to={trend.link} className="block group h-full">
-        <div className="bg-gradient-to-b from-[#1e1e1e] to-[#181818] border border-[#333333] rounded-xl p-6 hover:border-[#ff5733]/50 transition-all duration-300 h-full flex flex-col relative overflow-hidden hover:shadow-[0_5px_30px_rgba(255,87,51,0.25)] backdrop-blur-sm before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0zaC00djFoNHYtMXptNiAwaC00djFoNHYtMXptLTYtM2gtNHYxaDR2LTF6bTYgMGgtNHYxaDR2LTF6bS02LTNoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xeiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+')] before:opacity-40 before:z-0">
-          
+      <Link to={trend.link} className="block group h-full !no-underline">
+        <div className="bg-gradient-to-b from-[#1e1e1e] to-[#181818] border !border-[#333333] rounded-xl p-6 hover:!border-[#ff5733]/50 transition-all duration-300 h-full flex flex-col relative overflow-hidden hover:shadow-[0_5px_30px_rgba(255,87,51,0.25)] backdrop-blur-sm before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0zaC00djFoNHYtMXptNiAwaC00djFoNHYtMXptLTYtM2gtNHYxaDR2LTF6bTYgMGgtNHYxaDR2LTF6bS02LTNoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xem0tNi0zaC00djFoNHYtMXptMTIgMGgtNHYxaDR2LTF6bS02IDBoLTR2MWg0di0xeiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+')] before:opacity-40 before:z-0">
           {/* Top trend badge */}
           {index < 3 && (
-            <div className="absolute -top-2 -right-2 z-10">
-              <div className="bg-gradient-to-r from-[#ff5733] to-[#ff8c33] text-white font-semibold py-1.5 px-3 text-xs rounded-md shadow-lg flex items-center gap-1.5 rotate-12 transform origin-top-right">
+            <div className="absolute bottom-2 right-0 z-10">
+              <div className="bg-gradient-to-r from-[#ff5733] to-[#ff8c33] text-white font-semibold py-1.5 px-3 text-xs rounded-tl-md rounded-bl-md shadow-lg flex items-center gap-1.5 transform origin-top-right">
                 <Fire className="h-3.5 w-3.5 animate-pulse" /> HOT TREND
               </div>
             </div>
           )}
 
           <div className="flex justify-between items-start mb-5 relative z-10">
-            <Badge className={`${getHeatLevel()} border-none font-medium uppercase tracking-wide text-xs py-1 px-3`}>
+            <Badge
+              className={`${getHeatLevel()} !border-none font-medium uppercase tracking-wide text-xs py-1 px-3`}
+            >
               {trend.category}
             </Badge>
-            <div className="flex items-center gap-1.5 text-sm font-semibold bg-black/20 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/5 shadow-inner">
+            <div className="flex items-center gap-1 text-sm font-medium text-gray-400">
               <Fire
                 className={`h-4 w-4 ${
                   scorePercentage > 60 ? "text-[#ff5733]" : "text-[#ff8c33]"
-                } ${scorePercentage > 80 ? 'animate-pulse' : ''}`}
+                }`}
               />
-              <span className="text-gray-200 font-mono">{formatNumber(trend.score)}</span>
+              <span className="text-gray-300">{formatNumber(trend.score)}</span>
             </div>
           </div>
 
-          <h3 className="text-xl font-bold mb-3 text-gray-100 group-hover:text-[#ff5733] transition-colors line-clamp-2">
+          <h3 className="!text-xl !font-[500] !mb-3 !text-gray-100 group-hover:!text-[#ff5733] transition-colors line-clamp-2">
             {trend.title}
           </h3>
 
@@ -329,10 +327,10 @@ const TrendCard = ({
               />
             </div>
 
-            <div className="flex justify-between items-center pt-3 border-t border-[#333333]">
+            <div className="flex justify-between items-center pt-3 !border-t !border-[#333333]">
               <span className="text-sm text-gray-400 flex items-center gap-1.5">
-                <BarChart3 className="h-3.5 w-3.5" />{" "}
-                <span className="font-medium text-gray-300">{formatNumber(trend.moreRelevantValue)}</span>
+                <Hash className="h-3.5 w-3.5" />{" "}
+                <span className="font-medium text-gray-300">{trend.id}</span>
               </span>
               <span className="text-[#ff5733] flex items-center gap-1.5 text-sm font-medium group-hover:translate-x-0 -translate-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                 View details <ArrowUpRight className="h-4 w-4" />

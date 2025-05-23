@@ -184,7 +184,7 @@ export default function FavoritesPage() {
 
               <div className="relative">
                 <button
-                  className="flex items-center gap-2 bg-[#2a2a2a] !border !border-[#3a3a3a] rounded-md py-2 px-4 text-white hover:bg-[#3a3a3a] transition-colors"
+                  className="flex items-center gap-2 bg-[#2a2a2a] !border !border-[#3a3a3a] !rounded-md py-2 px-4 text-white hover:bg-[#3a3a3a] transition-colors"
                   onClick={() => setIsFiltersOpen(!isFiltersOpen)}
                 >
                   <Filter size={18} />

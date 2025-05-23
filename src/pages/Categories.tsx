@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 export default function Categories() {
   const categories = [
@@ -82,54 +83,60 @@ export default function Categories() {
         {/* Refined grid layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 perspective-1000">
           {categories.map((category, index) => (
-            <div
-              key={index}
-              className="group relative transform transition-all duration-700 hover:scale-105 hover:z-10"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                transform: `translateZ(${(index % 3) * 5}px)`,
-              }}
+            <Link
+              key={category.name}
+              to={`/category/${category.name.toLowerCase()}`}
+              className="group !no-underline"
             >
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#ff5733] to-[#ff8c33] rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-700 -z-10"></div>
+              <div
+                key={index}
+                className="group relative transform transition-all duration-700 hover:scale-105 hover:z-10"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  transform: `translateZ(${(index % 3) * 5}px)`,
+                }}
+              >
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ff5733] to-[#ff8c33] rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-700 -z-10"></div>
 
-              {/* Main card with consistent styling */}
-              <div className="relative h-full bg-[#1a1a20] backdrop-blur-sm border !border-[#ff5733]/10 rounded-2xl overflow-hidden shadow-lg shadow-black/30 transition-all duration-500">
-                {/* Top accent bar */}
-                <div className="h-1 w-full bg-gradient-to-r from-[#ff5733] to-[#ff8c33]"></div>
+                {/* Main card with consistent styling */}
+                <div className="relative h-full bg-[#1a1a20] backdrop-blur-sm border !border-[#ff5733]/10 rounded-2xl overflow-hidden shadow-lg shadow-black/30 transition-all duration-500">
+                  {/* Top accent bar */}
+                  <div className="h-1 w-full bg-gradient-to-r from-[#ff5733] to-[#ff8c33]"></div>
 
-                <div className="p-8">
-                  {/* Icon with consistent styling */}
-                  <div className="mb-6 relative">
-                    <div className="absolute -inset-3 bg-gradient-to-br from-[#ff5733]/20 to-[#ff8c33]/5 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                    <div className="relative w-14 h-14 flex items-center justify-center bg-[#ff5733]/10 rounded-xl border !border-[#ff5733]/20">
-                      <category.icon className="w-7 h-7 text-[#ff5733]" />
+                  <div className="p-8">
+                    {/* Icon with consistent styling */}
+                    <div className="mb-6 relative">
+                      <div className="absolute -inset-3 bg-gradient-to-br from-[#ff5733]/20 to-[#ff8c33]/5 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                      <div className="relative w-14 h-14 flex items-center justify-center bg-[#ff5733]/10 rounded-xl border !border-[#ff5733]/20">
+                        <category.icon className="w-7 h-7 text-[#ff5733]" />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Category name with consistent styling */}
-                  <h3 className="text-2xl w-[300px] font-bold mb-3 text-white group-hover:text-[#ff5733] transition-colors duration-300">
-                    {category.name}
-                  </h3>
+                    {/* Category name with consistent styling */}
+                    <h3 className="text-2xl w-[300px] font-bold mb-3 text-white group-hover:text-[#ff5733] transition-colors duration-300">
+                      {category.name}
+                    </h3>
 
-                  {/* Description with consistent styling */}
-                  <p className="text-zinc-400 mb-6">{category.description}</p>
+                    {/* Description with consistent styling */}
+                    <p className="text-zinc-400 mb-6">{category.description}</p>
 
-                  {/* Bottom accent with consistent styling */}
-                  <div className="flex items-center justify-between">
-                    <div className="h-[2px] w-12 bg-gradient-to-r from-[#ff5733] to-transparent"></div>
-                    <span className="text-[#ff5733] text-xs font-semibold tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                      Trending
-                    </span>
-                  </div>
+                    {/* Bottom accent with consistent styling */}
+                    <div className="flex items-center justify-between">
+                      <div className="h-[2px] w-12 bg-gradient-to-r from-[#ff5733] to-transparent"></div>
+                      <span className="text-[#ff5733] text-xs font-semibold tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                        Trending
+                      </span>
+                    </div>
 
-                  {/* Corner accent */}
-                  <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden">
-                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-[#ff5733] to-[#ff8c33] transform rotate-45 translate-x-1/2 translate-y-1/2 opacity-30"></div>
+                    {/* Corner accent */}
+                    <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden">
+                      <div className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-[#ff5733] to-[#ff8c33] transform rotate-45 translate-x-1/2 translate-y-1/2 opacity-30"></div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

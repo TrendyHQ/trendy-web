@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import animatePlugin from "tailwindcss-animate";
+import lineClampPlugin from "@tailwindcss/line-clamp";
 
 const config = {
   important: true,
@@ -83,7 +84,7 @@ const config = {
       },
     },
   },
-  plugins: [animatePlugin],
+  plugins: [animatePlugin, lineClampPlugin],
 } satisfies Config;
 
 export default config;

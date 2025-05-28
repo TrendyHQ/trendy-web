@@ -11,147 +11,246 @@ import {
   Plane,
   FlaskRoundIcon as Flask,
   Trophy,
+  ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-export default function Categories() {
-  const categories = [
+export default function Categories() {  const categories = [
     {
       name: "Fashion",
       icon: ShoppingBag,
       description: "Latest styles & trends",
+      color: "#ff5733"
     },
-    { name: "Technology", icon: Cpu, description: "Gadgets & innovations" },
+    { 
+      name: "Technology", 
+      icon: Cpu, 
+      description: "Gadgets & innovations",
+      color: "#ff7f33"
+    },
     {
       name: "Food & Beverages",
       icon: Utensils,
       description: "Culinary experiences",
+      color: "#ffab33"
     },
     {
       name: "Entertainment",
       icon: Film,
       description: "Movies, shows & events",
+      color: "#ff5733"
     },
-    { name: "Social Media", icon: Share2, description: "Platforms & content" },
-    { name: "Fitness", icon: Dumbbell, description: "Workouts & routines" },
-    { name: "Health", icon: Heart, description: "Wellness & lifestyle" },
-    { name: "Music", icon: Music, description: "Artists & releases" },
-    { name: "Politics", icon: VoteIcon, description: "News & developments" },
-    { name: "Travel", icon: Plane, description: "Destinations & adventures" },
-    { name: "Science", icon: Flask, description: "Discoveries & research" },
-    { name: "Sports", icon: Trophy, description: "Games & competitions" },
+    { 
+      name: "Social Media", 
+      icon: Share2, 
+      description: "Platforms & content",
+      color: "#ff7f33"
+    },
+    { 
+      name: "Fitness", 
+      icon: Dumbbell, 
+      description: "Workouts & routines",
+      color: "#ffab33"
+    },
+    { 
+      name: "Health", 
+      icon: Heart, 
+      description: "Wellness & lifestyle",
+      color: "#ff5733"
+    },
+    { 
+      name: "Music", 
+      icon: Music, 
+      description: "Artists & releases",
+      color: "#ff7f33"
+    },
+    { 
+      name: "Politics", 
+      icon: VoteIcon, 
+      description: "News & developments",
+      color: "#ffab33"
+    },
+    { 
+      name: "Travel", 
+      icon: Plane, 
+      description: "Destinations & adventures",
+      color: "#ff5733"
+    },
+    { 
+      name: "Science", 
+      icon: Flask, 
+      description: "Discoveries & research",
+      color: "#ff7f33"
+    },
+    { 
+      name: "Sports", 
+      icon: Trophy, 
+      description: "Games & competitions",
+      color: "#ffab33"
+    },
   ];
 
   return (
-    <main className="min-h-screen bg-[#0f0f12] text-zinc-100 overflow-hidden relative">
+    <>
       <Header />
-      {/* Sophisticated background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Radial gradient background */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,87,51,0.08)_0%,rgba(15,15,18,0)_70%)]"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white">
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_35px,rgba(255,87,51,0.1)_35px,rgba(255,87,51,0.1)_70px)]"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+          {/* Enhanced Header Section */}
+          <div className="mb-16">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
+              <span>Home</span>
+              <ArrowUpRight className="w-3 h-3 rotate-45" />
+              <span className="text-[#ff5733]">Categories</span>
+            </div>
 
-        {/* Hexagonal grid pattern */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 17.32v34.64L30 60 0 51.96V17.32L30 0zm0 5.77L6.18 20.19v28.62L30 54.23l23.82-5.42V20.19L30 5.77z' fill='%23ff5733' fillOpacity='0.2' fillRule='evenodd'/%3E%3C/svg%3E")`,
-            backgroundSize: "60px 60px",
-          }}
-        ></div>
-
-        {/* Horizontal accent line */}
-        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5733]/30 to-transparent"></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-16 md:py-24">
-        {/* Header with refined styling */}
-        <header className="mb-20 text-center relative">
-          <div className="inline-block relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#ff5733]/80 to-[#ff8c33]/80 blur-xl opacity-30 rounded-full"></div>
-            <h1 className="!relative !text-7xl !md:text-8xl !font-bold !mb-4 !bg-clip-text !text-transparent !bg-gradient-to-r !from-[#ff5733] !to-[#ff8c33]">
-              Trending Categories
-            </h1>
+            {/* Main Title */}
+            <div className="relative">
+              <div className="absolute -inset-4 bg-gradient-to-r from-[#ff5733]/20 via-transparent to-[#ff5733]/20 rounded-2xl blur-xl"></div>
+              <div className="relative bg-gray-900/50 backdrop-blur-sm border !border-gray-800/50 rounded-2xl p-8">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-[#ff5733]/20 rounded-full blur-lg"></div>
+                      <div className="relative bg-[#ff5733]/10 border !border-[#ff5733]/30 rounded-full p-3">
+                        <Sparkles className="w-8 h-8 text-[#ff5733]" />
+                      </div>
+                    </div>
+                    <div>
+                      <h1 className="text-5xl font-bold bg-gradient-to-r from-[#ff5733] via-[#ff7f33] to-[#ffab33] bg-clip-text text-transparent">
+                        Trending Categories
+                      </h1>                      <p className="text-gray-300 text-lg mt-2">
+                        Discover What&apos;s Hot
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Live Stats Badge */}
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="flex items-center gap-2 bg-[#ff5733]/10 border !border-[#ff5733]/30 rounded-full px-4 py-2">
+                      <div className="w-2 h-2 bg-[#ff5733] rounded-full animate-pulse"></div>
+                      <span className="text-sm text-[#ff5733] font-medium">Live Data</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-white">{categories.length}</div>
+                      <div className="text-xs text-gray-400">Categories</div>
+                    </div>
+                  </div>
+                </div>                <p className="text-gray-300 text-lg leading-relaxed max-w-3xl">
+                  Explore trending topics across all major categories. From technology and entertainment 
+                  to fashion and lifestyle, discover what&apos;s capturing the world&apos;s attention right now.
+                </p>
+              </div>
+            </div>
           </div>
-          <p className="text-zinc-400 !max-w-2xl !mx-auto !text-lg !mt-6">
-            Explore what&apos;s trending across different categories
-          </p>
-          <div className="mt-8 mx-auto w-24 h-1 bg-gradient-to-r from-[#ff5733] to-[#ff8c33] rounded-full"></div>
-        </header>
 
-        {/* Refined grid layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 perspective-1000">
-          {categories.map((category, index) => (
-            <Link
-              key={category.name}
-              to={`/category/${category.name.toLowerCase()}`}
-              className="group !no-underline"
-            >
-              <div
-                key={index}
-                className="group relative transform transition-all duration-700 hover:scale-105 hover:z-10"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  transform: `translateZ(${(index % 3) * 5}px)`,
-                }}
+          {/* Enhanced Categories Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {categories.map((category, index) => (
+              <Link
+                key={category.name}
+                to={`/category/${category.name.toLowerCase().replace(/\s+&\s+/g, '-').replace(/\s+/g, '-')}`}
+                className="group !no-underline"
               >
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff5733] to-[#ff8c33] rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-700 -z-10"></div>
+                <div
+                  className="group relative bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-sm border !border-gray-700/50 hover:!border-[#ff5733]/50 transition-all duration-500 hover:shadow-2xl hover:shadow-[#ff5733]/10 rounded-2xl overflow-hidden h-full"
+                  style={{
+                    animationDelay: `${index * 50}ms`,
+                  }}
+                >
+                  {/* Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#ff5733]/5 via-transparent to-[#ff5733]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Top Accent Bar */}
+                  <div className="h-1 w-full bg-gradient-to-r from-[#ff5733] to-[#ff7f33]"></div>
 
-                {/* Main card with consistent styling */}
-                <div className="relative h-full bg-[#1a1a20] backdrop-blur-sm border !border-[#ff5733]/10 rounded-2xl overflow-hidden shadow-lg shadow-black/30 transition-all duration-500">
-                  {/* Top accent bar */}
-                  <div className="h-1 w-full bg-gradient-to-r from-[#ff5733] to-[#ff8c33]"></div>
-
-                  <div className="p-8">
-                    {/* Icon with consistent styling */}
+                  <div className="p-6 relative">
+                    {/* Icon with enhanced styling */}
                     <div className="mb-6 relative">
-                      <div className="absolute -inset-3 bg-gradient-to-br from-[#ff5733]/20 to-[#ff8c33]/5 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                      <div className="relative w-14 h-14 flex items-center justify-center bg-[#ff5733]/10 rounded-xl border !border-[#ff5733]/20">
-                        <category.icon className="w-7 h-7 text-[#ff5733]" />
+                      <div className="absolute -inset-3 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
+                           style={{ backgroundColor: `${category.color}20` }}></div>
+                      <div className="relative w-16 h-16 flex items-center justify-center rounded-xl border !border-[#903733] transition-all duration-300"
+                           style={{ 
+                             backgroundColor: `${category.color}10`, 
+                             borderColor: `${category.color}30` 
+                           }}>
+                        <category.icon className="w-8 h-8 transition-transform duration-300 group-hover:scale-110" 
+                                      style={{ color: category.color }} />
+                      </div>
+                    </div>                    {/* Category Info */}
+                    <div className="mb-6">
+                      <h3 className="text-xl font-bold mb-2 text-white group-hover:text-[#ff5733] transition-colors duration-300">
+                        {category.name}
+                      </h3>
+                      <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                        {category.description}
+                      </p>
+                    </div>
+
+                    {/* Action Area */}
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="h-[2px] w-12 bg-gradient-to-r from-[#ff5733] to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="flex items-center gap-2 text-[#ff5733] text-xs font-semibold tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
+                        <span>Explore</span>
+                        <ArrowUpRight className="w-3 h-3" />
                       </div>
                     </div>
 
-                    {/* Category name with consistent styling */}
-                    <h3 className="text-2xl w-[300px] font-bold mb-3 text-white group-hover:text-[#ff5733] transition-colors duration-300">
-                      {category.name}
-                    </h3>
-
-                    {/* Description with consistent styling */}
-                    <p className="text-zinc-400 mb-6">{category.description}</p>
-
-                    {/* Bottom accent with consistent styling */}
-                    <div className="flex items-center justify-between">
-                      <div className="h-[2px] w-12 bg-gradient-to-r from-[#ff5733] to-transparent"></div>
-                      <span className="text-[#ff5733] text-xs font-semibold tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                        Trending
-                      </span>
-                    </div>
-
-                    {/* Corner accent */}
+                    {/* Corner Accent */}
                     <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden">
-                      <div className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-[#ff5733] to-[#ff8c33] transform rotate-45 translate-x-1/2 translate-y-1/2 opacity-30"></div>
+                      <div className="absolute bottom-0 right-0 w-8 h-8 transform rotate-45 translate-x-1/2 translate-y-1/2 opacity-20 transition-opacity duration-300 group-hover:opacity-40"
+                           style={{ backgroundColor: category.color }}></div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
 
-        {/* Floating accent elements with consistent styling */}
-        <div className="absolute top-1/4 left-[10%] w-6 h-6 rounded-full bg-[#ff5733]/10 backdrop-blur-sm border !border-[#ff5733]/20 animate-float"></div>
-        <div
-          className="absolute bottom-1/3 right-[10%] w-8 h-8 rounded-full bg-[#ff5733]/10 backdrop-blur-sm border !border-[#ff5733]/20 animate-float"
-          style={{ animationDelay: "1.5s" }}
-        ></div>
-        <div
-          className="absolute top-2/3 left-1/4 w-4 h-4 rounded-full bg-[#ff5733]/10 backdrop-blur-sm border !border-[#ff5733]/20 animate-float"
-          style={{ animationDelay: "2.5s" }}
-        ></div>
+          {/* Enhanced Stats Section */}
+          <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-sm border !border-gray-700/50 rounded-2xl p-8 text-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ff5733]/5 to-transparent rounded-xl"></div>
+                <div className="relative">
+                  <div className="text-4xl font-bold text-[#ff5733] mb-2">12</div>
+                  <div className="text-gray-300 font-medium">Categories</div>
+                  <div className="text-xs text-gray-400 mt-1">Available</div>
+                </div>
+              </div>
+            </div>            <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-sm border !border-gray-700/50 rounded-2xl p-8 text-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ff7f33]/5 to-transparent rounded-xl"></div>
+                <div className="relative">
+                  <div className="text-4xl font-bold text-[#ff7f33] mb-2">Real-time</div>
+                  <div className="text-gray-300 font-medium">Trending Data</div>
+                  <div className="text-xs text-gray-400 mt-1">From multiple sources</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-sm border !border-gray-700/50 rounded-2xl p-8 text-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ffab33]/5 to-transparent rounded-xl"></div>
+                <div className="relative">
+                  <div className="text-4xl font-bold text-[#ffab33] mb-2">Live</div>
+                  <div className="text-gray-300 font-medium">Real-time Data</div>
+                  <div className="text-xs text-gray-400 mt-1">Updated continuously</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <Footer />
-    </main>
+    </>
   );
 }

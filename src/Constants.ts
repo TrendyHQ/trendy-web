@@ -9,6 +9,9 @@ const currentHasSetUpAccount = signal<boolean>(false);
 const storedTopTrends = signal<GoogleTrendsData[]>([]);
 const testing = false;
 
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
 export {
   testing,
   currentTopTrends,
@@ -17,4 +20,5 @@ export {
   currentHasSetUpAccount,
   currentFavoritePostIds,
   storedTopTrends,
+  API_BASE_URL,
 };

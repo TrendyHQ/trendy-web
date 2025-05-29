@@ -1,45 +1,50 @@
 import {
-  ShoppingBag,
-  Cpu,
-  Utensils,
-  Film,
+  Shirt,
+  Headset,
+  CupSoda,
+  Clapperboard,
   Share2,
   Dumbbell,
-  Heart,
+  HeartPulse,
   Music,
-  VoteIcon,
+  Flag,
   Plane,
-  FlaskRoundIcon as Flask,
-  Trophy,
+  FlaskConical,
+  Icon,
   ArrowUpRight,
   Sparkles,
 } from "lucide-react";
+import { football } from "@lucide/lab";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-export default function Categories() {  const categories = [
+export default function Categories() {
+  // Sports icon wrapper component
+  const SportsIcon = (props: { className?: string; style?: React.CSSProperties }) => <Icon iconNode={football} {...props} />;
+
+  const categories = [
     {
       name: "Fashion",
-      icon: ShoppingBag,
+      icon: Shirt,
       description: "Latest styles & trends",
       color: "#ff5733"
     },
     { 
       name: "Technology", 
-      icon: Cpu, 
+      icon: Headset, 
       description: "Gadgets & innovations",
       color: "#ff7f33"
     },
     {
       name: "Food & Beverages",
-      icon: Utensils,
+      icon: CupSoda,
       description: "Culinary experiences",
       color: "#ffab33"
     },
     {
       name: "Entertainment",
-      icon: Film,
+      icon: Clapperboard,
       description: "Movies, shows & events",
       color: "#ff5733"
     },
@@ -57,7 +62,7 @@ export default function Categories() {  const categories = [
     },
     { 
       name: "Health", 
-      icon: Heart, 
+      icon: HeartPulse, 
       description: "Wellness & lifestyle",
       color: "#ff5733"
     },
@@ -69,7 +74,7 @@ export default function Categories() {  const categories = [
     },
     { 
       name: "Politics", 
-      icon: VoteIcon, 
+      icon: Flag, 
       description: "News & developments",
       color: "#ffab33"
     },
@@ -81,13 +86,12 @@ export default function Categories() {  const categories = [
     },
     { 
       name: "Science", 
-      icon: Flask, 
+      icon: FlaskConical, 
       description: "Discoveries & research",
       color: "#ff7f33"
-    },
-    { 
+    },    { 
       name: "Sports", 
-      icon: Trophy, 
+      icon: SportsIcon, 
       description: "Games & competitions",
       color: "#ffab33"
     },

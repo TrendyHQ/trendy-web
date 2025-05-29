@@ -9,7 +9,7 @@ import LoadingPage from "./LoadingPage";
 import { Loader } from "lucide-react";
 
 export default function Settings() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user, isAuthenticated, isLoading, logout } = useAuth0();
   const [apiIsLoading, setApiIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [nicknameCharacters, setNicknameCharacters] = useState<string>("");
@@ -21,7 +21,7 @@ export default function Settings() {
     emailNotifications: true,
     pushNotifications: false,
     profileVisibility: "public",
-    theme: "light"
+    theme: "light",
   });
 
   const nicknameInputRef = useRef<HTMLInputElement>(null);
@@ -31,7 +31,7 @@ export default function Settings() {
   useEffect(() => {
     if (user) {
       // Initialize with user data if available
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         nickname: user.nickname || "",
       }));
@@ -43,32 +43,46 @@ export default function Settings() {
 
       // Fetch user metadata from the API
       setApiIsLoading(true);
-      axios.get("http://localhost:8080/api/users/getUserProperty", {
-        params: {
-          userId: user.sub,
-          property: ["birthDate", "gender", "emailNotifications", "pushNotifications", "profileVisibility", "theme"].join(',')
-        }
-      })
-      .then(response => {
-        const metadata = response.data;
-        if (metadata) {
-          setFormData(prev => ({
-            ...prev,
-            birthDate: metadata.birthDate || "",
-            gender: metadata.gender || "",
-            emailNotifications: metadata.emailNotifications !== undefined ? metadata.emailNotifications : true,
-            pushNotifications: metadata.pushNotifications !== undefined ? metadata.pushNotifications : false,
-            profileVisibility: metadata.profileVisibility || "public",
-            theme: metadata.theme || "light"
-          }));
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching user metadata:", error);
-      })
-      .finally(() => {
-        setApiIsLoading(false);
-      });
+      axios
+        .get("http://localhost:8080/api/users/getUserProperty", {
+          params: {
+            userId: user.sub,
+            property: [
+              "birthDate",
+              "gender",
+              "emailNotifications",
+              "pushNotifications",
+              "profileVisibility",
+              "theme",
+            ].join(","),
+          },
+        })
+        .then((response) => {
+          const metadata = response.data;
+          if (metadata) {
+            setFormData((prev) => ({
+              ...prev,
+              birthDate: metadata.birthDate || "",
+              gender: metadata.gender || "",
+              emailNotifications:
+                metadata.emailNotifications !== undefined
+                  ? metadata.emailNotifications
+                  : true,
+              pushNotifications:
+                metadata.pushNotifications !== undefined
+                  ? metadata.pushNotifications
+                  : false,
+              profileVisibility: metadata.profileVisibility || "public",
+              theme: metadata.theme || "light",
+            }));
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user metadata:", error);
+        })
+        .finally(() => {
+          setApiIsLoading(false);
+        });
     }
   }, [user]);
 
@@ -81,7 +95,9 @@ export default function Settings() {
 
     if (image.size > maxFileSize) {
       alert(
-        "File size exceeds 10MB. Current file is " + (image.size / (1024 * 1024)) + " MB."
+        "File size exceeds 10MB. Current file is " +
+          image.size / (1024 * 1024) +
+          " MB."
       );
       return;
     }
@@ -139,7 +155,7 @@ export default function Settings() {
         emailNotifications: formData.emailNotifications,
         pushNotifications: formData.pushNotifications,
         profileVisibility: formData.profileVisibility,
-        theme: formData.theme
+        theme: formData.theme,
       },
     });
 
@@ -168,10 +184,32 @@ export default function Settings() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleDeleteAccount = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      logout();
+      try {
+        await axios.delete("http://localhost:8080/api/users/deleteUser", {
+          data: { userId: user?.sub },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        alert("Account deleted successfully.");
+        window.location.href = "/";
+      } catch {
+        alert("Failed to delete account. Please try again later.");
+      }
+    }
   };
 
   const triggerFileInput = () => {
@@ -189,46 +227,50 @@ export default function Settings() {
         <div className="settings-sidebar">
           <h2>Settings</h2>
           <ul>
-            <li 
-              className={activeSection === "profile" ? "active" : ""} 
+            <li
+              className={activeSection === "profile" ? "active" : ""}
               onClick={() => setActiveSection("profile")}
             >
               Profile
             </li>
-            <li 
-              className={activeSection === "account" ? "active" : ""} 
+            <li
+              className={activeSection === "account" ? "active" : ""}
               onClick={() => setActiveSection("account")}
             >
               Account
             </li>
-            <li 
-              className={activeSection === "notifications" ? "active" : ""} 
+            <li
+              className={activeSection === "notifications" ? "active" : ""}
               onClick={() => setActiveSection("notifications")}
             >
               Notifications
             </li>
-            <li 
-              className={activeSection === "privacy" ? "active" : ""} 
+            <li
+              className={activeSection === "privacy" ? "active" : ""}
               onClick={() => setActiveSection("privacy")}
             >
               Privacy
             </li>
-            <li 
-              className={activeSection === "appearance" ? "active" : ""} 
+            <li
+              className={activeSection === "appearance" ? "active" : ""}
               onClick={() => setActiveSection("appearance")}
             >
               Appearance
             </li>
           </ul>
         </div>
-        
+
         <div className="settings-content">
           {activeSection === "profile" && (
             <div className="settings-section">
               <h1>Profile Settings</h1>
               <div className="profile-picture-section">
                 <div className="profile-picture-container">
-                  <img src={user?.picture} className="settings-profile-picture" alt="Profile" />
+                  <img
+                    src={user?.picture}
+                    className="settings-profile-picture"
+                    alt="Profile"
+                  />
                   <button className="upload-btn" onClick={triggerFileInput}>
                     Change Picture
                   </button>
@@ -256,41 +298,47 @@ export default function Settings() {
                         if (target.value.length > 15) {
                           target.value = target.value.slice(0, 15);
                         }
-                        setNicknameCharacters(target.value.length + "/15 characters");
+                        setNicknameCharacters(
+                          target.value.length + "/15 characters"
+                        );
                         handleInputChange(e);
                       }}
                       defaultValue={user?.nickname}
                     />
-                    <span className="character-count">{nicknameCharacters}</span>
+                    <span className="character-count">
+                      {nicknameCharacters}
+                    </span>
                   </div>
-                  
+
                   <div className="form-group">
                     <label htmlFor="birthDate">Birth Date</label>
-                    <input 
-                      type="date" 
+                    <input
+                      type="date"
                       id="birthDate"
                       name="birthDate"
-                      ref={birthDateInputRef} 
+                      ref={birthDateInputRef}
                       onChange={handleInputChange}
                       value={formData.birthDate}
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Gender</label>
                     <div className="radio-group">
                       <div className="radio-option">
-                        <input 
-                          type="radio" 
-                          name="genderInput" 
-                          value="male" 
+                        <input
+                          type="radio"
+                          name="genderInput"
+                          value="male"
                           id="genderMale"
                           checked={formData.gender === "male"}
-                          onChange={() => setFormData({...formData, gender: "male"})}
+                          onChange={() =>
+                            setFormData({ ...formData, gender: "male" })
+                          }
                         />
                         <label htmlFor="genderMale">Male</label>
                       </div>
-                      
+
                       <div className="radio-option">
                         <input
                           type="radio"
@@ -298,11 +346,13 @@ export default function Settings() {
                           value="female"
                           id="genderFemale"
                           checked={formData.gender === "female"}
-                          onChange={() => setFormData({...formData, gender: "female"})}
+                          onChange={() =>
+                            setFormData({ ...formData, gender: "female" })
+                          }
                         />
                         <label htmlFor="genderFemale">Female</label>
                       </div>
-                      
+
                       <div className="radio-option">
                         <input
                           type="radio"
@@ -310,7 +360,9 @@ export default function Settings() {
                           value="other"
                           id="genderOther"
                           checked={formData.gender === "other"}
-                          onChange={() => setFormData({...formData, gender: "other"})}
+                          onChange={() =>
+                            setFormData({ ...formData, gender: "other" })
+                          }
                         />
                         <label htmlFor="genderOther">Other</label>
                       </div>
@@ -343,12 +395,13 @@ export default function Settings() {
                     <span className="toggle-slider"></span>
                   </label>
                 </div>
-                
+
                 <div className="form-group toggle-group">
                   <label htmlFor="pushNotifications">
                     Push Notifications
                     <p className="setting-description">
-                      Receive real-time notifications when someone interacts with your content
+                      Receive real-time notifications when someone interacts
+                      with your content
                     </p>
                   </label>
                   <label className="toggle-switch">
@@ -372,15 +425,26 @@ export default function Settings() {
               <div className="privacy-options">
                 <div className="form-group">
                   <label htmlFor="profileVisibility">Profile Visibility</label>
-                  <select 
+                  <select
                     id="profileVisibility"
                     name="profileVisibility"
                     value={formData.profileVisibility}
-                    onChange={(e) => setFormData({...formData, profileVisibility: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        profileVisibility: e.target.value,
+                      })
+                    }
                   >
-                    <option value="public">Public - Everyone can see your profile</option>
-                    <option value="friends">Friends Only - Only friends can see your profile</option>
-                    <option value="private">Private - Only you can see your profile</option>
+                    <option value="public">
+                      Public - Everyone can see your profile
+                    </option>
+                    <option value="friends">
+                      Friends Only - Only friends can see your profile
+                    </option>
+                    <option value="private">
+                      Private - Only you can see your profile
+                    </option>
                   </select>
                 </div>
               </div>
@@ -394,16 +458,24 @@ export default function Settings() {
                 <div className="form-group">
                   <label>Theme</label>
                   <div className="theme-selector">
-                    <div 
-                      className={`theme-option ${formData.theme === 'light' ? 'active' : ''}`}
-                      onClick={() => setFormData({...formData, theme: 'light'})}
+                    <div
+                      className={`theme-option ${
+                        formData.theme === "light" ? "active" : ""
+                      }`}
+                      onClick={() =>
+                        setFormData({ ...formData, theme: "light" })
+                      }
                     >
                       <div className="theme-preview light-theme-preview"></div>
                       <span>Light</span>
                     </div>
-                    <div 
-                      className={`theme-option ${formData.theme === 'dark' ? 'active' : ''}`}
-                      onClick={() => setFormData({...formData, theme: 'dark'})}
+                    <div
+                      className={`theme-option ${
+                        formData.theme === "dark" ? "active" : ""
+                      }`}
+                      onClick={() =>
+                        setFormData({ ...formData, theme: "dark" })
+                      }
                     >
                       <div className="theme-preview dark-theme-preview"></div>
                       <span>Dark</span>
@@ -425,26 +497,36 @@ export default function Settings() {
                 <div className="info-item">
                   <span className="info-label">Account Created:</span>
                   <span className="info-value">
-                    {user?.updated_at ? new Date(user.updated_at).toLocaleDateString() : "N/A"}
+                    {user?.updated_at
+                      ? new Date(user.updated_at).toLocaleDateString()
+                      : "N/A"}
                   </span>
                 </div>
               </div>
               <div className="danger-zone">
                 <h3>Danger Zone</h3>
-                <button className="delete-account-btn">Delete Account</button>
+                <button
+                  className="delete-account-btn"
+                  onClick={handleDeleteAccount}
+                >
+                  Delete Account
+                </button>
               </div>
             </div>
           )}
 
           <div className="settings-actions">
-            <button 
-              className={`save-settings-btn ${isSaving ? "!bg-[#be4126]" : ""}`} 
+            <button
+              className={`save-settings-btn ${isSaving ? "!bg-[#be4126]" : ""}`}
               onClick={updateUserInformation}
               disabled={isSaving}
             >
-                {isSaving ? <Loader className="animate-spin" /> : 'Save Changes'}
+              {isSaving ? <Loader className="animate-spin" /> : "Save Changes"}
             </button>
-            <button className="cancel-btn" onClick={() => window.location.reload()}>
+            <button
+              className="cancel-btn"
+              onClick={() => window.location.reload()}
+            >
               Cancel
             </button>
           </div>

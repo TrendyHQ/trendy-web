@@ -97,12 +97,17 @@ export default function Home() {
           }
         );
         if (property === "hasSetUpAccount") {
-          setHasSetUpAccount(res.data);
-          currentHasSetUpAccount.value = res.data;
+          console.log(res.data);
+          if (res.data !== null && res.data !== undefined) {
+            setHasSetUpAccount(res.data);
+            currentHasSetUpAccount.value = res.data;
+          } else {
+            setHasSetUpAccount(false);
+            currentHasSetUpAccount.value = false;
+          }
         }
-      } catch (error) {
+      } catch {
         setIsError(true);
-        console.error("Error fetching first login status:", error);
       } finally {
         setConfigIsLoading(false);
       }
@@ -144,9 +149,6 @@ export default function Home() {
 
       googleTrendData.sort((a, b) => b.score - a.score);
       storedTopTrends.value = googleTrendData;
-      console.log(
-        "==================\n" + googleTrendData + "\n=================="
-      );
       setTopCategories(googleTrendData);
 
       const trendsRes = await axios.post(
@@ -301,6 +303,9 @@ export default function Home() {
         );
 
         setHasSetUpAccount(true);
+        setTimeout(() => {
+          window.location.reload(); // Reload to apply changes
+        }, 100);
       } catch (error) {
         console.error("Error updating user information:", error);
       }
